@@ -24,7 +24,9 @@
 #' powers \eqn{(p1, p2)}. Functions that only involve a single power of
 #' the variable are denoted as FP1, i.e. 
 #' \deqn{FP1(p1) = \beta_1 x^{p1}.}
-#' For details see e.g. Sauerbrei et al (2006). 
+#' For details, see Sauerbrei et al. (2006) and Royston & Sauerbrei (2008). 
+#' For the effects of influential points on FP functions, see Sauerbrei et al. 
+#' (2023).
 #'
 #' @section Details on `family` option:
 #'
@@ -60,12 +62,14 @@
 #' \eqn{10^p} where the exponent \eqn{p} is given by 
 #' \deqn{p = sign(k) \times floor(|k|) \quad \text{where} \quad k = log_{10} (max(x')- min(x'))}
 #'
-#' The FP transformation of \eqn{x'} is centered on the mean of the observed 
-#' values of \eqn{x'}. For example, for the FP1 model \eqn{\beta_0 + \beta_1x^p},
-#' the actual model fitted by the software would be 
-#' \eqn{\beta'_0 + \beta'_1(x'^p-mean(x'^p))}. This approach ensures that
-#' the revised constant \eqn{\beta'_0} or baseline hazard function in a Cox
-#' model retains a meaningful interpretation.
+#' After the final FP powers are estimated, the program backscales \eqn{x'} to 
+#' the original scale \eqn{x}, ensuring that the final regression coefficients 
+#' are expressed in the original scale of the data. The FP transformation of 
+#' \eqn{x} is centered on the mean of the observed values of \eqn{x}. For example,
+#' for the FP1 model \eqn{\beta_0 + \beta_1x^p},the actual model fitted by the 
+#' software would be \eqn{\beta'_0 + \beta'_1(x^p-mean(x^p))}. This approach 
+#' ensures that the revised constant \eqn{\beta'_0} or baseline hazard function 
+#' in a Cox model retains a meaningful interpretation.
 #' 
 #' So in brief: shifting is required to make input values positive, scaling
 #' helps to bring the values to a reasonable range. Both operations are 
@@ -150,7 +154,8 @@
 #' If significant then model 3 cannot be simplified; accept model 3. 
 #' Otherwise, accept model 5. End of procedure.
 #' }
-#' The result is the selection of one of the six models. 
+#' The result is the selection of one of the six models. For details see 
+#' Royston and Sauerbrei (2016).
 #' 
 #' @section Details on model specification using a `formula`:
 #' `mfp2` supports model specifications using two different interfaces: one
@@ -216,14 +221,15 @@
 #' If supplied, then values must also be supplied to the `predict()` function.
 #' @param cycles an integer, specifying the maximum number of iteration cycles. 
 #' Default is 5.
-#' @param scale a numeric vector of length nvars or single numeric specifying 
+#' @param scale a numeric vector of length `nvars` or single numeric specifying 
 #' scaling factors. If a single numeric, then the value will be replicated as
 #' necessary. The formula interface `mfp2.formula` only supports single numeric 
 #' input to set a default value, individual values can be set using `fp` terms
 #' in the `formula` input. 
 #' Default is `NULL` which lets the program estimate the scaling factors 
 #' (see Details section). If scaling is not required set `scale = 1` to disable 
-#' it.
+#' it. The final regression coefficients are expressed in the original scale of
+#' the data.
 #' @param shift a numeric vector of length nvars or a single numeric specifying
 #' shift terms. If a single numeric, then the value will be replicated as
 #' necessary. The formula interface `mfp2.formula` only supports single numeric 
@@ -413,7 +419,11 @@
 #' 
 #' Sauerbrei, W. and Royston, P., 1999. \emph{Building multivariable prognostic 
 #' and diagnostic models: transformation of the predictors by using fractional 
-#' polynomials. J Roy Stat Soc a Sta, 162:71-94.}
+#' polynomials. J Roy Stat Soc a Sta, 162:71-94.}\cr
+#' 
+#' Sauerbrei, W., Kipruto, E. and Balmford, J., 2023. \emph{Effects of influential 
+#' points and sample size on the selection and replicability of multivariable 
+#' fractional polynomial models. Diagnostic and Prognostic Research, 7(1), p.7.}
 #' 
 #' @seealso 
 #' [summary.mfp2()], [coef.mfp2()], [predict.mfp2()], [fp()]
@@ -659,9 +669,8 @@ mfp2.default <- function(x,
       
       if (!is.null(strata)) {
           # assert stratification factors are of correct length
-          if (is.vector(strata)) {
-            strata_len = length(strata)
-          } else strata_len = nrow(strata)
+        strata_len <- ifelse(is.vector(strata), length(strata), nrow(strata))
+        
           if (strata_len != nrow(x)) {
               stop("! The length of stratification factor(s) and the number of observations in x must match.\n")
           }
@@ -738,9 +747,12 @@ mfp2.default <- function(x,
   } 
   if (is.null(shift)) {
       shift <- apply(x, 2, find_shift_factor)
-  } else if (length(shift) == 1) {
+  } else {
+    if (length(shift) == 1) {
       shift <- rep(shift, nvars)
+    }
   }
+    
   if (is.null(scale)) {
       scale <- apply(x, 2, find_scale_factor)
   } else if (length(scale) == 1) {
@@ -796,13 +808,46 @@ mfp2.default <- function(x,
   
 
   # data preparation -----------------------------------------------------------
-  # shift and scale 
+  # Apply shift transformation to the x matrix
   x <- sweep(x, 2, shift, "+")
+  
+  # Identify variables that require fractional polynomial transformation 
+  # (where df.list != 1)
+  nonlinear_variables <- which(df.list != 1)
+  
+  # Only check for non-positive values in variables that will undergo FP transformation
+  if (length(nonlinear_variables) > 0) {
+    # Extract only the relevant columns that need the positivity check
+    xd <- x[, nonlinear_variables, drop = FALSE]
+    
+    # Check which columns still have zero or negative values after shifting
+    neg_cols <- which(colSums(xd <= 0) > 0)
+    
+    if (length(neg_cols) > 0) {
+      # Get the names of problematic columns for user-friendly error message
+      cols_with_negatives <- colnames(xd)[neg_cols]
+      
+      # Provide a clear error message with the specific columns that have issues
+      stop(
+        "i The shifting factors are insufficient to ensure positive values for fractional polynomial transformation.\n", 
+        sprintf("i Problematic variables: %s", 
+                paste0(cols_with_negatives, collapse = ", ")), 
+        "\ni Consider increasing the shift values for these variables.",
+        call. = FALSE
+      )
+    }
+  }
+  
+  # scale x after shifting
   x <- sweep(x, 2, scale, "/")
   
   # stratification for cox model
   istrata <- strata
   if (family == "cox" && !is.null(strata)) {
+    # TODO: Replace strata with interaction()
+    # survival::strata: When used outside of a coxph formula the result of the
+    # function is essentially identical to the interaction function, though the
+    # labels from strata are often more verbose.
       istrata <- survival::strata(strata, shortlabel = TRUE)
       # convert strata to integers as conducted by coxph
       istrata <- as.integer(istrata)
@@ -1347,8 +1392,7 @@ get_selected_variable_names <- function(object) {
 #' Vector of length `ncol(x)` with degrees of freedom for each variable in `x`.
 #' 
 #' @export
-assign_df <- function(x, 
-                      df_default = 4) {
+assign_df <- function(x,df_default = 4) {
   
   # default degrees of freedom for each variable
   df <- rep(df_default, ncol(x))

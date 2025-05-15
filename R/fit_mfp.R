@@ -231,8 +231,15 @@ fit_mfp <- function(x,
   # step 4: fit final model with estimated functional forms --------------------
   # transform x using the final FP powers selected. 
   # x has already been shifted and scaled.
+  
+  # Apply backscaling only if at least one scaling factor is not equal to 1
+  if (any(scale != 1)) {
+  x <- backscale_matrix(x,scale)
+  }
+  
   data_transformed <- transform_matrix(
-    x = x, power_list = powers_current, center = center, acdx = acdx
+    x = x, 
+    power_list = powers_current, center = center, acdx = acdx
   )
 
   # fit model, and return full glm or coxph object
@@ -628,7 +635,7 @@ find_best_fp_cycle <- function(x,
 #' 
 #' @details 
 #' An example calculation: if p is the power(s) and p = c(1,2), then df = 4 
-#' but if x = NA then df = 0.
+#' but if p = NA then df = 0.
 #' 
 #' @return 
 #' returns numeric value denoting the number of degrees of freedom (df).
@@ -729,3 +736,55 @@ create_fp_terms <- function(fp_powers,
   
   fp_terms
 }
+
+
+#' Backscale Columns of a Matrix (Internal)
+#'
+#' Multiplies each column of a numeric matrix by a corresponding scalar value 
+#' from a named vector. Typically used to reverse prior scaling (i.e., backscaling).
+#' This is an internal helper function and not intended for direct use by package 
+#' users.
+#'
+#' @param x A numeric matrix with column names, or `NULL`.
+#' @param scalex A named numeric vector. Each name must match a column name of `x`.
+#'
+#' @return A matrix with backscaled columns, or `NULL` if `x` is `NULL`.
+#'
+backscale_matrix <- function(x, scalex) {
+  # If x is NULL, return NULL
+  if (is.null(x)) {
+    return(NULL)
+  }
+  
+  # Check: x must be a matrix
+  if (!is.matrix(x)) {
+    stop("`x` must be a matrix.")
+  }
+  
+  # Check: x must be numeric
+  if (!is.numeric(x)) {
+    stop("`x` must be a numeric matrix.")
+  }
+  
+  # Check: column names must be present
+  vnames <- colnames(x)
+  if (is.null(vnames)) {
+    stop("`x` must have column names.")
+  }
+  
+  # Check: scalex must be a named numeric vector
+  if (!is.numeric(scalex) || is.null(names(scalex))) {
+    stop("`scalex` must be a named numeric vector.")
+  }
+  
+  # Check: all columns in x must have matching names in scalex
+  missing_cols <- setdiff(vnames, names(scalex))
+  if (length(missing_cols) > 0) {
+    stop("Missing scaling values for column(s): ", paste(missing_cols, collapse = ", "))
+  }
+  
+  # Multiply each column by the corresponding scalar
+  unscale_x <- sweep(x, 2, scalex[vnames], FUN = "*")
+  return(unscale_x)
+}
+

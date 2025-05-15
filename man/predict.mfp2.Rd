@@ -2,7 +2,7 @@
 % Please edit documentation in R/predict.mfp2.R
 \name{predict.mfp2}
 \alias{predict.mfp2}
-\title{Predict Method for \code{mfp2} Fits}
+\title{Predict Method for \code{mfp2}}
 \usage{
 \method{predict}{mfp2}(
   object,
@@ -14,6 +14,7 @@
   ref = NULL,
   strata = NULL,
   newoffset = NULL,
+  nseq = 100,
   ...
 )
 }
@@ -21,46 +22,52 @@
 \item{object}{a fitted object of class \code{mfp2}.}
 
 \item{newdata}{optionally, a matrix with column names in which to look for
-variables with which to predict. See \code{\link[=mfp2]{mfp2()}} for details.}
+variables with which to predict. If provided, the variables are internally
+shifted using the shifting values stored in \code{object}. See \code{\link[=mfp2]{mfp2()}} for
+further details.}
 
-\item{type}{the type of prediction required.  The default is on the
-scale of the linear predictors. See \code{predict.glm()} or \code{predict.coxph()} for
-details. In case \code{type = "terms"}, see the Section on \verb{Terms prediction}.
-In case \code{type = "contrasts"}, see the Section on \code{Contrasts}.}
+\item{type}{the type of prediction required.  The default is on the scale of
+the linear predictors. See \code{predict.glm()} or \code{predict.coxph()} for details.
+In case \code{type = "terms"}, see the Section on \verb{Terms prediction}. In case
+\code{type = "contrasts"}, see the Section on \code{Contrasts}.}
 
 \item{terms}{a character vector of variable names specifying for which
-variables term or contrast predictions are desired.
-Only used in case \code{type = "terms"} or \code{type = "contrasts"}.
-If \code{NULL} (the default) then all selected variables in the final model will
-be used. In any case, only variables used in the final model are used, even
-if more variable names are passed.}
+variables term or contrast predictions are desired. Only used in case
+\code{type = "terms"} or \code{type = "contrasts"}. If \code{NULL} (the default) then all
+selected variables in the final model will be used. In any case, only
+variables used in the final model are used, even if more variable names are
+passed.}
 
 \item{terms_seq}{a character string specifying how the range of variable
 values for term predictions are handled. The default \code{equidistant} computes
 the range of the data range and generates an equidistant sequence of
-100 points from the minimum to the maximum values to properly show the functional
-form estimated in the final model.
+100 points from the minimum to the maximum values of shifted values to
+properly show the functional form estimated in the final model.
 The option \code{data} uses the observed data values directly, but these may not
 adequately reflect the functional form of the data, especially when extreme
 values or influential points are present.}
 
-\item{alpha}{significance level used for computing confidence
-intervals in terms prediction.}
+\item{alpha}{significance level used for computing confidence intervals in
+terms prediction.}
 
 \item{ref}{a named list of reference values used when \code{type = "contrasts"}.
 Note that any variable requested in \code{terms}, but not having an entry in this
-list (or if the entry is \code{NULL}) then the mean value (or minimum for binary
-variables) will be used as reference. Values are specified on the original
-scale of the variable since the program will internally scale it using the
-scaling factors obtained from \code{\link[=find_scale_factor]{find_scale_factor()}}. By default, this function
-uses the means (for continuous variables) and minima (for binary variables) as
+list (or if the entry is \code{NULL}) then the mean value of shifted data
+(or minimum for binary variables) will be used as reference. Values should be
+specified on the original scale of the variable since the program will
+internally scale it using the scaling factors obtained from
+\code{\link[=find_scale_factor]{find_scale_factor()}}. By default, this function uses the means
+(for continuous variables) and minimum (for binary variables) as
 reference values.}
 
 \item{strata}{stratum levels used for predictions.}
 
-\item{newoffset}{A vector of offsets used for predictions. This parameter is important when
-newdata is supplied. The offsets will be directly added to the linear predictor without any
-transformations.}
+\item{newoffset}{A vector of offsets used for predictions. This parameter is
+important when newdata is supplied. The offsets are directly added to the
+linear predictor without any transformations.}
+
+\item{nseq}{Integer specifying how many values to generate when
+\code{terms_seq = "equidistant"}. Default is 100.}
 
 \item{...}{further arguments passed to \code{predict.glm()} or \code{predict.coxph()}.}
 }
@@ -73,9 +80,8 @@ for each variable requested in \code{terms} (excluding those not present in the
 final model).
 Each entry is a \code{data.frame} with the following columns:
 \itemize{
-\item \code{variable}: variable values on original scale.
-\item \code{variable_pre}: variable with pre-transformation applied, i.e. shifted,
-scaled and centered as required.
+\item \code{variable}: variable values on original scale (without shifting).
+\item \code{variable_pre}: variable with pre-transformation applied, i.e. shifted, and centered as required.
 \item \code{value}: partial linear predictor or contrast (depending on \code{type}).
 \item \code{se}: standard error of partial linear predictor or contrast.
 \item \code{lower}: lower limit of confidence interval.
@@ -87,36 +93,83 @@ Obtains predictions from an \code{mfp2} object.
 }
 \details{
 To prepare the \code{newdata} for prediction, this function applies any
-necessary shifting and scaling based on the factors obtained from the
-training data.
-It is important to note that if the shifting factors are not sufficiently
-large as estimated from the training data, variables in \code{newdata} may end up
-with negative values, which can cause prediction errors if non-linear
-functional forms are used. A warning is given in this case by the function.
+necessary shifting based on factors obtained from the training data.
+It is important to note that if the shifting factors estimated from the
+training data are not sufficiently large, variables in \code{newdata} may end up
+being non-positive, which can cause prediction errors when non-linear
+functional forms such as logarithms are used. In such cases, the function
+issues a warning.
 The next step involves transforming the data using the selected
-fractional polynomial (FP) powers. If necessary, centering of variables is
-conducted. Once the transformation (and centering) is complete, the
-transformed data is passed to either \code{predict.glm()} or \code{predict.coxph()},
-depending on the chosen family of models and when type is not
-\code{terms} and \code{contrasts}.
+fractional polynomial (FP) powers. After transformation, variables are
+centered if \code{center} was set to TRUE in \code{mfp2()}. Once transformation
+(and centering) is complete, the transformed data is passed
+to either \code{predict.glm()} or \code{predict.coxph()}, depending on the model
+family used, provided that \code{type} is neither \code{terms} nor \code{contrasts} (see the
+section handling \code{terms} and \code{contrasts} for details).
 }
 \section{Terms prediction}{
 
-This function allows to compute the partial linear predictors
-for each variable selected into the final model if \code{type = "terms"}. Note
-that the results returned from this function are different from those of
-\code{predict.glm()} and \code{predict.coxph()} since these functions do not take
-into account that a single variable can be represented by multiple terms.
-This functionality is useful to assess model fit, since it also allows to
-draw data points based on residuals.
+If \code{type = "terms"}, this function computes the partial linear predictors
+for each variable included in the final model. Unlike \code{predict.glm()} and
+\code{predict.coxph()}, this function accounts for the fact that a single variable
+may be represented by multiple transformed terms.
+
+For a variable modeled using a first-degree fractional polynomial (FP1),
+the partial predictor is given by \eqn{\hat{\eta}_j = \hat{\beta}_0 + x_j^* \hat{\beta}_j}, where
+\eqn{x_j^*} is the transformed variable (centered if \code{center = TRUE}).
+
+For a second-degree fractional polynomial (FP2), the partial predictor
+takes the form \eqn{\hat{\eta}_j = \hat{\beta}_0 + x_{j1}^* \hat{\beta}_{j1} + x_{j2}^* \hat{\beta}_{j2}},
+where \eqn{x_{j1}^*} and \eqn{x_{j2}^*} are the two transformed components
+of the original variable (again, centered if \code{center = TRUE}).
+
+This functionality is particularly useful for visualizing the functional
+relationship of a continuous variable, or for assessing model fit when
+residuals are included. See also \code{fracplot()}.
 }
 
 \section{Contrasts}{
 
-This functions allows to compute contrasts with reference to a specified
-variable value if \code{type = "contrasts"}. In this case, the fitted partial
-predictors will be centered at the reference value (i.e. 0), and also
-confidence intervals will have width 0 at that point.
+If \code{type = "contrasts"}, this function computes contrasts relative to a
+specified reference value for the \eqn{j}th variable (e.g., age = 50). Let
+\eqn{x_j} denote the values of the \eqn{j}th variable in \code{newdata}, and
+\eqn{x_j^{\text{ref}}} the reference value. The contrast is defined as the
+difference between the partial linear predictor evaluated at the transformed
+(and centered, if \code{center = TRUE}) value \eqn{x_j}, and that evaluated at the
+transformed reference value \eqn{x_j^{(\text{ref}})},
+i.e., \eqn{f(x_j^*) - f(x_j^{*(\text{ref})})}.
+
+For a first-degree fractional polynomial (FP1), the partial predictor is:
+\deqn{\hat{f}(x_j^*) = \hat{\beta}_0 + x_j^* \hat{\beta}_j}
+and the contrast is:
+\deqn{\hat{f}(x_j^*) - \hat{f}(x_j^{*(\text{ref})}) = x_j^* \hat{\beta}_j - x_j^{*(\text{ref})} \hat{\beta}_j}
+
+For a second-degree fractional polynomial (FP2), the partial predictor is:
+\deqn{\hat{f}(x_j^*) = \hat{\beta}_0 + x_{j1}^* \hat{\beta}_{j1} + x_{j2}^* \hat{\beta}_{j2}}
+and the contrast is:
+\deqn{\hat{f}(x_j^*) - \hat{f}(x_j^{*(\text{ref})}) = x_{j1}^* \hat{\beta}_{j1} + x_{j2}^* \hat{\beta}_{j2} - x_{j1}^{*(\text{ref})} \hat{\beta}_{j1} - x_{j2}^{*(\text{ref})} \hat{\beta}_{j2}}
+
+where \eqn{x_j^*}, \eqn{x_{j1}^*}, and \eqn{x_{j2}^*} are the transformed
+(and centered, if applicable) components of the \eqn{j}th variable, and
+the \eqn{\hat{\beta}} terms are the corresponding model estimates
+
+The reference value \eqn{x_j^{(\text{ref})}} is first \strong{shifted} using the
+same shifting factor estimated from the training data, then transformed using
+the estimated fractional polynomial (FP) powers, and finally \strong{centered}
+(if \code{center = TRUE}) using the \strong{mean of the transformed (and shifted) values
+of \eqn{x_j} in the training data}—ensuring full consistency with the fitted model.
+
+If \code{ref = NULL}, the function uses the \strong{mean of the shifted \eqn{x_j}} as the
+reference value when \eqn{x_j} is continuous, or the \strong{minimum of \eqn{x_j}}
+(typically 0) when \eqn{x_j} is binary. This provides a natural and interpretable
+baseline in the absence of a user-specified reference.
+
+The fitted partial predictors are centered at the reference point,
+meaning the contrast at that point is zero. Correspondingly, confidence intervals
+at the reference value have zero width, reflecting no contrast.
+
+This functionality is especially useful for comparing the effect of a variable
+relative to a meaningful baseline, such as clinically relevant value.
 }
 
 \examples{
