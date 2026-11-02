@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Edwin Kipruto, Michael Kammer, Patrick Royston, and Willi Sauerbrei" />
+
+<meta name="date" content="2026-11-02" />
+
+<title>ACD Transformations with mfp2</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } 
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.at { color: #204a87; } 
+code span.bn { color: #0000cf; } 
+code span.cf { color: #204a87; font-weight: bold; } 
+code span.ch { color: #4e9a06; } 
+code span.cn { color: #8f5902; } 
+code span.co { color: #8f5902; font-style: italic; } 
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.dt { color: #204a87; } 
+code span.dv { color: #0000cf; } 
+code span.er { color: #a40000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #0000cf; } 
+code span.fu { color: #204a87; font-weight: bold; } 
+code span.im { } 
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.kw { color: #204a87; font-weight: bold; } 
+code span.op { color: #ce5c00; font-weight: bold; } 
+code span.ot { color: #8f5902; } 
+code span.pp { color: #8f5902; font-style: italic; } 
+code span.sc { color: #ce5c00; font-weight: bold; } 
+code span.ss { color: #4e9a06; } 
+code span.st { color: #4e9a06; } 
+code span.va { color: #000000; } 
+code span.vs { color: #4e9a06; } 
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">ACD Transformations with mfp2</h1>
+<h3 class="subtitle">Package version 1.1.0</h3>
+<h4 class="author">Edwin Kipruto, Michael Kammer, Patrick Royston, and
+Willi Sauerbrei</h4>
+<h4 class="date">November 02, 2026</h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#overview" id="toc-overview"><span class="toc-section-number">1</span> Overview</a></li>
+<li><a href="#definition-of-the-acd-transformation" id="toc-definition-of-the-acd-transformation"><span class="toc-section-number">2</span> Definition of the ACD
+transformation</a>
+<ul>
+<li><a href="#inverse-normal-transformation-of-ranks" id="toc-inverse-normal-transformation-of-ranks"><span class="toc-section-number">2.1</span> Inverse normal transformation of
+ranks</a></li>
+<li><a href="#power-linear-approximation" id="toc-power-linear-approximation"><span class="toc-section-number">2.2</span> Power-linear
+approximation</a></li>
+<li><a href="#back-transformation-to-the-interval-0-1" id="toc-back-transformation-to-the-interval-0-1"><span class="toc-section-number">2.3</span> Back-transformation to the
+interval <code>(0, 1)</code></a></li>
+</ul></li>
+<li><a href="#interpretation" id="toc-interpretation"><span class="toc-section-number">3</span> Interpretation</a></li>
+<li><a href="#acd-in-the-fractional-polynomial-family" id="toc-acd-in-the-fractional-polynomial-family"><span class="toc-section-number">4</span> ACD in the fractional polynomial
+family</a></li>
+<li><a href="#function-selection-procedure-for-acd-fspa" id="toc-function-selection-procedure-for-acd-fspa"><span class="toc-section-number">5</span> Function-selection procedure for ACD
+(FSPA)</a>
+<ul>
+<li><a href="#FSA" id="toc-FSA"><span class="toc-section-number">5.1</span> P-value selection</a></li>
+<li><a href="#information-criteria" id="toc-information-criteria"><span class="toc-section-number">5.2</span> Information criteria</a></li>
+</ul></li>
+<li><a href="#simulation-example" id="toc-simulation-example"><span class="toc-section-number">6</span> Simulation example</a></li>
+<li><a href="#fitting-an-acd-model" id="toc-fitting-an-acd-model"><span class="toc-section-number">7</span> Fitting an ACD model</a>
+<ul>
+<li><a href="#matrix-interface" id="toc-matrix-interface"><span class="toc-section-number">7.1</span> Matrix interface</a></li>
+<li><a href="#formula-interface" id="toc-formula-interface"><span class="toc-section-number">7.2</span> Formula interface</a></li>
+</ul></li>
+<li><a href="#comparison-with-standard-mfp" id="toc-comparison-with-standard-mfp"><span class="toc-section-number">8</span> Comparison with standard
+MFP</a></li>
+<li><a href="#plotting-the-fitted-functions" id="toc-plotting-the-fitted-functions"><span class="toc-section-number">9</span> Plotting the fitted
+functions</a></li>
+<li><a href="#practical-remarks" id="toc-practical-remarks"><span class="toc-section-number">10</span> Practical remarks</a></li>
+<li><a href="#references" id="toc-references"><span class="toc-section-number">11</span> References</a></li>
+</ul>
+</div>
+
+<style>
+body {
+font-size: 15px;
+line-height: 1.6;
+}
+
+p {
+text-align: justify;
+text-justify: inter-word;
+}
+
+h1, h2, h3, h4 {
+margin-top: 1.4em;
+margin-bottom: 0.6em;
+color: #1f77b4;
+}
+
+#TOC a {
+color: inherit;
+text-decoration: none;
+}
+
+body > p a,
+body > div:not(#TOC) a,
+.main-container a {
+color: #1f77b4;
+text-decoration: none;
+}
+body > p a:hover,
+body > div:not(#TOC) a:hover,
+.main-container a:hover {
+color: #0b4f8a;
+text-decoration: underline;
+}
+pre {
+font-size: 13px;
+line-height: 1.4;
+overflow-x: auto;
+}
+code {
+font-size: 90%;
+}
+img {
+max-width: 100%;
+height: auto;
+}
+.figure {
+margin-top: 1.2em;
+margin-bottom: 1.2em;
+}
+.caption {
+font-size: 90%;
+color: #555555;
+}
+</style>
+<div id="overview" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Overview</h1>
+<p>The approximate cumulative distribution (ACD) transformation provides
+a smooth way to model sigmoid-shaped relationships, including curves
+that level off at one or both ends (Royston, 2014). It approximates the
+empirical cumulative distribution function of a continuous
+predictor.</p>
+<p>The MFPA extension combines this transformation with multivariable
+fractional polynomial (MFP) modelling (Royston and Sauerbrei, 2016). For
+a predictor selected for ACD assessment, <code>mfp2()</code> considers
+functions of both the original predictor and its ACD transformation. The
+usual function-selection procedure is replaced by the function-selection
+procedure with ACD transformation (FSPA). Other predictors continue
+through standard MFP selection during backfitting.</p>
+<p>Request ACD assessment using:</p>
+<ul>
+<li><code>acd_vars = &quot;x&quot;</code> in the matrix interface;</li>
+<li><code>fp(x, acd = TRUE)</code> in the formula interface.</li>
+</ul>
+<p>Requesting ACD assessment allows the transformation to be considered;
+selection may still retain an ordinary FP1 or linear effect, or omit the
+predictor.</p>
+</div>
+<div id="definition-of-the-acd-transformation" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Definition of the ACD
+transformation</h1>
+<p>For observed predictor values <span class="math inline">\(x_1,\ldots,x_n\)</span>, the transformation has
+three steps. The description below assumes ordinary continuous data,
+without structural-zero handling.</p>
+<div id="inverse-normal-transformation-of-ranks" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Inverse normal
+transformation of ranks</h2>
+<p>First, convert the ranks to normal scores:</p>
+<p><span class="math display">\[
+z_i = \Phi^{-1}\left\{\frac{\operatorname{rank}(x_i)-0.5}{n}\right\},
+\]</span></p>
+<p>where <span class="math inline">\(\Phi^{-1}\)</span> is the inverse
+standard normal cumulative distribution function. The package assigns
+average ranks to tied values. When all values are distinct, these scores
+approximate expected standard normal order statistics.</p>
+</div>
+<div id="power-linear-approximation" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Power-linear
+approximation</h2>
+<p>Next, approximate the normal scores using a one-term FP regression.
+To include the logarithmic case explicitly, define</p>
+<p><span class="math display">\[
+h_p(u) =
+\begin{cases}
+\log(u), &amp; p=0,\\
+u^p, &amp; p\ne 0.
+\end{cases}
+\]</span></p>
+<p>The fitted approximation is</p>
+<p><span class="math display">\[
+\hat z_i = \hat a_0 + \hat a_1 h_q(x_i+s),
+\]</span></p>
+<p>where <span class="math inline">\(s\)</span> is the fitted shift and
+<span class="math inline">\(q\)</span> is the best-fitting FP1 power.
+The default candidate set is</p>
+<p><span class="math display">\[
+S = \{-2,-1,-0.5,0,0.5,1,2,3\}.
+\]</span></p>
+<p>The coefficients are estimated by ordinary least squares, and the
+power giving the best fit is selected. This preliminary regression uses
+the predictor values, not the outcome. User-supplied candidate powers
+for the predictor also apply to this step.</p>
+<p>With automatic shifting, <span class="math inline">\(s=0\)</span>
+when all values are positive; otherwise, a shift is chosen so that <span class="math inline">\(x_i+s&gt;0\)</span>. Active ACD predictors are not
+scaled by the ordinary MFP scale factor in version 1.1.0.</p>
+</div>
+<div id="back-transformation-to-the-interval-0-1" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> Back-transformation
+to the interval <code>(0, 1)</code></h2>
+<p>Finally, apply the standard normal cumulative distribution
+function:</p>
+<p><span class="math display">\[
+A(x_i) = \Phi(\hat z_i)
+= \Phi\{\hat a_0+\hat a_1 h_q(x_i+s)\}.
+\]</span></p>
+<p>This gives a smooth approximation to the predictor’s empirical
+cumulative distribution. Once its parameters have been estimated, <span class="math inline">\(A(x)\)</span> can be evaluated at new predictor
+values without recalculating their ranks. The fitted transformation is
+estimated once and reused during backfitting and prediction.</p>
+</div>
+</div>
+<div id="interpretation" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Interpretation</h1>
+<p>ACD values are approximately uniformly distributed between zero and
+one. They need not be exactly uniform, and the smallest and largest
+observed values need not map exactly to zero and one.</p>
+<p>For illustration, consider an uncentred model with an identity
+link:</p>
+<p><span class="math display">\[
+\mu(x)=E(Y\mid X=x)=\beta_0+\beta_1 A(x).
+\]</span></p>
+<p>At ACD values near zero, the fitted mean is near <span class="math inline">\(\beta_0\)</span>; at values near one, it is near
+<span class="math inline">\(\beta_0+\beta_1\)</span>. Thus, <span class="math inline">\(\beta_1\)</span> is the signed change in the
+fitted mean for a one-unit increase in <span class="math inline">\(A(x)\)</span>. Across the actual observed
+predictor range, the fitted difference is</p>
+<p><span class="math display">\[
+\mu(x_{\max})-\mu(x_{\min})
+=\beta_1\{A(x_{\max})-A(x_{\min})\}.
+\]</span></p>
+<p>This difference is approximately <span class="math inline">\(\beta_1\)</span> only when the observed ACD values
+cover nearly the whole interval. With other links, the same
+interpretation applies on the linear-predictor scale.</p>
+<p>A linear effect of <span class="math inline">\(A(x)\)</span>
+typically produces a sigmoid-shaped relationship with the original
+predictor. The transformation compresses the tails of its distribution,
+which can reduce the influence of extreme predictor values. It does not
+guarantee a particular response shape for every distribution or selected
+function.</p>
+</div>
+<div id="acd-in-the-fractional-polynomial-family" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> ACD in the fractional
+polynomial family</h1>
+<p>The largest ACD-extended function combines one FP1 term in the
+shifted original predictor and one FP1 term in its ACD
+transformation:</p>
+<p><span class="math display">\[
+\beta_1 h_{p_1}(x+s)+\beta_2 h_{p_2}\{A(x)\}.
+\]</span></p>
+<p>Following Royston and Sauerbrei (2016), this is denoted <span class="math inline">\(FP1(p_1,p_2)\)</span>. Here the notation
+represents two components, each containing one FP term. It differs from
+ordinary FP1 notation, which represents a single power term in one
+predictor.</p>
+<p>The powers <span class="math inline">\(p_1\)</span> and <span class="math inline">\(p_2\)</span> are selected for the outcome model.
+They are separate from the power <span class="math inline">\(q\)</span>
+used to construct <span class="math inline">\(A(x)\)</span>. The default
+power set gives <span class="math inline">\(8\times8=64\)</span>
+candidate pairs. A power of zero denotes a logarithm through the
+definition of <span class="math inline">\(h_p\)</span> above.</p>
+<p>This family also permits simpler functions that omit either
+component. When both components are retained, the original-predictor
+term can add a trend, so the complete function need not level off at
+both ends.</p>
+</div>
+<div id="function-selection-procedure-for-acd-fspa" class="section level1" number="5">
+<h1><span class="header-section-number">5</span> Function-selection
+procedure for ACD (FSPA)</h1>
+<p>For each predictor requested for ACD assessment, the FSPA considers
+the following six candidate families. The notation omits the intercept,
+other predictors, and centring constants.</p>
+<table>
+<caption>Six candidate model families considered by the FSPA.</caption>
+<colgroup>
+<col width="5%" />
+<col width="17%" />
+<col width="40%" />
+<col width="37%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Model</th>
+<th align="left">Notation</th>
+<th align="left">Function</th>
+<th align="left">Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">M1</td>
+<td align="left"><span class="math inline">\(FP1(p_1, p_2)\)</span></td>
+<td align="left"><span class="math inline">\(\beta_1 h_{p_1}(x+s) +
+\beta_2 h_{p_2}(A_x)\)</span></td>
+<td align="left">Most complex allowed ACD-extended function</td>
+</tr>
+<tr class="even">
+<td align="left">M2</td>
+<td align="left"><span class="math inline">\(FP1(p_1,
+\cdot)\)</span></td>
+<td align="left"><span class="math inline">\(\beta_1
+h_{p_1}(x+s)\)</span></td>
+<td align="left">Standard FP1 function of x</td>
+</tr>
+<tr class="odd">
+<td align="left">M3</td>
+<td align="left"><span class="math inline">\(FP1(\cdot,
+p_2)\)</span></td>
+<td align="left"><span class="math inline">\(\beta_2
+h_{p_2}(A_x)\)</span></td>
+<td align="left">FP1 function of ACD(x)</td>
+</tr>
+<tr class="even">
+<td align="left">M4</td>
+<td align="left"><span class="math inline">\(FP1(1, \cdot)\)</span></td>
+<td align="left"><span class="math inline">\(\beta_1(x+s)\)</span></td>
+<td align="left">Linear function of x</td>
+</tr>
+<tr class="odd">
+<td align="left">M5</td>
+<td align="left"><span class="math inline">\(FP1(\cdot, 1)\)</span></td>
+<td align="left"><span class="math inline">\(\beta_2 A_x\)</span></td>
+<td align="left">Linear function of ACD(x)</td>
+</tr>
+<tr class="even">
+<td align="left">M6</td>
+<td align="left"><span class="math inline">\(FP1(\cdot,
+\cdot)\)</span></td>
+<td align="left">Null model</td>
+<td align="left">x omitted</td>
+</tr>
+</tbody>
+</table>
+<p>Here <span class="math inline">\(A_x=A(x)\)</span>, and a dot
+indicates that the corresponding component is omitted. The families do
+not form a single nested sequence; for example, M2 and M3 use different
+components.</p>
+<div id="FSA" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> P-value
+selection</h2>
+<p>With <code>criterion = &quot;pvalue&quot;</code>, the first comparison uses
+<code>select</code> and the remaining comparisons use
+<code>alpha</code>. For the Gaussian models used below, the sequence
+is:</p>
+<ol style="list-style-type: decimal">
+<li>Compare M1 with M6 using 4 selection degrees of freedom. If the
+comparison is not significant, omit the predictor unless it is retained
+through <code>keep</code> or <code>select = 1</code>. Otherwise,
+continue.</li>
+<li>Compare M1 with M4 using 3 degrees of freedom. If the comparison is
+not significant, select the linear effect of the original predictor (M4)
+and stop.</li>
+<li>Compare M1 with M2 using 2 degrees of freedom. If the comparison is
+not significant, select the ordinary FP1 function (M2) and stop.</li>
+<li>Compare M1 with M3 using 2 degrees of freedom. If the comparison is
+significant, retain both components (M1) and stop. Otherwise, continue
+to the final comparison.</li>
+<li>Compare M3 with M5 using 1 degree of freedom. Select an FP1 function
+of ACD (M3) if the comparison is significant; otherwise, select a linear
+effect of ACD (M5).</li>
+</ol>
+<p>The ordering favours a linear or ordinary FP1 function when it gives
+an adequate fit relative to the two-component function. ACD components
+are retained when those simpler forms do not adequately represent the
+relationship. The degrees of freedom include an allowance for selecting
+the outcome-model FP powers; model comparisons also account for
+family-specific coefficient counts where applicable.</p>
+<p>Gaussian models use chi-square comparisons by default. Set
+<code>ftest = TRUE</code> to use F-tests. GEE models use Wald-based
+comparisons under p-value selection.</p>
+</div>
+<div id="information-criteria" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> Information
+criteria</h2>
+<p>With <code>criterion = &quot;aic&quot;</code> or
+<code>criterion = &quot;bic&quot;</code>, the six candidate families are compared
+directly, and the permitted model with the smallest criterion value is
+selected. The <code>select</code> and <code>alpha</code> significance
+levels do not control these comparisons. For GEE models, the
+corresponding scores are QICu and QBIC.</p>
+</div>
+</div>
+<div id="simulation-example" class="section level1" number="6">
+<h1><span class="header-section-number">6</span> Simulation example</h1>
+<p>The following simulation creates a sigmoid relationship between
+<code>x</code> and a continuous outcome <code>y</code>, with random
+noise added to the mean.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">54</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(n), <span class="at">ncol =</span> <span class="dv">1</span>, <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="cn">NULL</span>, <span class="st">&quot;x&quot;</span>))</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>sigmoid <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span><span class="fl">1.7</span> <span class="sc">*</span> x))</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>}</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="dv">20</span> <span class="sc">*</span> <span class="fu">sigmoid</span>(x) <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="fl">0.5</span>))</span></code></pre></div>
+</div>
+<div id="fitting-an-acd-model" class="section level1" number="7">
+<h1><span class="header-section-number">7</span> Fitting an ACD
+model</h1>
+<div id="matrix-interface" class="section level2" number="7.1">
+<h2><span class="header-section-number">7.1</span> Matrix interface</h2>
+<p>Name the predictor in <code>acd_vars</code> to request ACD
+assessment. In this example, the response family defaults to
+Gaussian.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>fit_acd_matrix <span class="ot">&lt;-</span> <span class="fu">mfp2</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>  x, y,</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>  <span class="at">acd_vars =</span> <span class="st">&quot;x&quot;</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>)</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>fit_acd_matrix<span class="sc">$</span>fp_terms</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt;   df_setting df_initial select alpha  acd  zero catzero spike prop_zero spike_dec selected</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt; x          4          4   0.05  0.05 TRUE FALSE   FALSE FALSE        NA         2     TRUE</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt;   searched_fp df_final power1 power2</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt; x        TRUE        4      1      1</span></span></code></pre></div>
+</div>
+<div id="formula-interface" class="section level2" number="7.2">
+<h2><span class="header-section-number">7.2</span> Formula
+interface</h2>
+<p>Set <code>acd = TRUE</code> inside <code>fp()</code> to request the
+same assessment through the formula interface.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">y =</span> y, <span class="at">x =</span> <span class="fu">as.numeric</span>(x))</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>fit_acd_formula <span class="ot">&lt;-</span> <span class="fu">mfp2</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  y <span class="sc">~</span> <span class="fu">fp</span>(x, <span class="at">acd =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="at">data =</span> dat,</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>)</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>fit_acd_formula<span class="sc">$</span>fp_terms</span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt;   df_setting df_initial select alpha  acd  zero catzero spike prop_zero spike_dec selected</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt; x          4          4   0.05  0.05 TRUE FALSE   FALSE FALSE        NA         2     TRUE</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt;   searched_fp df_final power1 power2</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt; x        TRUE        4      1      1</span></span></code></pre></div>
+</div>
+</div>
+<div id="comparison-with-standard-mfp" class="section level1" number="8">
+<h1><span class="header-section-number">8</span> Comparison with
+standard MFP</h1>
+<p>For comparison, fit an ordinary MFP model to the same data without
+ACD assessment. Its default maximum complexity is FP2.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>fit_standard <span class="ot">&lt;-</span> <span class="fu">mfp2</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  y <span class="sc">~</span> <span class="fu">fp</span>(x, <span class="at">acd =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="at">data =</span> dat,</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>)</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>fit_standard<span class="sc">$</span>fp_terms</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt;   df_setting df_initial select alpha   acd  zero catzero spike prop_zero spike_dec selected</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt; x          4          4   0.05  0.05 FALSE FALSE   FALSE FALSE        NA         2     TRUE</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt;   searched_fp df_final power1 power2</span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt; x        TRUE        4      3      3</span></span></code></pre></div>
+</div>
+<div id="plotting-the-fitted-functions" class="section level1" number="9">
+<h1><span class="header-section-number">9</span> Plotting the fitted
+functions</h1>
+<p>Use <code>plot()</code> to compare the selected functions. Each panel
+shows the fitted contribution, pointwise 95% confidence intervals, and
+component-plus-residual points. Because each Gaussian model has only one
+predictor and an identity link, the fitted curve includes the intercept
+and the points correspond to the observed outcomes.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">plot</span>(fit_acd_matrix, <span class="at">terms =</span> <span class="st">&quot;x&quot;</span>)[[<span class="dv">1</span>]] <span class="sc">+</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">ylab</span>(<span class="st">&quot;Partial predictor + residuals&quot;</span>) <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">ggtitle</span>(<span class="st">&quot;ACD model&quot;</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">plot</span>(fit_standard, <span class="at">terms =</span> <span class="st">&quot;x&quot;</span>)[[<span class="dv">1</span>]] <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">ylab</span>(<span class="st">&quot;Partial predictor + residuals&quot;</span>) <span class="sc">+</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">ggtitle</span>(<span class="st">&quot;Standard MFP model&quot;</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>patchwork<span class="sc">::</span><span class="fu">wrap_plots</span>(p1, p2, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img role="img" aria-label="ACD model compared with a standard MFP model." src="data:image/png;base64,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" alt="ACD model compared with a standard MFP model." width="100%" />
+<p class="caption">
+ACD model compared with a standard MFP model.
+</p>
+</div>
+<p>Both models use the same simulated observations. Inspect the curves
+to see how each represents the central transition and the tails, rather
+than assuming that requesting ACD guarantees a better fit. The intervals
+are conditional on the selected model and do not account for uncertainty
+from variable or function selection.</p>
+</div>
+<div id="practical-remarks" class="section level1" number="10">
+<h1><span class="header-section-number">10</span> Practical remarks</h1>
+<ul>
+<li>Use ACD assessment when sigmoid-shaped effects are plausible and the
+fitted relationship supports them. The ACD option extends the choices
+available during MFP selection.</li>
+<li>For an eligible ACD predictor, <code>mfp2()</code> sets the maximum
+<code>df</code> to 4 to allow the two-component reference model.
+Selection can still choose a simpler form.</li>
+<li>ACD requests are reset when the fitting predictor has fewer than
+five distinct values. The ordinary MFP rules then apply.</li>
+<li>Supply original predictor values for prediction. The fitted shift,
+ACD approximation, selected powers, and centring are reused; do not
+recalculate ranks or refit the ACD transformation in the new data.</li>
+<li>In <code>$fp_terms</code>, <code>power1</code> describes the
+original-predictor component and <code>power2</code> the ACD component.
+An <code>NA</code> power indicates that the corresponding component is
+absent. A nonzero ACD flag alone does not establish that the final model
+retains an ACD component.</li>
+</ul>
+</div>
+<div id="references" class="section level1" number="11">
+<h1><span class="header-section-number">11</span> References</h1>
+<p>Royston, P. (2014). A smooth covariate rank transformation for use in
+regression models with a sigmoid dose-response function. <em>Stata
+Journal</em>, 14(2), 329–341.</p>
+<p>Royston, P. and Sauerbrei, W. (2016). mfpa: Extension of mfp using
+the ACD covariate transformation for enhanced parametric multivariable
+modeling. <em>Stata Journal</em>, 16(1), 72–87.</p>
+<p>Royston, P. and Sauerbrei, W. (2008). <em>Multivariable
+Model-Building: A Pragmatic Approach to Regression Analysis Based on
+Fractional Polynomials for Modelling Continuous Variables</em>. John
+Wiley &amp; Sons.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

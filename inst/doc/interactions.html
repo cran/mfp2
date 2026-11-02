@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Edwin Kipruto, Patrick Royston and Willi Sauerbrei" />
+
+
+<title>Multivariable Fractional Polynomial Interaction Models</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Multivariable Fractional Polynomial
+Interaction Models</h1>
+<h4 class="author">Edwin Kipruto, Patrick Royston and Willi
+Sauerbrei</h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction" id="toc-introduction"><span class="toc-section-number">1</span> Introduction</a></li>
+<li><a href="#advanced-prostate-cancer-data" id="toc-advanced-prostate-cancer-data"><span class="toc-section-number">2</span> Advanced prostate cancer
+data</a></li>
+<li><a href="#interaction-without-adjustment" id="toc-interaction-without-adjustment"><span class="toc-section-number">3</span> Interaction without adjustment</a>
+<ul>
+<li><a href="#plotting-the-interaction" id="toc-plotting-the-interaction"><span class="toc-section-number">3.1</span> Plotting the interaction</a></li>
+<li><a href="#predictions-at-chosen-ages" id="toc-predictions-at-chosen-ages"><span class="toc-section-number">3.2</span> Predictions at chosen
+ages</a></li>
+</ul></li>
+<li><a href="#interaction-with-adjustment-for-prognostic-factors" id="toc-interaction-with-adjustment-for-prognostic-factors"><span class="toc-section-number">4</span> Interaction with adjustment for
+prognostic factors</a></li>
+<li><a href="#selection-with-aic" id="toc-selection-with-aic"><span class="toc-section-number">5</span> Selection with AIC</a></li>
+<li><a href="#several-interaction-candidates" id="toc-several-interaction-candidates"><span class="toc-section-number">6</span> Several interaction
+candidates</a></li>
+<li><a href="#fixed-linear-adjustment-model" id="toc-fixed-linear-adjustment-model"><span class="toc-section-number">7</span> Fixed linear adjustment
+model</a></li>
+<li><a href="#more-than-two-groups" id="toc-more-than-two-groups"><span class="toc-section-number">8</span> More than two groups</a></li>
+<li><a href="#the-xy-interface" id="toc-the-xy-interface"><span class="toc-section-number">9</span> The xy interface</a></li>
+<li><a href="#further-details" id="toc-further-details"><span class="toc-section-number">10</span> Further details</a>
+<ul>
+<li><a href="#paper-reference" id="toc-paper-reference"><span class="toc-section-number">10.1</span> Paper reference</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="introduction" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Introduction</h1>
+<p><code>mfpi()</code> assesses whether the effect of a grouping
+variable, such as treatment, varies with a continuous variable. The
+treatment effect is modelled as a fractional polynomial (FP) function of
+the continuous variable, so the variable does not need to be
+categorised. The procedure has two stages: Stage 1 selects an adjustment
+model with MFP, and Stage 2 tests each candidate interaction while
+holding that adjustment model fixed.</p>
+<p>This vignette shows how to run the analyses in the accompanying paper
+(<a href="#paper-reference">paper reference</a>) and how to read the
+output. For the methodology, the flexibility variants
+(<code>flex</code>), the selection criteria and the interface, each
+section points to the relevant part of the paper (Sections 2 and 3).</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(mfp2)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(survival)</span></code></pre></div>
+</div>
+<div id="advanced-prostate-cancer-data" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Advanced prostate
+cancer data</h1>
+<p>The data come from a randomised trial comparing placebo with
+diethylstilboestrol (paper, Section 4). The outcome is overall survival
+(<code>survtime</code>, <code>cens</code>), and the grouping variable is
+the binary treatment <code>rx</code>. The data set already contains the
+recoding described in the paper.</p>
+<p>Converting <code>rx</code> to a factor with named levels gives
+<code>Placebo</code> and <code>Treatment</code> labels in printed
+output, predictions and plots. The first level is the reference group
+(paper, Section 3.3).</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;advanced_prostate_cancer&quot;</span>, <span class="at">package =</span> <span class="st">&quot;mfp2&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>advanced_prostate_cancer<span class="sc">$</span>rx <span class="ot">&lt;-</span> <span class="fu">factor</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>  advanced_prostate_cancer<span class="sc">$</span>rx,</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>  <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Placebo&quot;</span>, <span class="st">&quot;Treatment&quot;</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>)</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="fu">table</span>(advanced_prostate_cancer<span class="sc">$</span>rx)</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt;   Placebo Treatment </span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt;       237       238</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="fu">tapply</span>(advanced_prostate_cancer<span class="sc">$</span>age, advanced_prostate_cancer<span class="sc">$</span>rx, range)</span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt; $Placebo</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#&gt; [1] 48 84</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co">#&gt; $Treatment</span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co">#&gt; [1] 49 89</span></span></code></pre></div>
+<p>The question is whether the treatment effect varies with age. The
+overall treatment comparison, which ignores age, shows no clear
+difference (paper, Section 4.1):</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">survdiff</span>(<span class="fu">Surv</span>(survtime, cens) <span class="sc">~</span> rx, <span class="at">data =</span> advanced_prostate_cancer)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt; survdiff(formula = Surv(survtime, cens) ~ rx, data = advanced_prostate_cancer)</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt;                N Observed Expected (O-E)^2/E (O-E)^2/V</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; rx=Placebo   237      180      165      1.33      2.66</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; rx=Treatment 238      158      173      1.27      2.66</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt;  Chisq= 2.7  on 1 degrees of freedom, p= 0.1</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>cox <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(survtime, cens) <span class="sc">~</span> rx, <span class="at">data =</span> advanced_prostate_cancer)</span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="fu">summary</span>(cox)<span class="sc">$</span>conf.int</span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt;             exp(coef) exp(-coef) lower .95 upper .95</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; rxTreatment 0.8374787    1.19406 0.6762658  1.037123</span></span></code></pre></div>
+<p>The hazard ratio is 0.84 (95% CI 0.68–1.04). A single overall
+estimate like this can hide an effect that changes with age.</p>
+<p>All analyses below use <code>flex = &quot;flex1&quot;</code> (the same FP
+powers in both groups) and <code>ties = &quot;breslow&quot;</code>, as in the
+paper. The package defaults are <code>flex = &quot;flex3&quot;</code> and
+<code>ties = &quot;efron&quot;</code>. The paper (Sections 2.5 and 4) explains
+both choices and how Efron’s method changes the results.</p>
+</div>
+<div id="interaction-without-adjustment" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Interaction without
+adjustment</h1>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>fit_unadjusted <span class="ot">&lt;-</span> <span class="fu">mfpi</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="fu">Surv</span>(survtime, cens) <span class="sc">~</span> rx <span class="sc">+</span> <span class="fu">fp</span>(age),</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="at">data =</span> advanced_prostate_cancer,</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;cox&quot;</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  <span class="at">group_var =</span> <span class="st">&quot;rx&quot;</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  <span class="at">interaction_vars =</span> <span class="st">&quot;age&quot;</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>  <span class="at">interaction_forms =</span> <span class="fu">c</span>(<span class="at">age =</span> <span class="st">&quot;fp2&quot;</span>),</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>  <span class="at">flex =</span> <span class="st">&quot;flex1&quot;</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>  <span class="at">ties =</span> <span class="st">&quot;breslow&quot;</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>)</span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt;   STEP 1: Selected Adjustment Model (MFP)</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">#&gt;   Model: Cox proportional hazards</span></span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt;   Criterion: p-value</span></span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">#&gt;     df_initial select alpha searched_fp df_final power1</span></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="co">#&gt; age          4  0.050 0.050         yes        2      3</span></span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a><span class="co">#&gt;   Selected adjustment variables (1): age</span></span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a><span class="co">#&gt;   STEP 2: Evaluating Interactions (flex = flex1)</span></span>
+<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a><span class="co">#&gt;   Group variable: rx</span></span>
+<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a><span class="co">#&gt;   Selection rule: p-value &lt; 0.050</span></span>
+<span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a><span class="co">#&gt;   P-value adjustment: none</span></span>
+<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-33"><a href="#cb4-33" tabindex="-1"></a><span class="co">#&gt; ----------------------------------------------------------------------</span></span>
+<span id="cb4-34"><a href="#cb4-34" tabindex="-1"></a><span class="co">#&gt;   [1/1] Variable: &#39;age&#39; x &#39;rx&#39;</span></span>
+<span id="cb4-35"><a href="#cb4-35" tabindex="-1"></a><span class="co">#&gt;   Adjusting for: (none)</span></span>
+<span id="cb4-36"><a href="#cb4-36" tabindex="-1"></a><span class="co">#&gt; ----------------------------------------------------------------------</span></span>
+<span id="cb4-37"><a href="#cb4-37" tabindex="-1"></a><span class="co">#&gt;  Type deviance_int deviance_diff df pvalue main_power int_power     </span></span>
+<span id="cb4-38"><a href="#cb4-38" tabindex="-1"></a><span class="co">#&gt;  FP2  3766.216     9.746         2  0.008  (3, 3)     (3, 3), (3, 3)</span></span>
+<span id="cb4-39"><a href="#cb4-39" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-40"><a href="#cb4-40" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-41"><a href="#cb4-41" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb4-42"><a href="#cb4-42" tabindex="-1"></a><span class="co">#&gt;   STEP 3: Interaction Summary</span></span>
+<span id="cb4-43"><a href="#cb4-43" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb4-44"><a href="#cb4-44" tabindex="-1"></a><span class="co">#&gt;   Variable     Type          p-value   selected</span></span>
+<span id="cb4-45"><a href="#cb4-45" tabindex="-1"></a><span class="co">#&gt; ----------------------------------------------------------------------</span></span>
+<span id="cb4-46"><a href="#cb4-46" tabindex="-1"></a><span class="co">#&gt;   age          FP2             0.008        Yes</span></span>
+<span id="cb4-47"><a href="#cb4-47" tabindex="-1"></a><span class="co">#&gt; ----------------------------------------------------------------------</span></span>
+<span id="cb4-48"><a href="#cb4-48" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-49"><a href="#cb4-49" tabindex="-1"></a><span class="co">#&gt; Done: 1 of 1 interactions selected.</span></span>
+<span id="cb4-50"><a href="#cb4-50" tabindex="-1"></a><span class="fu">print</span>(fit_unadjusted)</span>
+<span id="cb4-51"><a href="#cb4-51" tabindex="-1"></a><span class="co">#&gt; =========================================</span></span>
+<span id="cb4-52"><a href="#cb4-52" tabindex="-1"></a><span class="co">#&gt; MFPI  |  n = 475 (events = 338)  |  flex1</span></span>
+<span id="cb4-53"><a href="#cb4-53" tabindex="-1"></a><span class="co">#&gt; =========================================</span></span>
+<span id="cb4-54"><a href="#cb4-54" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-55"><a href="#cb4-55" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb4-56"><a href="#cb4-56" tabindex="-1"></a><span class="co">#&gt; mfpi(formula = Surv(survtime, cens) ~ rx + fp(age), data = advanced_prostate_cancer, </span></span>
+<span id="cb4-57"><a href="#cb4-57" tabindex="-1"></a><span class="co">#&gt;     group_var = &quot;rx&quot;, interaction_vars = &quot;age&quot;, interaction_forms = c(age = &quot;fp2&quot;), </span></span>
+<span id="cb4-58"><a href="#cb4-58" tabindex="-1"></a><span class="co">#&gt;     flex = &quot;flex1&quot;, family = &quot;cox&quot;, ties = &quot;breslow&quot;)</span></span>
+<span id="cb4-59"><a href="#cb4-59" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-60"><a href="#cb4-60" tabindex="-1"></a><span class="co">#&gt; Model: Cox proportional hazards</span></span>
+<span id="cb4-61"><a href="#cb4-61" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-62"><a href="#cb4-62" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-63"><a href="#cb4-63" tabindex="-1"></a><span class="co">#&gt; Step 1 - Selected Adjustment Model (MFP):</span></span>
+<span id="cb4-64"><a href="#cb4-64" tabindex="-1"></a><span class="co">#&gt; ----------------------------------------- </span></span>
+<span id="cb4-65"><a href="#cb4-65" tabindex="-1"></a><span class="co">#&gt;     df_initial select alpha searched_fp df_final power1</span></span>
+<span id="cb4-66"><a href="#cb4-66" tabindex="-1"></a><span class="co">#&gt; age          4  0.050 0.050         yes        2      3</span></span>
+<span id="cb4-67"><a href="#cb4-67" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-68"><a href="#cb4-68" tabindex="-1"></a><span class="co">#&gt;   Selected adjustment variables (1): age</span></span>
+<span id="cb4-69"><a href="#cb4-69" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-70"><a href="#cb4-70" tabindex="-1"></a><span class="co">#&gt; Step 2 - All Interaction Candidates:</span></span>
+<span id="cb4-71"><a href="#cb4-71" tabindex="-1"></a><span class="co">#&gt; ------------------------------------ </span></span>
+<span id="cb4-72"><a href="#cb4-72" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-73"><a href="#cb4-73" tabindex="-1"></a><span class="co">#&gt;   Grouping variable     : rx</span></span>
+<span id="cb4-74"><a href="#cb4-74" tabindex="-1"></a><span class="co">#&gt;   Selection criterion   : p-value</span></span>
+<span id="cb4-75"><a href="#cb4-75" tabindex="-1"></a><span class="co">#&gt;   Selection rule        : p-value &lt; 0.050</span></span>
+<span id="cb4-76"><a href="#cb4-76" tabindex="-1"></a><span class="co">#&gt;   P-value adjustment    : none</span></span>
+<span id="cb4-77"><a href="#cb4-77" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-78"><a href="#cb4-78" tabindex="-1"></a><span class="co">#&gt;  variable type deviance_int deviance_diff df_int p-value fp_powers_main</span></span>
+<span id="cb4-79"><a href="#cb4-79" tabindex="-1"></a><span class="co">#&gt;       age  FP2     3766.216         9.746      2   0.008         (3, 3)</span></span>
+<span id="cb4-80"><a href="#cb4-80" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-81"><a href="#cb4-81" tabindex="-1"></a><span class="co">#&gt;   FP powers by group level:</span></span>
+<span id="cb4-82"><a href="#cb4-82" tabindex="-1"></a><span class="co">#&gt;  variable type Group Group level fp_powers_int</span></span>
+<span id="cb4-83"><a href="#cb4-83" tabindex="-1"></a><span class="co">#&gt;       age  FP2    rx     Placebo        (3, 3)</span></span>
+<span id="cb4-84"><a href="#cb4-84" tabindex="-1"></a><span class="co">#&gt;       age  FP2    rx   Treatment        (3, 3)</span></span>
+<span id="cb4-85"><a href="#cb4-85" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-86"><a href="#cb4-86" tabindex="-1"></a><span class="co">#&gt; Step 3 - Interaction Summary:</span></span>
+<span id="cb4-87"><a href="#cb4-87" tabindex="-1"></a><span class="co">#&gt; ----------------------------- </span></span>
+<span id="cb4-88"><a href="#cb4-88" tabindex="-1"></a><span class="co">#&gt;  variable type p-value selected</span></span>
+<span id="cb4-89"><a href="#cb4-89" tabindex="-1"></a><span class="co">#&gt;       age  FP2   0.008      Yes</span></span></code></pre></div>
+<p>What the arguments do:</p>
+<ul>
+<li><code>fp(age)</code> puts age in the Stage 1 adjustment model. It
+does not set the form of the interaction.</li>
+<li><code>group_var</code> names the grouping variable.</li>
+<li><code>interaction_vars</code> lists the continuous variables tested
+for interaction with <code>group_var</code>.</li>
+<li><code>interaction_forms = c(age = &quot;fp2&quot;)</code> models the
+interaction with an FP2 function. All 36 FP2 power pairs are compared.
+Variables not listed use FP1.</li>
+<li><code>flex = &quot;flex1&quot;</code> selects the FP powers from the model
+without interaction and uses them in both groups (paper, Section
+2.5).</li>
+</ul>
+<p>How to read the output (paper, Section 4.2):</p>
+<ul>
+<li><strong>Step 1</strong> is the adjustment model. Age is selected as
+FP1 with power 3. Here age is the only adjustment variable, and it is
+removed from the adjustment set when its own interaction is tested.</li>
+<li><strong>Step 2</strong> is the interaction test. The FP2 powers (3,
+3) are used in both groups. Adding the interaction reduces the deviance
+by 9.746 on 2 df.</li>
+<li><strong>Step 3</strong> summarises the decision: the interaction is
+selected (p = 0.008).</li>
+</ul>
+<div id="plotting-the-interaction" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Plotting the
+interaction</h2>
+<p><code>plot()</code> returns a list with one element per variable.
+Each element contains one plot per comparison with the reference
+group.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>p_unadj <span class="ot">&lt;-</span> <span class="fu">plot</span>(fit_unadjusted, <span class="at">terms =</span> <span class="st">&quot;age&quot;</span>, <span class="at">plot_type =</span> <span class="st">&quot;both&quot;</span>,</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>                <span class="at">show_title =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img role="img" aria-label="Unadjusted analysis: fitted age functions by group (left) and the Treatment-minus-Placebo log hazard ratio with 95% CI (right); paper, Figure 2." src="data:image/png;base64,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" alt="Unadjusted analysis: fitted age functions by group (left) and the Treatment-minus-Placebo log hazard ratio with 95% CI (right); paper, Figure 2." width="100%" />
+<p class="caption">
+Unadjusted analysis: fitted age functions by group (left) and the
+Treatment-minus-Placebo log hazard ratio with 95% CI (right); paper,
+Figure 2.
+</p>
+</div>
+<p>The right panel shows the log hazard ratio for Treatment vs Placebo
+as a function of age, the difference function <span class="math inline">\(\Delta\)</span> (paper, Section 2.3). The dashed
+line is the constant log hazard ratio from the model without
+interaction. Here, the benefit of treatment is largest in younger
+patients and decreases with age. The confidence intervals do not account
+for the selection of FP powers.</p>
+</div>
+<div id="predictions-at-chosen-ages" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> Predictions at chosen
+ages</h2>
+<p><code>type = &quot;both&quot;</code> returns the fitted function for each group
+and the difference between groups, all on the linear predictor
+scale.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>age_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  fit_unadjusted,</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">age =</span> <span class="fu">c</span>(<span class="dv">50</span>, <span class="dv">60</span>, <span class="dv">70</span>)),</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="at">terms =</span> <span class="st">&quot;age&quot;</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  <span class="at">level =</span> <span class="fl">0.95</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;both&quot;</span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>)</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>age_pred</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co">#&gt; =========================================================</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="co">#&gt; MFPI prediction  |  term: age  |  scale: linear predictor</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="co">#&gt; =========================================================</span></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co">#&gt; Partial fitted functions:</span></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#&gt;  age     group estimate    SE  lower  upper</span></span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co">#&gt;   50   Placebo    0.460 0.322 -0.170  1.090</span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="co">#&gt;   60   Placebo   -0.018 0.126 -0.266  0.230</span></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="co">#&gt;   70   Placebo   -0.154 0.080 -0.310  0.003</span></span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a><span class="co">#&gt;   50 Treatment   -1.014 0.404 -1.805 -0.223</span></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="co">#&gt;   60 Treatment   -0.821 0.199 -1.212 -0.430</span></span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a><span class="co">#&gt;   70 Treatment   -0.376 0.123 -0.618 -0.134</span></span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a><span class="co">#&gt; Differences:</span></span>
+<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a><span class="co">#&gt;  age          contrast     group reference estimate    SE  lower  upper</span></span>
+<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a><span class="co">#&gt;   50 Treatment-Placebo Treatment   Placebo   -1.474 0.517 -2.488 -0.460</span></span>
+<span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a><span class="co">#&gt;   60 Treatment-Placebo Treatment   Placebo   -0.802 0.235 -1.263 -0.342</span></span>
+<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a><span class="co">#&gt;   70 Treatment-Placebo Treatment   Placebo   -0.223 0.144 -0.505  0.060</span></span>
+<span id="cb6-27"><a href="#cb6-27" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-28"><a href="#cb6-28" tabindex="-1"></a><span class="co">#&gt; Note: Partial fitted functions comprise the intercept (when present), group main effect,</span></span>
+<span id="cb6-29"><a href="#cb6-29" tabindex="-1"></a><span class="co">#&gt; and group-specific FP function estimated from the adjusted interaction model.</span></span>
+<span id="cb6-30"><a href="#cb6-30" tabindex="-1"></a><span class="co">#&gt; Differences are comparison-group minus reference-group partial fitted functions.</span></span></code></pre></div>
+<p>The differences are age-specific log hazard ratios. Exponentiating
+them gives hazard ratios of about 0.23, 0.45 and 0.80 at ages 50, 60 and
+70 (paper, Section 4.2.2).</p>
+</div>
+</div>
+<div id="interaction-with-adjustment-for-prognostic-factors" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Interaction with
+adjustment for prognostic factors</h1>
+<p>The other baseline factors are now candidates for the adjustment
+model. Continuous variables enter through <code>fp()</code>; binary
+variables are entered directly. Age is still the only variable tested
+for interaction.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>fit_adjusted <span class="ot">&lt;-</span> <span class="fu">mfpi</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="fu">Surv</span>(survtime, cens) <span class="sc">~</span> rx <span class="sc">+</span> <span class="fu">fp</span>(age) <span class="sc">+</span> <span class="fu">fp</span>(wt) <span class="sc">+</span> <span class="fu">fp</span>(sbp) <span class="sc">+</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>    <span class="fu">fp</span>(dbp) <span class="sc">+</span> <span class="fu">fp</span>(sz) <span class="sc">+</span> <span class="fu">fp</span>(ap) <span class="sc">+</span> <span class="fu">fp</span>(hg) <span class="sc">+</span> <span class="fu">fp</span>(sg) <span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>    pf <span class="sc">+</span> hx <span class="sc">+</span> bm <span class="sc">+</span> stage <span class="sc">+</span> ekg,</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>  <span class="at">data =</span> advanced_prostate_cancer,</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;cox&quot;</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>  <span class="at">group_var =</span> <span class="st">&quot;rx&quot;</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>  <span class="at">interaction_vars =</span> <span class="st">&quot;age&quot;</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>  <span class="at">interaction_forms =</span> <span class="fu">c</span>(<span class="at">age =</span> <span class="st">&quot;fp2&quot;</span>),</span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>  <span class="at">flex =</span> <span class="st">&quot;flex1&quot;</span>,</span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>  <span class="at">ties =</span> <span class="st">&quot;breslow&quot;</span></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>)</span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a><span class="co">#&gt;   STEP 1: Selected Adjustment Model (MFP)</span></span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a><span class="co">#&gt;   Model: Cox proportional hazards</span></span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a><span class="co">#&gt;   Criterion: p-value</span></span>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a><span class="co">#&gt;       df_initial select alpha searched_fp df_final power1 power2</span></span>
+<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a><span class="co">#&gt; hx             1  0.050 0.050          no        1      1     NA</span></span>
+<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a><span class="co">#&gt; sz             4  0.050 0.050          no        1      1     NA</span></span>
+<span id="cb7-24"><a href="#cb7-24" tabindex="-1"></a><span class="co">#&gt; age            4  0.050 0.050         yes        4      3      3</span></span>
+<span id="cb7-25"><a href="#cb7-25" tabindex="-1"></a><span class="co">#&gt; ekg            1  0.050 0.050          no        1      1     NA</span></span>
+<span id="cb7-26"><a href="#cb7-26" tabindex="-1"></a><span class="co">#&gt; wt             4  0.050 0.050          no        1      1     NA</span></span>
+<span id="cb7-27"><a href="#cb7-27" tabindex="-1"></a><span class="co">#&gt; pf             1  0.050 0.050          no        1      1     NA</span></span>
+<span id="cb7-28"><a href="#cb7-28" tabindex="-1"></a><span class="co">#&gt; stage          1  0.050 0.050          no        1      1     NA</span></span>
+<span id="cb7-29"><a href="#cb7-29" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-30"><a href="#cb7-30" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-31"><a href="#cb7-31" tabindex="-1"></a><span class="co">#&gt;   Selected adjustment variables (7): hx, sz, age, ekg, wt, pf, stage</span></span>
+<span id="cb7-32"><a href="#cb7-32" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-33"><a href="#cb7-33" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb7-34"><a href="#cb7-34" tabindex="-1"></a><span class="co">#&gt;   STEP 2: Evaluating Interactions (flex = flex1)</span></span>
+<span id="cb7-35"><a href="#cb7-35" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb7-36"><a href="#cb7-36" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-37"><a href="#cb7-37" tabindex="-1"></a><span class="co">#&gt;   Group variable: rx</span></span>
+<span id="cb7-38"><a href="#cb7-38" tabindex="-1"></a><span class="co">#&gt;   Selection rule: p-value &lt; 0.050</span></span>
+<span id="cb7-39"><a href="#cb7-39" tabindex="-1"></a><span class="co">#&gt;   P-value adjustment: none</span></span>
+<span id="cb7-40"><a href="#cb7-40" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-41"><a href="#cb7-41" tabindex="-1"></a><span class="co">#&gt; ----------------------------------------------------------------------</span></span>
+<span id="cb7-42"><a href="#cb7-42" tabindex="-1"></a><span class="co">#&gt;   [1/1] Variable: &#39;age&#39; x &#39;rx&#39;</span></span>
+<span id="cb7-43"><a href="#cb7-43" tabindex="-1"></a><span class="co">#&gt;   Adjusting for: hx, sz, ekg, wt, pf, stage</span></span>
+<span id="cb7-44"><a href="#cb7-44" tabindex="-1"></a><span class="co">#&gt; ----------------------------------------------------------------------</span></span>
+<span id="cb7-45"><a href="#cb7-45" tabindex="-1"></a><span class="co">#&gt;  Type deviance_int deviance_diff df pvalue main_power int_power     </span></span>
+<span id="cb7-46"><a href="#cb7-46" tabindex="-1"></a><span class="co">#&gt;  FP2  3706.659     7.203         2  0.027  (3, 3)     (3, 3), (3, 3)</span></span>
+<span id="cb7-47"><a href="#cb7-47" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-48"><a href="#cb7-48" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-49"><a href="#cb7-49" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb7-50"><a href="#cb7-50" tabindex="-1"></a><span class="co">#&gt;   STEP 3: Interaction Summary</span></span>
+<span id="cb7-51"><a href="#cb7-51" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb7-52"><a href="#cb7-52" tabindex="-1"></a><span class="co">#&gt;   Variable     Type          p-value   selected</span></span>
+<span id="cb7-53"><a href="#cb7-53" tabindex="-1"></a><span class="co">#&gt; ----------------------------------------------------------------------</span></span>
+<span id="cb7-54"><a href="#cb7-54" tabindex="-1"></a><span class="co">#&gt;   age          FP2             0.027        Yes</span></span>
+<span id="cb7-55"><a href="#cb7-55" tabindex="-1"></a><span class="co">#&gt; ----------------------------------------------------------------------</span></span>
+<span id="cb7-56"><a href="#cb7-56" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-57"><a href="#cb7-57" tabindex="-1"></a><span class="co">#&gt; Done: 1 of 1 interactions selected.</span></span>
+<span id="cb7-58"><a href="#cb7-58" tabindex="-1"></a><span class="fu">print</span>(fit_adjusted)</span>
+<span id="cb7-59"><a href="#cb7-59" tabindex="-1"></a><span class="co">#&gt; =========================================</span></span>
+<span id="cb7-60"><a href="#cb7-60" tabindex="-1"></a><span class="co">#&gt; MFPI  |  n = 475 (events = 338)  |  flex1</span></span>
+<span id="cb7-61"><a href="#cb7-61" tabindex="-1"></a><span class="co">#&gt; =========================================</span></span>
+<span id="cb7-62"><a href="#cb7-62" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-63"><a href="#cb7-63" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb7-64"><a href="#cb7-64" tabindex="-1"></a><span class="co">#&gt; mfpi(formula = Surv(survtime, cens) ~ rx + fp(age) + fp(wt) + </span></span>
+<span id="cb7-65"><a href="#cb7-65" tabindex="-1"></a><span class="co">#&gt;     fp(sbp) + fp(dbp) + fp(sz) + fp(ap) + fp(hg) + fp(sg) + pf + </span></span>
+<span id="cb7-66"><a href="#cb7-66" tabindex="-1"></a><span class="co">#&gt;     hx + bm + stage + ekg, data = advanced_prostate_cancer, group_var = &quot;rx&quot;, </span></span>
+<span id="cb7-67"><a href="#cb7-67" tabindex="-1"></a><span class="co">#&gt;     interaction_vars = &quot;age&quot;, interaction_forms = c(age = &quot;fp2&quot;), </span></span>
+<span id="cb7-68"><a href="#cb7-68" tabindex="-1"></a><span class="co">#&gt;     flex = &quot;flex1&quot;, family = &quot;cox&quot;, ties = &quot;breslow&quot;)</span></span>
+<span id="cb7-69"><a href="#cb7-69" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-70"><a href="#cb7-70" tabindex="-1"></a><span class="co">#&gt; Model: Cox proportional hazards</span></span>
+<span id="cb7-71"><a href="#cb7-71" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-72"><a href="#cb7-72" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-73"><a href="#cb7-73" tabindex="-1"></a><span class="co">#&gt; Step 1 - Selected Adjustment Model (MFP):</span></span>
+<span id="cb7-74"><a href="#cb7-74" tabindex="-1"></a><span class="co">#&gt; ----------------------------------------- </span></span>
+<span id="cb7-75"><a href="#cb7-75" tabindex="-1"></a><span class="co">#&gt;       df_initial select alpha searched_fp df_final power1 power2</span></span>
+<span id="cb7-76"><a href="#cb7-76" tabindex="-1"></a><span class="co">#&gt; hx             1  0.050 0.050          no        1      1     NA</span></span>
+<span id="cb7-77"><a href="#cb7-77" tabindex="-1"></a><span class="co">#&gt; sz             4  0.050 0.050          no        1      1     NA</span></span>
+<span id="cb7-78"><a href="#cb7-78" tabindex="-1"></a><span class="co">#&gt; age            4  0.050 0.050         yes        4      3      3</span></span>
+<span id="cb7-79"><a href="#cb7-79" tabindex="-1"></a><span class="co">#&gt; ekg            1  0.050 0.050          no        1      1     NA</span></span>
+<span id="cb7-80"><a href="#cb7-80" tabindex="-1"></a><span class="co">#&gt; wt             4  0.050 0.050          no        1      1     NA</span></span>
+<span id="cb7-81"><a href="#cb7-81" tabindex="-1"></a><span class="co">#&gt; pf             1  0.050 0.050          no        1      1     NA</span></span>
+<span id="cb7-82"><a href="#cb7-82" tabindex="-1"></a><span class="co">#&gt; stage          1  0.050 0.050          no        1      1     NA</span></span>
+<span id="cb7-83"><a href="#cb7-83" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-84"><a href="#cb7-84" tabindex="-1"></a><span class="co">#&gt;   Selected adjustment variables (7): hx, sz, age, ekg, wt, pf, stage</span></span>
+<span id="cb7-85"><a href="#cb7-85" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-86"><a href="#cb7-86" tabindex="-1"></a><span class="co">#&gt; Step 2 - All Interaction Candidates:</span></span>
+<span id="cb7-87"><a href="#cb7-87" tabindex="-1"></a><span class="co">#&gt; ------------------------------------ </span></span>
+<span id="cb7-88"><a href="#cb7-88" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-89"><a href="#cb7-89" tabindex="-1"></a><span class="co">#&gt;   Grouping variable     : rx</span></span>
+<span id="cb7-90"><a href="#cb7-90" tabindex="-1"></a><span class="co">#&gt;   Selection criterion   : p-value</span></span>
+<span id="cb7-91"><a href="#cb7-91" tabindex="-1"></a><span class="co">#&gt;   Selection rule        : p-value &lt; 0.050</span></span>
+<span id="cb7-92"><a href="#cb7-92" tabindex="-1"></a><span class="co">#&gt;   P-value adjustment    : none</span></span>
+<span id="cb7-93"><a href="#cb7-93" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-94"><a href="#cb7-94" tabindex="-1"></a><span class="co">#&gt;  variable type deviance_int deviance_diff df_int p-value fp_powers_main</span></span>
+<span id="cb7-95"><a href="#cb7-95" tabindex="-1"></a><span class="co">#&gt;       age  FP2     3706.659         7.203      2   0.027         (3, 3)</span></span>
+<span id="cb7-96"><a href="#cb7-96" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-97"><a href="#cb7-97" tabindex="-1"></a><span class="co">#&gt;   FP powers by group level:</span></span>
+<span id="cb7-98"><a href="#cb7-98" tabindex="-1"></a><span class="co">#&gt;  variable type Group Group level fp_powers_int</span></span>
+<span id="cb7-99"><a href="#cb7-99" tabindex="-1"></a><span class="co">#&gt;       age  FP2    rx     Placebo        (3, 3)</span></span>
+<span id="cb7-100"><a href="#cb7-100" tabindex="-1"></a><span class="co">#&gt;       age  FP2    rx   Treatment        (3, 3)</span></span>
+<span id="cb7-101"><a href="#cb7-101" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-102"><a href="#cb7-102" tabindex="-1"></a><span class="co">#&gt; Step 3 - Interaction Summary:</span></span>
+<span id="cb7-103"><a href="#cb7-103" tabindex="-1"></a><span class="co">#&gt; ----------------------------- </span></span>
+<span id="cb7-104"><a href="#cb7-104" tabindex="-1"></a><span class="co">#&gt;  variable type p-value selected</span></span>
+<span id="cb7-105"><a href="#cb7-105" tabindex="-1"></a><span class="co">#&gt;       age  FP2   0.027      Yes</span></span></code></pre></div>
+<p>Step 1 now selects seven variables, with age as FP2 (3, 3). The
+interaction is weaker after adjustment but is still selected (p = 0.027;
+paper, Section 4.3). The plot is similar to the unadjusted one:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>p_adj <span class="ot">&lt;-</span> <span class="fu">plot</span>(fit_adjusted, <span class="at">terms =</span> <span class="st">&quot;age&quot;</span>, <span class="at">plot_type =</span> <span class="st">&quot;both&quot;</span>,</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>              <span class="at">show_title =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img role="img" aria-label="Adjusted analysis: fitted age functions by group (left) and the Treatment-minus-Placebo log hazard ratio with 95% CI (right); paper, Figure 3." src="data:image/png;base64,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" alt="Adjusted analysis: fitted age functions by group (left) and the Treatment-minus-Placebo log hazard ratio with 95% CI (right); paper, Figure 3." width="100%" />
+<p class="caption">
+Adjusted analysis: fitted age functions by group (left) and the
+Treatment-minus-Placebo log hazard ratio with 95% CI (right); paper,
+Figure 3.
+</p>
+</div>
+</div>
+<div id="selection-with-aic" class="section level1" number="5">
+<h1><span class="header-section-number">5</span> Selection with AIC</h1>
+<p>With <code>criterion = &quot;aic&quot;</code>, AIC is used in both stages. The
+interaction is selected when it lowers AIC by more than
+<code>min_improvement</code> (default 2). <code>criterion = &quot;bic&quot;</code>
+works the same way (paper, Section 2.6).</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>fit_aic <span class="ot">&lt;-</span> <span class="fu">mfpi</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  <span class="fu">Surv</span>(survtime, cens) <span class="sc">~</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>    rx <span class="sc">+</span> <span class="fu">fp</span>(age) <span class="sc">+</span> <span class="fu">fp</span>(wt) <span class="sc">+</span> <span class="fu">fp</span>(sbp) <span class="sc">+</span> <span class="fu">fp</span>(dbp) <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>    <span class="fu">fp</span>(sz) <span class="sc">+</span> <span class="fu">fp</span>(ap) <span class="sc">+</span> <span class="fu">fp</span>(hg) <span class="sc">+</span> <span class="fu">fp</span>(sg) <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>    pf <span class="sc">+</span> hx <span class="sc">+</span> bm <span class="sc">+</span> stage <span class="sc">+</span> ekg,</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>  <span class="at">data =</span> advanced_prostate_cancer,</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;cox&quot;</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>  <span class="at">group_var =</span> <span class="st">&quot;rx&quot;</span>,</span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>  <span class="at">interaction_vars =</span> <span class="st">&quot;age&quot;</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>  <span class="at">interaction_forms =</span> <span class="fu">c</span>(<span class="at">age =</span> <span class="st">&quot;fp2&quot;</span>),</span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a>  <span class="at">flex =</span> <span class="st">&quot;flex1&quot;</span>,</span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a>  <span class="at">ties =</span> <span class="st">&quot;breslow&quot;</span>,</span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a>  <span class="at">criterion =</span> <span class="st">&quot;aic&quot;</span>,</span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a>  <span class="at">min_improvement =</span> <span class="dv">2</span></span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a>)</span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a><span class="co">#&gt;   STEP 1: Selected Adjustment Model (MFP)</span></span>
+<span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a><span class="co">#&gt;   Model: Cox proportional hazards</span></span>
+<span id="cb9-22"><a href="#cb9-22" tabindex="-1"></a><span class="co">#&gt;   Criterion: AIC</span></span>
+<span id="cb9-23"><a href="#cb9-23" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-24"><a href="#cb9-24" tabindex="-1"></a><span class="co">#&gt;     df_initial searched_fp df_final power1 power2</span></span>
+<span id="cb9-25"><a href="#cb9-25" tabindex="-1"></a><span class="co">#&gt; hx           1          no        1      1     NA</span></span>
+<span id="cb9-26"><a href="#cb9-26" tabindex="-1"></a><span class="co">#&gt; sz           4          no        1      1     NA</span></span>
+<span id="cb9-27"><a href="#cb9-27" tabindex="-1"></a><span class="co">#&gt; age          4         yes        4      3      3</span></span>
+<span id="cb9-28"><a href="#cb9-28" tabindex="-1"></a><span class="co">#&gt; ekg          1          no        1      1     NA</span></span>
+<span id="cb9-29"><a href="#cb9-29" tabindex="-1"></a><span class="co">#&gt; hg           4          no        1      1     NA</span></span>
+<span id="cb9-30"><a href="#cb9-30" tabindex="-1"></a><span class="co">#&gt; wt           4          no        1      1     NA</span></span>
+<span id="cb9-31"><a href="#cb9-31" tabindex="-1"></a><span class="co">#&gt; sg           4          no        1      1     NA</span></span>
+<span id="cb9-32"><a href="#cb9-32" tabindex="-1"></a><span class="co">#&gt; pf           1          no        1      1     NA</span></span>
+<span id="cb9-33"><a href="#cb9-33" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-34"><a href="#cb9-34" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-35"><a href="#cb9-35" tabindex="-1"></a><span class="co">#&gt;   Selected adjustment variables (8): hx, sz, age, ekg, hg, wt, sg, pf</span></span>
+<span id="cb9-36"><a href="#cb9-36" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-37"><a href="#cb9-37" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb9-38"><a href="#cb9-38" tabindex="-1"></a><span class="co">#&gt;   STEP 2: Evaluating Interactions (flex = flex1)</span></span>
+<span id="cb9-39"><a href="#cb9-39" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb9-40"><a href="#cb9-40" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-41"><a href="#cb9-41" tabindex="-1"></a><span class="co">#&gt;   Group variable: rx</span></span>
+<span id="cb9-42"><a href="#cb9-42" tabindex="-1"></a><span class="co">#&gt;   Selection rule: AIC reduction &gt; 2.000</span></span>
+<span id="cb9-43"><a href="#cb9-43" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-44"><a href="#cb9-44" tabindex="-1"></a><span class="co">#&gt; ----------------------------------------------------------------------</span></span>
+<span id="cb9-45"><a href="#cb9-45" tabindex="-1"></a><span class="co">#&gt;   [1/1] Variable: &#39;age&#39; x &#39;rx&#39;</span></span>
+<span id="cb9-46"><a href="#cb9-46" tabindex="-1"></a><span class="co">#&gt;   Adjusting for: hx, sz, ekg, hg, wt, sg, pf</span></span>
+<span id="cb9-47"><a href="#cb9-47" tabindex="-1"></a><span class="co">#&gt; ----------------------------------------------------------------------</span></span>
+<span id="cb9-48"><a href="#cb9-48" tabindex="-1"></a><span class="co">#&gt;  Type AIC_main AIC_interaction dAIC  main_power int_power     </span></span>
+<span id="cb9-49"><a href="#cb9-49" tabindex="-1"></a><span class="co">#&gt;  FP2  3715.930 3712.248        3.681 (3, 3)     (3, 3), (3, 3)</span></span>
+<span id="cb9-50"><a href="#cb9-50" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-51"><a href="#cb9-51" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-52"><a href="#cb9-52" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb9-53"><a href="#cb9-53" tabindex="-1"></a><span class="co">#&gt;   STEP 3: Interaction Summary</span></span>
+<span id="cb9-54"><a href="#cb9-54" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb9-55"><a href="#cb9-55" tabindex="-1"></a><span class="co">#&gt;   Variable     Type             dAIC   selected</span></span>
+<span id="cb9-56"><a href="#cb9-56" tabindex="-1"></a><span class="co">#&gt; ----------------------------------------------------------------------</span></span>
+<span id="cb9-57"><a href="#cb9-57" tabindex="-1"></a><span class="co">#&gt;   age          FP2             3.681        Yes</span></span>
+<span id="cb9-58"><a href="#cb9-58" tabindex="-1"></a><span class="co">#&gt; ----------------------------------------------------------------------</span></span>
+<span id="cb9-59"><a href="#cb9-59" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-60"><a href="#cb9-60" tabindex="-1"></a><span class="co">#&gt; Done: 1 of 1 interactions selected.</span></span>
+<span id="cb9-61"><a href="#cb9-61" tabindex="-1"></a><span class="fu">print</span>(fit_aic)</span>
+<span id="cb9-62"><a href="#cb9-62" tabindex="-1"></a><span class="co">#&gt; =========================================</span></span>
+<span id="cb9-63"><a href="#cb9-63" tabindex="-1"></a><span class="co">#&gt; MFPI  |  n = 475 (events = 338)  |  flex1</span></span>
+<span id="cb9-64"><a href="#cb9-64" tabindex="-1"></a><span class="co">#&gt; =========================================</span></span>
+<span id="cb9-65"><a href="#cb9-65" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-66"><a href="#cb9-66" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb9-67"><a href="#cb9-67" tabindex="-1"></a><span class="co">#&gt; mfpi(formula = Surv(survtime, cens) ~ rx + fp(age) + fp(wt) + </span></span>
+<span id="cb9-68"><a href="#cb9-68" tabindex="-1"></a><span class="co">#&gt;     fp(sbp) + fp(dbp) + fp(sz) + fp(ap) + fp(hg) + fp(sg) + pf + </span></span>
+<span id="cb9-69"><a href="#cb9-69" tabindex="-1"></a><span class="co">#&gt;     hx + bm + stage + ekg, data = advanced_prostate_cancer, group_var = &quot;rx&quot;, </span></span>
+<span id="cb9-70"><a href="#cb9-70" tabindex="-1"></a><span class="co">#&gt;     interaction_vars = &quot;age&quot;, interaction_forms = c(age = &quot;fp2&quot;), </span></span>
+<span id="cb9-71"><a href="#cb9-71" tabindex="-1"></a><span class="co">#&gt;     flex = &quot;flex1&quot;, min_improvement = 2, family = &quot;cox&quot;, criterion = &quot;aic&quot;, </span></span>
+<span id="cb9-72"><a href="#cb9-72" tabindex="-1"></a><span class="co">#&gt;     ties = &quot;breslow&quot;)</span></span>
+<span id="cb9-73"><a href="#cb9-73" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-74"><a href="#cb9-74" tabindex="-1"></a><span class="co">#&gt; Model: Cox proportional hazards</span></span>
+<span id="cb9-75"><a href="#cb9-75" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-76"><a href="#cb9-76" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-77"><a href="#cb9-77" tabindex="-1"></a><span class="co">#&gt; Step 1 - Selected Adjustment Model (MFP):</span></span>
+<span id="cb9-78"><a href="#cb9-78" tabindex="-1"></a><span class="co">#&gt; ----------------------------------------- </span></span>
+<span id="cb9-79"><a href="#cb9-79" tabindex="-1"></a><span class="co">#&gt;     df_initial searched_fp df_final power1 power2</span></span>
+<span id="cb9-80"><a href="#cb9-80" tabindex="-1"></a><span class="co">#&gt; hx           1          no        1      1     NA</span></span>
+<span id="cb9-81"><a href="#cb9-81" tabindex="-1"></a><span class="co">#&gt; sz           4          no        1      1     NA</span></span>
+<span id="cb9-82"><a href="#cb9-82" tabindex="-1"></a><span class="co">#&gt; age          4         yes        4      3      3</span></span>
+<span id="cb9-83"><a href="#cb9-83" tabindex="-1"></a><span class="co">#&gt; ekg          1          no        1      1     NA</span></span>
+<span id="cb9-84"><a href="#cb9-84" tabindex="-1"></a><span class="co">#&gt; hg           4          no        1      1     NA</span></span>
+<span id="cb9-85"><a href="#cb9-85" tabindex="-1"></a><span class="co">#&gt; wt           4          no        1      1     NA</span></span>
+<span id="cb9-86"><a href="#cb9-86" tabindex="-1"></a><span class="co">#&gt; sg           4          no        1      1     NA</span></span>
+<span id="cb9-87"><a href="#cb9-87" tabindex="-1"></a><span class="co">#&gt; pf           1          no        1      1     NA</span></span>
+<span id="cb9-88"><a href="#cb9-88" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-89"><a href="#cb9-89" tabindex="-1"></a><span class="co">#&gt;   Selected adjustment variables (8): hx, sz, age, ekg, hg, wt, sg, pf</span></span>
+<span id="cb9-90"><a href="#cb9-90" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-91"><a href="#cb9-91" tabindex="-1"></a><span class="co">#&gt; Step 2 - All Interaction Candidates:</span></span>
+<span id="cb9-92"><a href="#cb9-92" tabindex="-1"></a><span class="co">#&gt; ------------------------------------ </span></span>
+<span id="cb9-93"><a href="#cb9-93" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-94"><a href="#cb9-94" tabindex="-1"></a><span class="co">#&gt;   Grouping variable     : rx</span></span>
+<span id="cb9-95"><a href="#cb9-95" tabindex="-1"></a><span class="co">#&gt;   Selection criterion   : AIC</span></span>
+<span id="cb9-96"><a href="#cb9-96" tabindex="-1"></a><span class="co">#&gt;   Selection rule        : AIC reduction &gt; 2.000</span></span>
+<span id="cb9-97"><a href="#cb9-97" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-98"><a href="#cb9-98" tabindex="-1"></a><span class="co">#&gt;  variable type AIC_main AIC_interaction  dAIC fp_powers_main</span></span>
+<span id="cb9-99"><a href="#cb9-99" tabindex="-1"></a><span class="co">#&gt;       age  FP2 3715.930        3712.248 3.681         (3, 3)</span></span>
+<span id="cb9-100"><a href="#cb9-100" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-101"><a href="#cb9-101" tabindex="-1"></a><span class="co">#&gt;   FP powers by group level:</span></span>
+<span id="cb9-102"><a href="#cb9-102" tabindex="-1"></a><span class="co">#&gt;  variable type Group Group level fp_powers_int</span></span>
+<span id="cb9-103"><a href="#cb9-103" tabindex="-1"></a><span class="co">#&gt;       age  FP2    rx     Placebo        (3, 3)</span></span>
+<span id="cb9-104"><a href="#cb9-104" tabindex="-1"></a><span class="co">#&gt;       age  FP2    rx   Treatment        (3, 3)</span></span>
+<span id="cb9-105"><a href="#cb9-105" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-106"><a href="#cb9-106" tabindex="-1"></a><span class="co">#&gt; Step 3 - Interaction Summary:</span></span>
+<span id="cb9-107"><a href="#cb9-107" tabindex="-1"></a><span class="co">#&gt; ----------------------------- </span></span>
+<span id="cb9-108"><a href="#cb9-108" tabindex="-1"></a><span class="co">#&gt;  variable type  dAIC selected</span></span>
+<span id="cb9-109"><a href="#cb9-109" tabindex="-1"></a><span class="co">#&gt;       age  FP2 3.681      Yes</span></span></code></pre></div>
+<p>AIC selects a slightly different adjustment model (eight variables)
+but the same interaction, with AIC lower by 3.681 (paper, Section
+4.4).</p>
+</div>
+<div id="several-interaction-candidates" class="section level1" number="6">
+<h1><span class="header-section-number">6</span> Several interaction
+candidates</h1>
+<p>Several continuous variables can be tested at once. Here age uses FP2
+and the other six use the default FP1.
+<code>p_adjust_method = &quot;holm&quot;</code> adjusts the p-values for the seven
+tests (paper, Section 2.6).</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>fit_multiple_interactions <span class="ot">&lt;-</span> <span class="fu">mfpi</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>  <span class="fu">Surv</span>(survtime, cens) <span class="sc">~</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>    rx <span class="sc">+</span> <span class="fu">fp</span>(age) <span class="sc">+</span> <span class="fu">fp</span>(wt) <span class="sc">+</span> <span class="fu">fp</span>(sbp) <span class="sc">+</span> <span class="fu">fp</span>(dbp) <span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>    <span class="fu">fp</span>(sz) <span class="sc">+</span> <span class="fu">fp</span>(ap) <span class="sc">+</span> <span class="fu">fp</span>(hg) <span class="sc">+</span> <span class="fu">fp</span>(sg) <span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>    pf <span class="sc">+</span> hx <span class="sc">+</span> bm <span class="sc">+</span> stage <span class="sc">+</span> ekg,</span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>  <span class="at">data =</span> advanced_prostate_cancer,</span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;cox&quot;</span>,</span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a>  <span class="at">group_var =</span> <span class="st">&quot;rx&quot;</span>,</span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a>  <span class="at">interaction_vars =</span> <span class="fu">c</span>(<span class="st">&quot;age&quot;</span>, <span class="st">&quot;wt&quot;</span>, <span class="st">&quot;sbp&quot;</span>, <span class="st">&quot;dbp&quot;</span>, <span class="st">&quot;sz&quot;</span>, <span class="st">&quot;ap&quot;</span>, <span class="st">&quot;hg&quot;</span>),</span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a>  <span class="at">interaction_forms =</span> <span class="fu">c</span>(<span class="at">age =</span> <span class="st">&quot;fp2&quot;</span>),</span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a>  <span class="at">flex =</span> <span class="st">&quot;flex1&quot;</span>,</span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a>  <span class="at">ties =</span> <span class="st">&quot;breslow&quot;</span>,</span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a>  <span class="at">p_adjust_method =</span> <span class="st">&quot;holm&quot;</span>,</span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a>)</span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="fu">print</span>(fit_multiple_interactions)</span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="co">#&gt; =========================================</span></span>
+<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a><span class="co">#&gt; MFPI  |  n = 475 (events = 338)  |  flex1</span></span>
+<span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a><span class="co">#&gt; =========================================</span></span>
+<span id="cb10-20"><a href="#cb10-20" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-21"><a href="#cb10-21" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb10-22"><a href="#cb10-22" tabindex="-1"></a><span class="co">#&gt; mfpi(formula = Surv(survtime, cens) ~ rx + fp(age) + fp(wt) + </span></span>
+<span id="cb10-23"><a href="#cb10-23" tabindex="-1"></a><span class="co">#&gt;     fp(sbp) + fp(dbp) + fp(sz) + fp(ap) + fp(hg) + fp(sg) + pf + </span></span>
+<span id="cb10-24"><a href="#cb10-24" tabindex="-1"></a><span class="co">#&gt;     hx + bm + stage + ekg, data = advanced_prostate_cancer, group_var = &quot;rx&quot;, </span></span>
+<span id="cb10-25"><a href="#cb10-25" tabindex="-1"></a><span class="co">#&gt;     interaction_vars = c(&quot;age&quot;, &quot;wt&quot;, &quot;sbp&quot;, &quot;dbp&quot;, &quot;sz&quot;, &quot;ap&quot;, </span></span>
+<span id="cb10-26"><a href="#cb10-26" tabindex="-1"></a><span class="co">#&gt;         &quot;hg&quot;), interaction_forms = c(age = &quot;fp2&quot;), flex = &quot;flex1&quot;, </span></span>
+<span id="cb10-27"><a href="#cb10-27" tabindex="-1"></a><span class="co">#&gt;     family = &quot;cox&quot;, ties = &quot;breslow&quot;, p_adjust_method = &quot;holm&quot;, </span></span>
+<span id="cb10-28"><a href="#cb10-28" tabindex="-1"></a><span class="co">#&gt;     verbose = FALSE)</span></span>
+<span id="cb10-29"><a href="#cb10-29" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-30"><a href="#cb10-30" tabindex="-1"></a><span class="co">#&gt; Model: Cox proportional hazards</span></span>
+<span id="cb10-31"><a href="#cb10-31" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-32"><a href="#cb10-32" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-33"><a href="#cb10-33" tabindex="-1"></a><span class="co">#&gt; Step 1 - Selected Adjustment Model (MFP):</span></span>
+<span id="cb10-34"><a href="#cb10-34" tabindex="-1"></a><span class="co">#&gt; ----------------------------------------- </span></span>
+<span id="cb10-35"><a href="#cb10-35" tabindex="-1"></a><span class="co">#&gt;       df_initial select alpha searched_fp df_final power1 power2</span></span>
+<span id="cb10-36"><a href="#cb10-36" tabindex="-1"></a><span class="co">#&gt; hx             1  0.050 0.050          no        1      1     NA</span></span>
+<span id="cb10-37"><a href="#cb10-37" tabindex="-1"></a><span class="co">#&gt; sz             4  0.050 0.050          no        1      1     NA</span></span>
+<span id="cb10-38"><a href="#cb10-38" tabindex="-1"></a><span class="co">#&gt; age            4  0.050 0.050         yes        4      3      3</span></span>
+<span id="cb10-39"><a href="#cb10-39" tabindex="-1"></a><span class="co">#&gt; ekg            1  0.050 0.050          no        1      1     NA</span></span>
+<span id="cb10-40"><a href="#cb10-40" tabindex="-1"></a><span class="co">#&gt; wt             4  0.050 0.050          no        1      1     NA</span></span>
+<span id="cb10-41"><a href="#cb10-41" tabindex="-1"></a><span class="co">#&gt; pf             1  0.050 0.050          no        1      1     NA</span></span>
+<span id="cb10-42"><a href="#cb10-42" tabindex="-1"></a><span class="co">#&gt; stage          1  0.050 0.050          no        1      1     NA</span></span>
+<span id="cb10-43"><a href="#cb10-43" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-44"><a href="#cb10-44" tabindex="-1"></a><span class="co">#&gt;   Selected adjustment variables (7): hx, sz, age, ekg, wt, pf, stage</span></span>
+<span id="cb10-45"><a href="#cb10-45" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-46"><a href="#cb10-46" tabindex="-1"></a><span class="co">#&gt; Step 2 - All Interaction Candidates:</span></span>
+<span id="cb10-47"><a href="#cb10-47" tabindex="-1"></a><span class="co">#&gt; ------------------------------------ </span></span>
+<span id="cb10-48"><a href="#cb10-48" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-49"><a href="#cb10-49" tabindex="-1"></a><span class="co">#&gt;   Grouping variable     : rx</span></span>
+<span id="cb10-50"><a href="#cb10-50" tabindex="-1"></a><span class="co">#&gt;   Selection criterion   : p-value</span></span>
+<span id="cb10-51"><a href="#cb10-51" tabindex="-1"></a><span class="co">#&gt;   Selection rule        : adjusted p-value &lt; 0.050</span></span>
+<span id="cb10-52"><a href="#cb10-52" tabindex="-1"></a><span class="co">#&gt;   P-value adjustment    : holm</span></span>
+<span id="cb10-53"><a href="#cb10-53" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-54"><a href="#cb10-54" tabindex="-1"></a><span class="co">#&gt;  variable type deviance_int deviance_diff df_int p-value fp_powers_main</span></span>
+<span id="cb10-55"><a href="#cb10-55" tabindex="-1"></a><span class="co">#&gt;       age  FP2     3706.659         7.203      2   0.027         (3, 3)</span></span>
+<span id="cb10-56"><a href="#cb10-56" tabindex="-1"></a><span class="co">#&gt;        wt  FP1     3712.079         0.190      1   0.663           (-2)</span></span>
+<span id="cb10-57"><a href="#cb10-57" tabindex="-1"></a><span class="co">#&gt;       sbp  FP1     3713.361         0.395      1   0.529            (3)</span></span>
+<span id="cb10-58"><a href="#cb10-58" tabindex="-1"></a><span class="co">#&gt;       dbp  FP1     3713.527         0.178      1   0.673         (-0.5)</span></span>
+<span id="cb10-59"><a href="#cb10-59" tabindex="-1"></a><span class="co">#&gt;        sz  FP1     3710.649         3.213      1   0.073            (1)</span></span>
+<span id="cb10-60"><a href="#cb10-60" tabindex="-1"></a><span class="co">#&gt;        ap  FP1     3706.813         3.877      1   0.049           (-2)</span></span>
+<span id="cb10-61"><a href="#cb10-61" tabindex="-1"></a><span class="co">#&gt;        hg  FP1     3706.688         0.955      1   0.329           (-2)</span></span>
+<span id="cb10-62"><a href="#cb10-62" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-63"><a href="#cb10-63" tabindex="-1"></a><span class="co">#&gt;   FP powers by group level:</span></span>
+<span id="cb10-64"><a href="#cb10-64" tabindex="-1"></a><span class="co">#&gt;  variable type Group Group level fp_powers_int</span></span>
+<span id="cb10-65"><a href="#cb10-65" tabindex="-1"></a><span class="co">#&gt;       age  FP2    rx     Placebo        (3, 3)</span></span>
+<span id="cb10-66"><a href="#cb10-66" tabindex="-1"></a><span class="co">#&gt;       age  FP2    rx   Treatment        (3, 3)</span></span>
+<span id="cb10-67"><a href="#cb10-67" tabindex="-1"></a><span class="co">#&gt;        wt  FP1    rx     Placebo          (-2)</span></span>
+<span id="cb10-68"><a href="#cb10-68" tabindex="-1"></a><span class="co">#&gt;        wt  FP1    rx   Treatment          (-2)</span></span>
+<span id="cb10-69"><a href="#cb10-69" tabindex="-1"></a><span class="co">#&gt;       sbp  FP1    rx     Placebo           (3)</span></span>
+<span id="cb10-70"><a href="#cb10-70" tabindex="-1"></a><span class="co">#&gt;       sbp  FP1    rx   Treatment           (3)</span></span>
+<span id="cb10-71"><a href="#cb10-71" tabindex="-1"></a><span class="co">#&gt;       dbp  FP1    rx     Placebo        (-0.5)</span></span>
+<span id="cb10-72"><a href="#cb10-72" tabindex="-1"></a><span class="co">#&gt;       dbp  FP1    rx   Treatment        (-0.5)</span></span>
+<span id="cb10-73"><a href="#cb10-73" tabindex="-1"></a><span class="co">#&gt;        sz  FP1    rx     Placebo           (1)</span></span>
+<span id="cb10-74"><a href="#cb10-74" tabindex="-1"></a><span class="co">#&gt;        sz  FP1    rx   Treatment           (1)</span></span>
+<span id="cb10-75"><a href="#cb10-75" tabindex="-1"></a><span class="co">#&gt;        ap  FP1    rx     Placebo          (-2)</span></span>
+<span id="cb10-76"><a href="#cb10-76" tabindex="-1"></a><span class="co">#&gt;        ap  FP1    rx   Treatment          (-2)</span></span>
+<span id="cb10-77"><a href="#cb10-77" tabindex="-1"></a><span class="co">#&gt;        hg  FP1    rx     Placebo          (-2)</span></span>
+<span id="cb10-78"><a href="#cb10-78" tabindex="-1"></a><span class="co">#&gt;        hg  FP1    rx   Treatment          (-2)</span></span>
+<span id="cb10-79"><a href="#cb10-79" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-80"><a href="#cb10-80" tabindex="-1"></a><span class="co">#&gt; Step 3 - Interaction Summary:</span></span>
+<span id="cb10-81"><a href="#cb10-81" tabindex="-1"></a><span class="co">#&gt; ----------------------------- </span></span>
+<span id="cb10-82"><a href="#cb10-82" tabindex="-1"></a><span class="co">#&gt;  variable type p_raw p_adjusted selected</span></span>
+<span id="cb10-83"><a href="#cb10-83" tabindex="-1"></a><span class="co">#&gt;       age  FP2 0.027      0.191       No</span></span>
+<span id="cb10-84"><a href="#cb10-84" tabindex="-1"></a><span class="co">#&gt;        wt  FP1 0.663      1.000       No</span></span>
+<span id="cb10-85"><a href="#cb10-85" tabindex="-1"></a><span class="co">#&gt;       sbp  FP1 0.529      1.000       No</span></span>
+<span id="cb10-86"><a href="#cb10-86" tabindex="-1"></a><span class="co">#&gt;       dbp  FP1 0.673      1.000       No</span></span>
+<span id="cb10-87"><a href="#cb10-87" tabindex="-1"></a><span class="co">#&gt;        sz  FP1 0.073      0.365       No</span></span>
+<span id="cb10-88"><a href="#cb10-88" tabindex="-1"></a><span class="co">#&gt;        ap  FP1 0.049      0.294       No</span></span>
+<span id="cb10-89"><a href="#cb10-89" tabindex="-1"></a><span class="co">#&gt;        hg  FP1 0.329      1.000       No</span></span></code></pre></div>
+<p>Step 3 now shows raw and adjusted p-values. Age (raw p = 0.027) and
+<code>ap</code> (raw p = 0.049) are below 0.05 before adjustment, but no
+interaction is selected after Holm adjustment (paper, Section 4.5).</p>
+</div>
+<div id="fixed-linear-adjustment-model" class="section level1" number="7">
+<h1><span class="header-section-number">7</span> Fixed linear adjustment
+model</h1>
+<p>The adjustment model can be prespecified instead of selected:</p>
+<ul>
+<li><code>fp(x, df = 1)</code> gives a linear adjustment effect, with no
+FP power search.</li>
+<li><code>keep</code> forces the named variables into the adjustment
+model.</li>
+</ul>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>fit_fixed_linear <span class="ot">&lt;-</span> <span class="fu">mfpi</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  <span class="fu">Surv</span>(survtime, cens) <span class="sc">~</span></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>    rx <span class="sc">+</span></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>    <span class="fu">fp</span>(age, <span class="at">df =</span> <span class="dv">1</span>) <span class="sc">+</span> <span class="fu">fp</span>(wt, <span class="at">df =</span> <span class="dv">1</span>) <span class="sc">+</span> <span class="fu">fp</span>(sbp, <span class="at">df =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>    <span class="fu">fp</span>(dbp, <span class="at">df =</span> <span class="dv">1</span>) <span class="sc">+</span> <span class="fu">fp</span>(sz, <span class="at">df =</span> <span class="dv">1</span>) <span class="sc">+</span> <span class="fu">fp</span>(ap, <span class="at">df =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>    <span class="fu">fp</span>(hg, <span class="at">df =</span> <span class="dv">1</span>) <span class="sc">+</span> <span class="fu">fp</span>(sg, <span class="at">df =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>    pf <span class="sc">+</span> hx <span class="sc">+</span> bm <span class="sc">+</span> stage <span class="sc">+</span> ekg,</span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>  <span class="at">data =</span> advanced_prostate_cancer,</span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;cox&quot;</span>,</span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a>  <span class="at">group_var =</span> <span class="st">&quot;rx&quot;</span>,</span>
+<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a>  <span class="at">interaction_vars =</span> <span class="st">&quot;age&quot;</span>,</span>
+<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a>  <span class="at">interaction_forms =</span> <span class="fu">c</span>(<span class="at">age =</span> <span class="st">&quot;fp2&quot;</span>),</span>
+<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a>  <span class="at">flex =</span> <span class="st">&quot;flex1&quot;</span>,</span>
+<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a>  <span class="at">ties =</span> <span class="st">&quot;breslow&quot;</span>,</span>
+<span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a>  <span class="at">criterion =</span> <span class="st">&quot;pvalue&quot;</span>,</span>
+<span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a>  <span class="at">keep =</span> <span class="fu">c</span>(<span class="st">&quot;age&quot;</span>, <span class="st">&quot;wt&quot;</span>, <span class="st">&quot;sbp&quot;</span>, <span class="st">&quot;dbp&quot;</span>, <span class="st">&quot;sz&quot;</span>, <span class="st">&quot;ap&quot;</span>, <span class="st">&quot;hg&quot;</span>, <span class="st">&quot;sg&quot;</span>,</span>
+<span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a>           <span class="st">&quot;pf&quot;</span>, <span class="st">&quot;hx&quot;</span>, <span class="st">&quot;bm&quot;</span>, <span class="st">&quot;stage&quot;</span>, <span class="st">&quot;ekg&quot;</span>)</span>
+<span id="cb11-18"><a href="#cb11-18" tabindex="-1"></a>)</span>
+<span id="cb11-19"><a href="#cb11-19" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-20"><a href="#cb11-20" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb11-21"><a href="#cb11-21" tabindex="-1"></a><span class="co">#&gt;   STEP 1: Selected Adjustment Model (MFP)</span></span>
+<span id="cb11-22"><a href="#cb11-22" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb11-23"><a href="#cb11-23" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-24"><a href="#cb11-24" tabindex="-1"></a><span class="co">#&gt;   Model: Cox proportional hazards</span></span>
+<span id="cb11-25"><a href="#cb11-25" tabindex="-1"></a><span class="co">#&gt;   Criterion: p-value</span></span>
+<span id="cb11-26"><a href="#cb11-26" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-27"><a href="#cb11-27" tabindex="-1"></a><span class="co">#&gt;       df_initial select alpha searched_fp df_final power1</span></span>
+<span id="cb11-28"><a href="#cb11-28" tabindex="-1"></a><span class="co">#&gt; hx             1  1.000 0.050          no        1      1</span></span>
+<span id="cb11-29"><a href="#cb11-29" tabindex="-1"></a><span class="co">#&gt; sz             1  1.000 0.050          no        1      1</span></span>
+<span id="cb11-30"><a href="#cb11-30" tabindex="-1"></a><span class="co">#&gt; age            1  1.000 0.050          no        1      1</span></span>
+<span id="cb11-31"><a href="#cb11-31" tabindex="-1"></a><span class="co">#&gt; ekg            1  1.000 0.050          no        1      1</span></span>
+<span id="cb11-32"><a href="#cb11-32" tabindex="-1"></a><span class="co">#&gt; hg             1  1.000 0.050          no        1      1</span></span>
+<span id="cb11-33"><a href="#cb11-33" tabindex="-1"></a><span class="co">#&gt; wt             1  1.000 0.050          no        1      1</span></span>
+<span id="cb11-34"><a href="#cb11-34" tabindex="-1"></a><span class="co">#&gt; sg             1  1.000 0.050          no        1      1</span></span>
+<span id="cb11-35"><a href="#cb11-35" tabindex="-1"></a><span class="co">#&gt; pf             1  1.000 0.050          no        1      1</span></span>
+<span id="cb11-36"><a href="#cb11-36" tabindex="-1"></a><span class="co">#&gt; bm             1  1.000 0.050          no        1      1</span></span>
+<span id="cb11-37"><a href="#cb11-37" tabindex="-1"></a><span class="co">#&gt; ap             1  1.000 0.050          no        1      1</span></span>
+<span id="cb11-38"><a href="#cb11-38" tabindex="-1"></a><span class="co">#&gt; dbp            1  1.000 0.050          no        1      1</span></span>
+<span id="cb11-39"><a href="#cb11-39" tabindex="-1"></a><span class="co">#&gt; sbp            1  1.000 0.050          no        1      1</span></span>
+<span id="cb11-40"><a href="#cb11-40" tabindex="-1"></a><span class="co">#&gt; stage          1  1.000 0.050          no        1      1</span></span>
+<span id="cb11-41"><a href="#cb11-41" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-42"><a href="#cb11-42" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-43"><a href="#cb11-43" tabindex="-1"></a><span class="co">#&gt;   Selected adjustment variables (13): hx, sz, age, ekg, hg, wt, sg, pf, bm, ap, dbp, sbp, stage</span></span>
+<span id="cb11-44"><a href="#cb11-44" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-45"><a href="#cb11-45" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb11-46"><a href="#cb11-46" tabindex="-1"></a><span class="co">#&gt;   STEP 2: Evaluating Interactions (flex = flex1)</span></span>
+<span id="cb11-47"><a href="#cb11-47" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb11-48"><a href="#cb11-48" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-49"><a href="#cb11-49" tabindex="-1"></a><span class="co">#&gt;   Group variable: rx</span></span>
+<span id="cb11-50"><a href="#cb11-50" tabindex="-1"></a><span class="co">#&gt;   Selection rule: p-value &lt; 0.050</span></span>
+<span id="cb11-51"><a href="#cb11-51" tabindex="-1"></a><span class="co">#&gt;   P-value adjustment: none</span></span>
+<span id="cb11-52"><a href="#cb11-52" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-53"><a href="#cb11-53" tabindex="-1"></a><span class="co">#&gt; ----------------------------------------------------------------------</span></span>
+<span id="cb11-54"><a href="#cb11-54" tabindex="-1"></a><span class="co">#&gt;   [1/1] Variable: &#39;age&#39; x &#39;rx&#39;</span></span>
+<span id="cb11-55"><a href="#cb11-55" tabindex="-1"></a><span class="co">#&gt;   Adjusting for: hx, sz, ekg, hg, wt, sg, pf, bm, ap, dbp, sbp, stage</span></span>
+<span id="cb11-56"><a href="#cb11-56" tabindex="-1"></a><span class="co">#&gt; ----------------------------------------------------------------------</span></span>
+<span id="cb11-57"><a href="#cb11-57" tabindex="-1"></a><span class="co">#&gt;  Type deviance_int deviance_diff df pvalue main_power int_power     </span></span>
+<span id="cb11-58"><a href="#cb11-58" tabindex="-1"></a><span class="co">#&gt;  FP2  3694.694     8.004         2  0.018  (3, 3)     (3, 3), (3, 3)</span></span>
+<span id="cb11-59"><a href="#cb11-59" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-60"><a href="#cb11-60" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-61"><a href="#cb11-61" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb11-62"><a href="#cb11-62" tabindex="-1"></a><span class="co">#&gt;   STEP 3: Interaction Summary</span></span>
+<span id="cb11-63"><a href="#cb11-63" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb11-64"><a href="#cb11-64" tabindex="-1"></a><span class="co">#&gt;   Variable     Type          p-value   selected</span></span>
+<span id="cb11-65"><a href="#cb11-65" tabindex="-1"></a><span class="co">#&gt; ----------------------------------------------------------------------</span></span>
+<span id="cb11-66"><a href="#cb11-66" tabindex="-1"></a><span class="co">#&gt;   age          FP2             0.018        Yes</span></span>
+<span id="cb11-67"><a href="#cb11-67" tabindex="-1"></a><span class="co">#&gt; ----------------------------------------------------------------------</span></span>
+<span id="cb11-68"><a href="#cb11-68" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-69"><a href="#cb11-69" tabindex="-1"></a><span class="co">#&gt; Done: 1 of 1 interactions selected.</span></span>
+<span id="cb11-70"><a href="#cb11-70" tabindex="-1"></a><span class="fu">print</span>(fit_fixed_linear)</span>
+<span id="cb11-71"><a href="#cb11-71" tabindex="-1"></a><span class="co">#&gt; =========================================</span></span>
+<span id="cb11-72"><a href="#cb11-72" tabindex="-1"></a><span class="co">#&gt; MFPI  |  n = 475 (events = 338)  |  flex1</span></span>
+<span id="cb11-73"><a href="#cb11-73" tabindex="-1"></a><span class="co">#&gt; =========================================</span></span>
+<span id="cb11-74"><a href="#cb11-74" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-75"><a href="#cb11-75" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb11-76"><a href="#cb11-76" tabindex="-1"></a><span class="co">#&gt; mfpi(formula = Surv(survtime, cens) ~ rx + fp(age, df = 1) + </span></span>
+<span id="cb11-77"><a href="#cb11-77" tabindex="-1"></a><span class="co">#&gt;     fp(wt, df = 1) + fp(sbp, df = 1) + fp(dbp, df = 1) + fp(sz, </span></span>
+<span id="cb11-78"><a href="#cb11-78" tabindex="-1"></a><span class="co">#&gt;     df = 1) + fp(ap, df = 1) + fp(hg, df = 1) + fp(sg, df = 1) + </span></span>
+<span id="cb11-79"><a href="#cb11-79" tabindex="-1"></a><span class="co">#&gt;     pf + hx + bm + stage + ekg, data = advanced_prostate_cancer, </span></span>
+<span id="cb11-80"><a href="#cb11-80" tabindex="-1"></a><span class="co">#&gt;     group_var = &quot;rx&quot;, interaction_vars = &quot;age&quot;, interaction_forms = c(age = &quot;fp2&quot;), </span></span>
+<span id="cb11-81"><a href="#cb11-81" tabindex="-1"></a><span class="co">#&gt;     flex = &quot;flex1&quot;, family = &quot;cox&quot;, criterion = &quot;pvalue&quot;, keep = c(&quot;age&quot;, </span></span>
+<span id="cb11-82"><a href="#cb11-82" tabindex="-1"></a><span class="co">#&gt;         &quot;wt&quot;, &quot;sbp&quot;, &quot;dbp&quot;, &quot;sz&quot;, &quot;ap&quot;, &quot;hg&quot;, &quot;sg&quot;, &quot;pf&quot;, &quot;hx&quot;, </span></span>
+<span id="cb11-83"><a href="#cb11-83" tabindex="-1"></a><span class="co">#&gt;         &quot;bm&quot;, &quot;stage&quot;, &quot;ekg&quot;), ties = &quot;breslow&quot;)</span></span>
+<span id="cb11-84"><a href="#cb11-84" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-85"><a href="#cb11-85" tabindex="-1"></a><span class="co">#&gt; Model: Cox proportional hazards</span></span>
+<span id="cb11-86"><a href="#cb11-86" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-87"><a href="#cb11-87" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-88"><a href="#cb11-88" tabindex="-1"></a><span class="co">#&gt; Step 1 - Selected Adjustment Model (MFP):</span></span>
+<span id="cb11-89"><a href="#cb11-89" tabindex="-1"></a><span class="co">#&gt; ----------------------------------------- </span></span>
+<span id="cb11-90"><a href="#cb11-90" tabindex="-1"></a><span class="co">#&gt;       df_initial select alpha searched_fp df_final power1</span></span>
+<span id="cb11-91"><a href="#cb11-91" tabindex="-1"></a><span class="co">#&gt; hx             1  1.000 0.050          no        1      1</span></span>
+<span id="cb11-92"><a href="#cb11-92" tabindex="-1"></a><span class="co">#&gt; sz             1  1.000 0.050          no        1      1</span></span>
+<span id="cb11-93"><a href="#cb11-93" tabindex="-1"></a><span class="co">#&gt; age            1  1.000 0.050          no        1      1</span></span>
+<span id="cb11-94"><a href="#cb11-94" tabindex="-1"></a><span class="co">#&gt; ekg            1  1.000 0.050          no        1      1</span></span>
+<span id="cb11-95"><a href="#cb11-95" tabindex="-1"></a><span class="co">#&gt; hg             1  1.000 0.050          no        1      1</span></span>
+<span id="cb11-96"><a href="#cb11-96" tabindex="-1"></a><span class="co">#&gt; wt             1  1.000 0.050          no        1      1</span></span>
+<span id="cb11-97"><a href="#cb11-97" tabindex="-1"></a><span class="co">#&gt; sg             1  1.000 0.050          no        1      1</span></span>
+<span id="cb11-98"><a href="#cb11-98" tabindex="-1"></a><span class="co">#&gt; pf             1  1.000 0.050          no        1      1</span></span>
+<span id="cb11-99"><a href="#cb11-99" tabindex="-1"></a><span class="co">#&gt; bm             1  1.000 0.050          no        1      1</span></span>
+<span id="cb11-100"><a href="#cb11-100" tabindex="-1"></a><span class="co">#&gt; ap             1  1.000 0.050          no        1      1</span></span>
+<span id="cb11-101"><a href="#cb11-101" tabindex="-1"></a><span class="co">#&gt; dbp            1  1.000 0.050          no        1      1</span></span>
+<span id="cb11-102"><a href="#cb11-102" tabindex="-1"></a><span class="co">#&gt; sbp            1  1.000 0.050          no        1      1</span></span>
+<span id="cb11-103"><a href="#cb11-103" tabindex="-1"></a><span class="co">#&gt; stage          1  1.000 0.050          no        1      1</span></span>
+<span id="cb11-104"><a href="#cb11-104" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-105"><a href="#cb11-105" tabindex="-1"></a><span class="co">#&gt;   Selected adjustment variables (13): hx, sz, age, ekg, hg, wt, sg, pf, bm, ap, dbp, sbp, stage</span></span>
+<span id="cb11-106"><a href="#cb11-106" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-107"><a href="#cb11-107" tabindex="-1"></a><span class="co">#&gt; Step 2 - All Interaction Candidates:</span></span>
+<span id="cb11-108"><a href="#cb11-108" tabindex="-1"></a><span class="co">#&gt; ------------------------------------ </span></span>
+<span id="cb11-109"><a href="#cb11-109" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-110"><a href="#cb11-110" tabindex="-1"></a><span class="co">#&gt;   Grouping variable     : rx</span></span>
+<span id="cb11-111"><a href="#cb11-111" tabindex="-1"></a><span class="co">#&gt;   Selection criterion   : p-value</span></span>
+<span id="cb11-112"><a href="#cb11-112" tabindex="-1"></a><span class="co">#&gt;   Selection rule        : p-value &lt; 0.050</span></span>
+<span id="cb11-113"><a href="#cb11-113" tabindex="-1"></a><span class="co">#&gt;   P-value adjustment    : none</span></span>
+<span id="cb11-114"><a href="#cb11-114" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-115"><a href="#cb11-115" tabindex="-1"></a><span class="co">#&gt;  variable type deviance_int deviance_diff df_int p-value fp_powers_main</span></span>
+<span id="cb11-116"><a href="#cb11-116" tabindex="-1"></a><span class="co">#&gt;       age  FP2     3694.694         8.004      2   0.018         (3, 3)</span></span>
+<span id="cb11-117"><a href="#cb11-117" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-118"><a href="#cb11-118" tabindex="-1"></a><span class="co">#&gt;   FP powers by group level:</span></span>
+<span id="cb11-119"><a href="#cb11-119" tabindex="-1"></a><span class="co">#&gt;  variable type Group Group level fp_powers_int</span></span>
+<span id="cb11-120"><a href="#cb11-120" tabindex="-1"></a><span class="co">#&gt;       age  FP2    rx     Placebo        (3, 3)</span></span>
+<span id="cb11-121"><a href="#cb11-121" tabindex="-1"></a><span class="co">#&gt;       age  FP2    rx   Treatment        (3, 3)</span></span>
+<span id="cb11-122"><a href="#cb11-122" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-123"><a href="#cb11-123" tabindex="-1"></a><span class="co">#&gt; Step 3 - Interaction Summary:</span></span>
+<span id="cb11-124"><a href="#cb11-124" tabindex="-1"></a><span class="co">#&gt; ----------------------------- </span></span>
+<span id="cb11-125"><a href="#cb11-125" tabindex="-1"></a><span class="co">#&gt;  variable type p-value selected</span></span>
+<span id="cb11-126"><a href="#cb11-126" tabindex="-1"></a><span class="co">#&gt;       age  FP2   0.018      Yes</span></span></code></pre></div>
+<p><code>fp(age, df = 1)</code> affects only the adjustment model. The
+interaction with treatment is still FP2, as set by
+<code>interaction_forms</code>. To use a known transformation in the
+adjustment model (for example, <code>log(x)</code>), create the
+transformed variable first and enter it with <code>df = 1</code> (paper,
+Section 4.6).</p>
+</div>
+<div id="more-than-two-groups" class="section level1" number="8">
+<h1><span class="header-section-number">8</span> More than two
+groups</h1>
+<p><code>group_var</code> may have more than two levels. Each
+non-reference group is compared with the reference group, and
+<code>plot()</code> and <code>predict()</code> return one comparison per
+non-reference group (paper, Section 4.7).</p>
+</div>
+<div id="the-xy-interface" class="section level1" number="9">
+<h1><span class="header-section-number">9</span> The xy interface</h1>
+<p><code>mfpi()</code> also accepts a predictor data frame
+<code>x</code> and a response <code>y</code> instead of a formula.
+Columns are matched by name, so their order does not matter (paper,
+Appendix A).</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">with</span>(advanced_prostate_cancer, <span class="fu">Surv</span>(survtime, cens))</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>x <span class="ot">&lt;-</span> advanced_prostate_cancer[, <span class="fu">c</span>(</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>  <span class="st">&quot;rx&quot;</span>, <span class="st">&quot;age&quot;</span>, <span class="st">&quot;wt&quot;</span>, <span class="st">&quot;sbp&quot;</span>, <span class="st">&quot;dbp&quot;</span>, <span class="st">&quot;sz&quot;</span>, <span class="st">&quot;ap&quot;</span>, <span class="st">&quot;hg&quot;</span>, <span class="st">&quot;sg&quot;</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>  <span class="st">&quot;pf&quot;</span>, <span class="st">&quot;hx&quot;</span>, <span class="st">&quot;bm&quot;</span>, <span class="st">&quot;stage&quot;</span>, <span class="st">&quot;ekg&quot;</span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>)]</span></code></pre></div>
+<p>The unadjusted analysis passes only <code>rx</code> and
+<code>age</code>, and gives the same results as
+<code>fit_unadjusted</code>:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>fit_unadjusted_xy <span class="ot">&lt;-</span> <span class="fu">mfpi</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  <span class="at">x =</span> x[, <span class="fu">c</span>(<span class="st">&quot;rx&quot;</span>, <span class="st">&quot;age&quot;</span>)],</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>  <span class="at">y =</span> y,</span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;cox&quot;</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>  <span class="at">group_var =</span> <span class="st">&quot;rx&quot;</span>,</span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a>  <span class="at">interaction_vars =</span> <span class="st">&quot;age&quot;</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a>  <span class="at">interaction_forms =</span> <span class="fu">c</span>(<span class="at">age =</span> <span class="st">&quot;fp2&quot;</span>),</span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a>  <span class="at">flex =</span> <span class="st">&quot;flex1&quot;</span>,</span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a>  <span class="at">ties =</span> <span class="st">&quot;breslow&quot;</span></span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a>)</span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a><span class="co">#&gt;   STEP 1: Selected Adjustment Model (MFP)</span></span>
+<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a><span class="co">#&gt;   Model: Cox proportional hazards</span></span>
+<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a><span class="co">#&gt;   Criterion: p-value</span></span>
+<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-19"><a href="#cb13-19" tabindex="-1"></a><span class="co">#&gt;     df_initial select alpha searched_fp df_final power1</span></span>
+<span id="cb13-20"><a href="#cb13-20" tabindex="-1"></a><span class="co">#&gt; age          4  0.050 0.050         yes        2      3</span></span>
+<span id="cb13-21"><a href="#cb13-21" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-22"><a href="#cb13-22" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-23"><a href="#cb13-23" tabindex="-1"></a><span class="co">#&gt;   Selected adjustment variables (1): age</span></span>
+<span id="cb13-24"><a href="#cb13-24" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-25"><a href="#cb13-25" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-26"><a href="#cb13-26" tabindex="-1"></a><span class="co">#&gt;   STEP 2: Evaluating Interactions (flex = flex1)</span></span>
+<span id="cb13-27"><a href="#cb13-27" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-28"><a href="#cb13-28" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-29"><a href="#cb13-29" tabindex="-1"></a><span class="co">#&gt;   Group variable: rx</span></span>
+<span id="cb13-30"><a href="#cb13-30" tabindex="-1"></a><span class="co">#&gt;   Selection rule: p-value &lt; 0.050</span></span>
+<span id="cb13-31"><a href="#cb13-31" tabindex="-1"></a><span class="co">#&gt;   P-value adjustment: none</span></span>
+<span id="cb13-32"><a href="#cb13-32" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-33"><a href="#cb13-33" tabindex="-1"></a><span class="co">#&gt; ----------------------------------------------------------------------</span></span>
+<span id="cb13-34"><a href="#cb13-34" tabindex="-1"></a><span class="co">#&gt;   [1/1] Variable: &#39;age&#39; x &#39;rx&#39;</span></span>
+<span id="cb13-35"><a href="#cb13-35" tabindex="-1"></a><span class="co">#&gt;   Adjusting for: (none)</span></span>
+<span id="cb13-36"><a href="#cb13-36" tabindex="-1"></a><span class="co">#&gt; ----------------------------------------------------------------------</span></span>
+<span id="cb13-37"><a href="#cb13-37" tabindex="-1"></a><span class="co">#&gt;  Type deviance_int deviance_diff df pvalue main_power int_power     </span></span>
+<span id="cb13-38"><a href="#cb13-38" tabindex="-1"></a><span class="co">#&gt;  FP2  3766.216     9.746         2  0.008  (3, 3)     (3, 3), (3, 3)</span></span>
+<span id="cb13-39"><a href="#cb13-39" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-40"><a href="#cb13-40" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-41"><a href="#cb13-41" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-42"><a href="#cb13-42" tabindex="-1"></a><span class="co">#&gt;   STEP 3: Interaction Summary</span></span>
+<span id="cb13-43"><a href="#cb13-43" tabindex="-1"></a><span class="co">#&gt; ======================================================================</span></span>
+<span id="cb13-44"><a href="#cb13-44" tabindex="-1"></a><span class="co">#&gt;   Variable     Type          p-value   selected</span></span>
+<span id="cb13-45"><a href="#cb13-45" tabindex="-1"></a><span class="co">#&gt; ----------------------------------------------------------------------</span></span>
+<span id="cb13-46"><a href="#cb13-46" tabindex="-1"></a><span class="co">#&gt;   age          FP2             0.008        Yes</span></span>
+<span id="cb13-47"><a href="#cb13-47" tabindex="-1"></a><span class="co">#&gt; ----------------------------------------------------------------------</span></span>
+<span id="cb13-48"><a href="#cb13-48" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-49"><a href="#cb13-49" tabindex="-1"></a><span class="co">#&gt; Done: 1 of 1 interactions selected.</span></span>
+<span id="cb13-50"><a href="#cb13-50" tabindex="-1"></a><span class="fu">print</span>(fit_unadjusted_xy)</span>
+<span id="cb13-51"><a href="#cb13-51" tabindex="-1"></a><span class="co">#&gt; =========================================</span></span>
+<span id="cb13-52"><a href="#cb13-52" tabindex="-1"></a><span class="co">#&gt; MFPI  |  n = 475 (events = 338)  |  flex1</span></span>
+<span id="cb13-53"><a href="#cb13-53" tabindex="-1"></a><span class="co">#&gt; =========================================</span></span>
+<span id="cb13-54"><a href="#cb13-54" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-55"><a href="#cb13-55" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb13-56"><a href="#cb13-56" tabindex="-1"></a><span class="co">#&gt; mfpi(x = x[, c(&quot;rx&quot;, &quot;age&quot;)], y = y, group_var = &quot;rx&quot;, interaction_vars = &quot;age&quot;, </span></span>
+<span id="cb13-57"><a href="#cb13-57" tabindex="-1"></a><span class="co">#&gt;     interaction_forms = c(age = &quot;fp2&quot;), flex = &quot;flex1&quot;, family = &quot;cox&quot;, </span></span>
+<span id="cb13-58"><a href="#cb13-58" tabindex="-1"></a><span class="co">#&gt;     ties = &quot;breslow&quot;)</span></span>
+<span id="cb13-59"><a href="#cb13-59" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-60"><a href="#cb13-60" tabindex="-1"></a><span class="co">#&gt; Model: Cox proportional hazards</span></span>
+<span id="cb13-61"><a href="#cb13-61" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-62"><a href="#cb13-62" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-63"><a href="#cb13-63" tabindex="-1"></a><span class="co">#&gt; Step 1 - Selected Adjustment Model (MFP):</span></span>
+<span id="cb13-64"><a href="#cb13-64" tabindex="-1"></a><span class="co">#&gt; ----------------------------------------- </span></span>
+<span id="cb13-65"><a href="#cb13-65" tabindex="-1"></a><span class="co">#&gt;     df_initial select alpha searched_fp df_final power1</span></span>
+<span id="cb13-66"><a href="#cb13-66" tabindex="-1"></a><span class="co">#&gt; age          4  0.050 0.050         yes        2      3</span></span>
+<span id="cb13-67"><a href="#cb13-67" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-68"><a href="#cb13-68" tabindex="-1"></a><span class="co">#&gt;   Selected adjustment variables (1): age</span></span>
+<span id="cb13-69"><a href="#cb13-69" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-70"><a href="#cb13-70" tabindex="-1"></a><span class="co">#&gt; Step 2 - All Interaction Candidates:</span></span>
+<span id="cb13-71"><a href="#cb13-71" tabindex="-1"></a><span class="co">#&gt; ------------------------------------ </span></span>
+<span id="cb13-72"><a href="#cb13-72" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-73"><a href="#cb13-73" tabindex="-1"></a><span class="co">#&gt;   Grouping variable     : rx</span></span>
+<span id="cb13-74"><a href="#cb13-74" tabindex="-1"></a><span class="co">#&gt;   Selection criterion   : p-value</span></span>
+<span id="cb13-75"><a href="#cb13-75" tabindex="-1"></a><span class="co">#&gt;   Selection rule        : p-value &lt; 0.050</span></span>
+<span id="cb13-76"><a href="#cb13-76" tabindex="-1"></a><span class="co">#&gt;   P-value adjustment    : none</span></span>
+<span id="cb13-77"><a href="#cb13-77" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-78"><a href="#cb13-78" tabindex="-1"></a><span class="co">#&gt;  variable type deviance_int deviance_diff df_int p-value fp_powers_main</span></span>
+<span id="cb13-79"><a href="#cb13-79" tabindex="-1"></a><span class="co">#&gt;       age  FP2     3766.216         9.746      2   0.008         (3, 3)</span></span>
+<span id="cb13-80"><a href="#cb13-80" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-81"><a href="#cb13-81" tabindex="-1"></a><span class="co">#&gt;   FP powers by group level:</span></span>
+<span id="cb13-82"><a href="#cb13-82" tabindex="-1"></a><span class="co">#&gt;  variable type Group Group level fp_powers_int</span></span>
+<span id="cb13-83"><a href="#cb13-83" tabindex="-1"></a><span class="co">#&gt;       age  FP2    rx     Placebo        (3, 3)</span></span>
+<span id="cb13-84"><a href="#cb13-84" tabindex="-1"></a><span class="co">#&gt;       age  FP2    rx   Treatment        (3, 3)</span></span>
+<span id="cb13-85"><a href="#cb13-85" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-86"><a href="#cb13-86" tabindex="-1"></a><span class="co">#&gt; Step 3 - Interaction Summary:</span></span>
+<span id="cb13-87"><a href="#cb13-87" tabindex="-1"></a><span class="co">#&gt; ----------------------------- </span></span>
+<span id="cb13-88"><a href="#cb13-88" tabindex="-1"></a><span class="co">#&gt;  variable type p-value selected</span></span>
+<span id="cb13-89"><a href="#cb13-89" tabindex="-1"></a><span class="co">#&gt;       age  FP2   0.008      Yes</span></span></code></pre></div>
+<p>Passing all columns of <code>x</code> makes every other variable a
+candidate for the adjustment model. The following calls give the same
+results as the adjusted, AIC and multiple-candidate formula fits
+above:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>fit_adjusted_xy <span class="ot">&lt;-</span> <span class="fu">mfpi</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>  <span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">family =</span> <span class="st">&quot;cox&quot;</span>,</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>  <span class="at">group_var =</span> <span class="st">&quot;rx&quot;</span>, <span class="at">interaction_vars =</span> <span class="st">&quot;age&quot;</span>,</span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>  <span class="at">interaction_forms =</span> <span class="fu">c</span>(<span class="at">age =</span> <span class="st">&quot;fp2&quot;</span>), <span class="at">flex =</span> <span class="st">&quot;flex1&quot;</span>, <span class="at">ties =</span> <span class="st">&quot;breslow&quot;</span></span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>)</span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a>fit_aic_xy <span class="ot">&lt;-</span> <span class="fu">mfpi</span>(</span>
+<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a>  <span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">family =</span> <span class="st">&quot;cox&quot;</span>,</span>
+<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a>  <span class="at">group_var =</span> <span class="st">&quot;rx&quot;</span>, <span class="at">interaction_vars =</span> <span class="st">&quot;age&quot;</span>,</span>
+<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a>  <span class="at">interaction_forms =</span> <span class="fu">c</span>(<span class="at">age =</span> <span class="st">&quot;fp2&quot;</span>), <span class="at">flex =</span> <span class="st">&quot;flex1&quot;</span>, <span class="at">ties =</span> <span class="st">&quot;breslow&quot;</span>,</span>
+<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a>  <span class="at">criterion =</span> <span class="st">&quot;aic&quot;</span>, <span class="at">min_improvement =</span> <span class="dv">2</span></span>
+<span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a>)</span>
+<span id="cb14-13"><a href="#cb14-13" tabindex="-1"></a></span>
+<span id="cb14-14"><a href="#cb14-14" tabindex="-1"></a>fit_multiple_xy <span class="ot">&lt;-</span> <span class="fu">mfpi</span>(</span>
+<span id="cb14-15"><a href="#cb14-15" tabindex="-1"></a>  <span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">family =</span> <span class="st">&quot;cox&quot;</span>,</span>
+<span id="cb14-16"><a href="#cb14-16" tabindex="-1"></a>  <span class="at">group_var =</span> <span class="st">&quot;rx&quot;</span>,</span>
+<span id="cb14-17"><a href="#cb14-17" tabindex="-1"></a>  <span class="at">interaction_vars =</span> <span class="fu">c</span>(<span class="st">&quot;age&quot;</span>, <span class="st">&quot;wt&quot;</span>, <span class="st">&quot;sbp&quot;</span>, <span class="st">&quot;dbp&quot;</span>, <span class="st">&quot;sz&quot;</span>, <span class="st">&quot;ap&quot;</span>, <span class="st">&quot;hg&quot;</span>),</span>
+<span id="cb14-18"><a href="#cb14-18" tabindex="-1"></a>  <span class="at">interaction_forms =</span> <span class="fu">c</span>(<span class="at">age =</span> <span class="st">&quot;fp2&quot;</span>), <span class="at">flex =</span> <span class="st">&quot;flex1&quot;</span>, <span class="at">ties =</span> <span class="st">&quot;breslow&quot;</span>,</span>
+<span id="cb14-19"><a href="#cb14-19" tabindex="-1"></a>  <span class="at">p_adjust_method =</span> <span class="st">&quot;holm&quot;</span>, <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb14-20"><a href="#cb14-20" tabindex="-1"></a>)</span></code></pre></div>
+<p>Without a formula, settings that <code>fp()</code> would set are
+given as named vectors. For the fixed linear adjustment model,
+<code>df</code> sets each continuous variable to linear and
+<code>keep</code> forces all variables in:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>fit_fixed_linear_xy <span class="ot">&lt;-</span> <span class="fu">mfpi</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>  <span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">family =</span> <span class="st">&quot;cox&quot;</span>,</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>  <span class="at">group_var =</span> <span class="st">&quot;rx&quot;</span>, <span class="at">interaction_vars =</span> <span class="st">&quot;age&quot;</span>,</span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>  <span class="at">interaction_forms =</span> <span class="fu">c</span>(<span class="at">age =</span> <span class="st">&quot;fp2&quot;</span>), <span class="at">flex =</span> <span class="st">&quot;flex1&quot;</span>, <span class="at">ties =</span> <span class="st">&quot;breslow&quot;</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>  <span class="at">criterion =</span> <span class="st">&quot;pvalue&quot;</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a>  <span class="at">df =</span> <span class="fu">c</span>(<span class="at">age =</span> <span class="dv">1</span>, <span class="at">wt =</span> <span class="dv">1</span>, <span class="at">sbp =</span> <span class="dv">1</span>, <span class="at">dbp =</span> <span class="dv">1</span>,</span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a>         <span class="at">sz =</span> <span class="dv">1</span>, <span class="at">ap =</span> <span class="dv">1</span>, <span class="at">hg =</span> <span class="dv">1</span>, <span class="at">sg =</span> <span class="dv">1</span>),</span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a>  <span class="at">keep =</span> <span class="fu">c</span>(<span class="st">&quot;age&quot;</span>, <span class="st">&quot;wt&quot;</span>, <span class="st">&quot;sbp&quot;</span>, <span class="st">&quot;dbp&quot;</span>, <span class="st">&quot;sz&quot;</span>, <span class="st">&quot;ap&quot;</span>, <span class="st">&quot;hg&quot;</span>, <span class="st">&quot;sg&quot;</span>,</span>
+<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a>           <span class="st">&quot;pf&quot;</span>, <span class="st">&quot;hx&quot;</span>, <span class="st">&quot;bm&quot;</span>, <span class="st">&quot;stage&quot;</span>, <span class="st">&quot;ekg&quot;</span>)</span>
+<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a>)</span></code></pre></div>
+<p>Centering (<code>center</code>, <code>center_type</code>) works the
+same in both interfaces. It does not change the fitted values, the
+difference function, the selected powers or the p-values (paper,
+Appendix A.7).</p>
+</div>
+<div id="further-details" class="section level1" number="10">
+<h1><span class="header-section-number">10</span> Further details</h1>
+<p>See <code>?mfpi</code>, <code>?predict.mfpi</code> and
+<code>?plot.mfpi</code> for all arguments. The paper describes the MFPI
+methodology (Section 2), the software interface and data requirements
+(Section 3), the application in more detail (Section 4) and a comparison
+with the Stata <code>mfpi</code> command (Section 5 and Appendix B).</p>
+<div id="paper-reference" class="section level2" number="10.1">
+<h2><span class="header-section-number">10.1</span> Paper reference</h2>
+<p>Kipruto, E., Royston, P., and Sauerbrei, W. <em>Multivariable
+Fractional Polynomial Interaction Models in R</em>. Manuscript submitted
+to the <em>Journal of Statistical Software</em>.</p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

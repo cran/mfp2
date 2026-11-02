@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Edwin Kipruto" />
+<meta name="author" content="Michael Kammer" />
+<meta name="author" content="Patrick Royston" />
+<meta name="author" content="Willi Sauerbrei" />
+
+<meta name="date" content="2026-11-02" />
+
+<title>MFP Methodology and Practical Considerations</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } 
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.at { color: #204a87; } 
+code span.bn { color: #0000cf; } 
+code span.cf { color: #204a87; font-weight: bold; } 
+code span.ch { color: #4e9a06; } 
+code span.cn { color: #8f5902; } 
+code span.co { color: #8f5902; font-style: italic; } 
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.dt { color: #204a87; } 
+code span.dv { color: #0000cf; } 
+code span.er { color: #a40000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #0000cf; } 
+code span.fu { color: #204a87; font-weight: bold; } 
+code span.im { } 
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.kw { color: #204a87; font-weight: bold; } 
+code span.op { color: #ce5c00; font-weight: bold; } 
+code span.ot { color: #8f5902; } 
+code span.pp { color: #8f5902; font-style: italic; } 
+code span.sc { color: #ce5c00; font-weight: bold; } 
+code span.ss { color: #4e9a06; } 
+code span.st { color: #4e9a06; } 
+code span.va { color: #000000; } 
+code span.vs { color: #4e9a06; } 
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">MFP Methodology and Practical
+Considerations</h1>
+<h3 class="subtitle">Package version 1.1.0</h3>
+<h4 class="author">Edwin Kipruto</h4>
+<h4 class="author">Michael Kammer</h4>
+<h4 class="author">Patrick Royston</h4>
+<h4 class="author">Willi Sauerbrei</h4>
+<h4 class="date">November 02, 2026</h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#mfp-methodology-and-practical-considerations" id="toc-mfp-methodology-and-practical-considerations"><span class="toc-section-number">1</span> MFP methodology and practical
+considerations</a>
+<ul>
+<li><a href="#overview-of-mfp" id="toc-overview-of-mfp"><span class="toc-section-number">1.1</span> Overview of MFP</a></li>
+<li><a href="#fractional-polynomial-models-for-a-continuous-variable" id="toc-fractional-polynomial-models-for-a-continuous-variable"><span class="toc-section-number">1.2</span> Fractional polynomial models for a
+continuous variable</a></li>
+<li><a href="#function-selection-procedure-fsp" id="toc-function-selection-procedure-fsp"><span class="toc-section-number">1.3</span> Function selection procedure
+(FSP)</a></li>
+<li><a href="#multivariable-mfp-procedure" id="toc-multivariable-mfp-procedure"><span class="toc-section-number">1.4</span> Multivariable MFP procedure</a>
+<ul>
+<li><a href="#backfitting-cycles" id="toc-backfitting-cycles"><span class="toc-section-number">1.4.1</span> Backfitting cycles</a></li>
+</ul></li>
+<li><a href="#key-issues-and-approaches-to-handling-them" id="toc-key-issues-and-approaches-to-handling-them"><span class="toc-section-number">1.5</span> Key issues and approaches to
+handling them</a></li>
+<li><a href="#the-variable-has-to-be-positive" id="toc-the-variable-has-to-be-positive"><span class="toc-section-number">1.6</span> The variable has to be
+positive</a></li>
+<li><a href="#sample-size-and-influential-observations" id="toc-sample-size-and-influential-observations"><span class="toc-section-number">1.7</span> Sample size and influential
+observations</a></li>
+<li><a href="#lack-of-fit" id="toc-lack-of-fit"><span class="toc-section-number">1.8</span> Lack of fit</a></li>
+<li><a href="#local-features" id="toc-local-features"><span class="toc-section-number">1.9</span> Local features</a></li>
+<li><a href="#model-selection-uncertainty-and-limitations" id="toc-model-selection-uncertainty-and-limitations"><span class="toc-section-number">1.10</span> Model-selection uncertainty and
+limitations</a></li>
+<li><a href="#references" id="toc-references"><span class="toc-section-number">1.11</span> References</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="mfp-methodology-and-practical-considerations" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> MFP methodology and
+practical considerations</h1>
+<p>This vignette explains the statistical motivation and methodology of
+multivariable fractional polynomial modelling. It covers fractional
+polynomial functions, functional-form selection, backward elimination,
+sample-size considerations, influential observations, lack of fit, and
+selected methodological extensions.</p>
+<p>For practical guidance on fitting, inspecting, predicting from, and
+plotting models with the <code>mfp2</code> package, see
+<code>vignette(&quot;mfp2&quot;, package = &quot;mfp2&quot;)</code>.</p>
+<div id="overview-of-mfp" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Overview of MFP</h2>
+<p>Multivariable regression models are widely used across various fields
+of science where empirical data is analyzed. In model building, many
+researchers often assume a linear function for continuous variables,
+sometimes after applying “standard” transformations such as logarithms,
+or dividing the variable into several categories. Assuming linearity
+without considering non-linear relationships may hinder the detection of
+effects or cause the effects to be mismodeled. Categorizing continuous
+variables, which results in modelling implausible step functions, is a
+common practice but widely criticized (Royston et al. 2006; Sauerbrei et
+al. 2020).</p>
+<p>When building a descriptive model with the aim of capturing the data
+structure parsimoniously, two components should be considered: first,
+variable selection to identify the subset of “important” covariates that
+have a significant impact on the outcome and second, whether non-linear
+relationships of continuous covariates fit the data (substantially)
+better.</p>
+<p>The MFP approach has been proposed as a pragmatic method that
+combines variable and function selection simultaneously in multivariable
+regression modelling. This approach identifies non-linear functions for
+continuous variables if sufficiently supported by the data, and
+eliminates covariates with no or weak effects by backward elimination
+(BE). Despite its relative simplicity, the selected models often capture
+the essential information from the data. The MFP models are relatively
+straightforward to interpret and report, which is important for
+transportability and practical usability.</p>
+<p>In detail, the MFP procedure combines: - variable selection through
+backward elimination with - selection of fractional polynomial (FP)
+functions for continuous variables.</p>
+<p>The analyst must decide on nominal significance levels <span class="math inline">\((\alpha_1, \alpha_2)\)</span> for both components.
+This choice has a strong influence on the complexity of the final model.
+Often, the same significance levels <span class="math inline">\((\alpha_1 = \alpha_2)\)</span> are used for both
+components, but they can also differ. The decision regarding these
+significance levels strongly depends on the specific aim of the
+analysis.</p>
+<p>The remainder of this vignette introduces fractional polynomial
+functions and the multivariable fractional polynomial approach. It
+describes functional-form selection for continuous covariates, variable
+selection, practical considerations, and selected methodological
+extensions.</p>
+<p>For guidance on fitting models with the <code>mfp2</code> package,
+see <code>vignette(&quot;mfp2&quot;, package = &quot;mfp2&quot;)</code>. Dedicated guidance
+is also available for approximate cumulative distribution
+transformations, spike-at-zero modelling, and MFPI interaction
+analysis:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">vignette</span>(<span class="st">&quot;acd-transformations&quot;</span>, <span class="at">package =</span> <span class="st">&quot;mfp2&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">vignette</span>(<span class="st">&quot;spike-at-zero&quot;</span>, <span class="at">package =</span> <span class="st">&quot;mfp2&quot;</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">vignette</span>(<span class="st">&quot;interactions&quot;</span>, <span class="at">package =</span> <span class="st">&quot;mfp2&quot;</span>)</span></code></pre></div>
+<p>For more comprehensive information about MFP and its extensions, see
+Royston and Sauerbrei (2008), the references at the end of this
+vignette, and the <a href="https://mfp.imbi.uni-freiburg.de/">MFP
+website</a>.</p>
+</div>
+<div id="fractional-polynomial-models-for-a-continuous-variable" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Fractional polynomial
+models for a continuous variable</h2>
+<p>Suppose that we have an outcome variable, a single continuous
+covariate <span class="math inline">\(x\)</span>, and a regression model
+relating them. A starting point is the straight-line model <span class="math inline">\(\beta_1x\)</span> (for simplicity, we suppress the
+constant term, <span class="math inline">\(\beta_0\)</span>). Often, a
+straight line is an adequate description of the relationship, but other
+models should be investigated for possible improvements in ﬁt. A simple
+extension of the straight line is a power transformation model, <span class="math inline">\(\beta_1x^{p}\)</span>. The latter model has often
+been used by practitioners in an ad hoc way, utilizing different choices
+of <span class="math inline">\(p\)</span>. Royston and Altman (1994)
+formalized the model by calling it a ﬁrst-degree fractional polynomial
+or FP1 function. The power <span class="math inline">\(p\)</span> is
+chosen from a pragmatically restricted set of eight elements: <span class="math inline">\(S = \{-2, -1, -0.5, 0, 0.5, 1, 2, 3\}\)</span>,
+where <span class="math inline">\(x^0\)</span> denotes the natural
+logarithm <span class="math inline">\(\log(x)\)</span>.</p>
+<p>As with polynomial regression, extension from one-term FP1 functions
+to more complex and ﬂexible two-term FP2 functions is straightforward.
+The quadratic function <span class="math inline">\(\beta_1x^1 +
+\beta_2x^2\)</span> is written as <span class="math inline">\(\beta_1x^{p1} + \beta_2x^{p2}\)</span> in FP
+terminology. The powers <span class="math inline">\(p1=1\)</span> and
+<span class="math inline">\(p2=2\)</span> are members of set <span class="math inline">\(S\)</span>. Royston and Altman extended the class
+of FP2 functions with different powers to cases with equal powers (<span class="math inline">\(p1=p2=p\)</span>) by defining them as <span class="math inline">\(\beta_1x^p + \beta_2x^p \log(x)\)</span>. These
+are known as repeated-powers functions. Detailed definitions of FP
+functions are given in Section 4.3.1 of Royston and Sauerbrei (2008).
+For formal deﬁnitions, we use their notation.</p>
+<p>FP1 functions are always monotonic and those with power <span class="math inline">\(p &lt; 0\)</span> have an asymptote as <span class="math inline">\(x\rightarrow \infty\)</span>. FP2 functions may be
+monotonic or unimodal (i.e., have one maximum or one minimum for
+positive values of <span class="math inline">\(x\)</span>), and they
+have an asymptote as <span class="math inline">\(x\rightarrow
+\infty\)</span> when both <span class="math inline">\(p1\)</span> and
+<span class="math inline">\(p2\)</span> are negative. For more details,
+see Royston and Sauerbrei (2008), Section 4.4.</p>
+<p>Extension to FPm is straightforward but <span class="math inline">\(m&gt;2\)</span> is hardly needed when modelling
+health research data with MFP. For <span class="math inline">\(m =
+2\)</span>, there are 44 models available within the set of FP powers
+(<span class="math inline">\(S\)</span>), consisting of 8 FP1 models and
+36 FP2 models. Although the allowed class of FP functions may seem
+limited, it encompasses a wide range of diverse shapes. This is
+illustrated in the Figure below, with the left panel displaying eight
+FP1 powers and the right panel depicting a subset of FP2 powers.</p>
+<div class="figure" style="text-align: center">
+<img role="img" aria-label="Illustration of the flexibility of the FP family. 8 FP1 functions (left panel) and a subset of FP2 functions (right panel). FPs are global functions. See section 1.3.1.4 for a proposed extension of local features" src="data:image/png;base64,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" alt="Illustration of the flexibility of the FP family. 8 FP1 functions (left panel) and a subset of FP2 functions (right panel). FPs are global functions. See section 1.3.1.4 for a proposed extension of local features" width="100%" />
+<p class="caption">
+Illustration of the flexibility of the FP family. 8 FP1 functions (left
+panel) and a subset of FP2 functions (right panel). FPs are global
+functions. See section 1.3.1.4 for a proposed extension of local
+features
+</p>
+</div>
+<p>Based on extensive experience with real data and several simulation
+studies, FP1 and FP2 are generally considered adequate in the context of
+multivariable model building, particularly when the selection of
+variable and functional forms are required (Royston and Sauerbrei 2008;
+Sauerbrei et al. 2007a).</p>
+</div>
+<div id="function-selection-procedure-fsp" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Function selection
+procedure (FSP)</h2>
+<p>This short description of the MFP methodology content is based on
+previously published encyclopedia articles (Sauerbrei and Royston, 2011;
+Sauerbrei and Royston, 2016).</p>
+<p>Choosing the best fitting FP1, FP2, or linear function for a given
+dataset is conducted by grid search, computing the deviance (minus twice
+the maximized log-likelihood) and making a decision for the best
+function based on a suitable algorithm (e.g. via pre-defined
+significance levels).</p>
+<p>The default function in most implementations of MFP is a linear
+function. Therefore, unless the data support a more complex FP function,
+a straight line model is chosen. There are occasional exceptions. For
+example, to model time-varying regression coefficients in the Cox model,
+Sauerbrei et al. (2007b) chose a default time (<span class="math inline">\(t\)</span>) transformation of <span class="math inline">\(\log (t)\)</span> rather than <span class="math inline">\(t\)</span>.</p>
+<p>It can be assumed that deviance diﬀerence between an FPm and an
+FP(m-1) model is distributed approximately as central <span class="math inline">\(\chi^2\)</span> on 2 degrees of freedom (d.f.)
+(Royston and Sauerbrei 2008, Chapter 4.9; Ambler and Royston (2001)). To
+select a speciﬁc function, a closed test procedure was proposed (Royston
+and Sauerbrei 2008, Section 4.10). The complexity of the final function
+requires pre-definition of a variable-selection level and a
+functional-form selection level, together with the degree (<span class="math inline">\(m\)</span>) of the most complex FP model allowed.
+In <code>mfp2()</code>, these are called <code>select</code> and
+<code>alpha</code>. Typical choices are
+<code>select = alpha = 0.05</code> and FP2 (<span class="math inline">\(m = 2\)</span>). The closed test for <span class="math inline">\(m = 2\)</span> runs as follows:</p>
+<ol style="list-style-type: decimal">
+<li>Test the best FP2 model for <span class="math inline">\(x\)</span>
+against the null model using 4 d.f. and the <code>select</code> level.
+If the test is not significant, omit <span class="math inline">\(x\)</span> and stop.</li>
+<li>Test the best FP2 model against a straight line using 3 d.f. and the
+<code>alpha</code> level. If the test is not significant, retain a
+straight line and stop.</li>
+<li>Test the best FP2 model against the best FP1 model using 2 d.f. and
+the <code>alpha</code> level. Retain FP1 if this test is not significant
+and FP2 otherwise.</li>
+</ol>
+<p>Step 1 is a test of the overall association of the outcome with <span class="math inline">\(x\)</span>. Step 2 examines the evidence for
+nonlinearity. Step 3 chooses between a simpler or a more complex
+non-linear model.</p>
+</div>
+<div id="multivariable-mfp-procedure" class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> Multivariable MFP
+procedure</h2>
+<p>When developing a multivariable model with a relatively large number
+of candidate covariates (say between 10 and 30, we are not envisaging
+the case of high-dimensional data), an important distinction is between
+descriptive, predictive and explanatory modelling (Shmueli, 2010). MFP
+was mainly developed for descriptive modelling, aiming to capture the
+data structure parsimoniously. Nevertheless, a suitable descriptive
+model often has a fit similar to a model whose aim is good prediction
+(Sauerbrei et al. 2007a). In some fields, the term explanatory modelling
+is used exclusively for testing causal theory.</p>
+<p>In many areas of science, the main interest often lies in the
+identification of inﬂuential variables and determination of appropriate
+functional forms for continuous variables. Often, linearity is presumed
+without checking this important assumption. The MFP procedure was
+proposed as a pragmatic strategy to investigate whether nonlinear
+functions can improve the model ﬁt (Royston and Sauerbrei, 2008;
+Sauerbrei and Royston, 1999). MFP combines backward elimination for the
+selection of variables with a systematic search for possible
+nonlinearity by the function selection procedure (FSP). The extension is
+feasible with any type of regression model to which BE is applicable.
+The philosophy behind MFP modeling is to create interpretable and
+relatively simple models (Sauerbrei et al. 2007a). Consequently, an
+analyst using MFP should be less concerned about failing to include
+variables with a weak eﬀect or failing to identify minor curvature in a
+functional form of a continuous covariate.</p>
+<div id="backfitting-cycles" class="section level3" number="1.4.1">
+<h3><span class="header-section-number">1.4.1</span> Backfitting
+cycles</h3>
+<p>The multivariable procedure updates one covariate at a time while
+adjusting for the current functions of all other retained covariates.
+The first cycle starts from linear representations, orders covariates
+according to the chosen <code>xorder</code>, and applies the variable
+and function selection procedure to each in turn. Later cycles revisit
+every retained candidate using the functions selected for the other
+covariates in the preceding updates. Iteration stops when the selected
+variables, powers, and SAZ decisions no longer change, or when the
+maximum number of <code>cycles</code> is reached. This cycling is
+essential because the preferred form for one covariate may change after
+another covariate is removed or transformed. Modiﬁcations that may
+improve MFP models are combination with post-estimation shrinkage
+(Dunkler et al., 2016, R-package shrink) and a more systematic check for
+overlooked local features (Binder and Sauerbrei, 2010, currently not
+implemented in the <code>mfp2</code> package). Successful use of MFP
+requires only general knowledge about building regression models.</p>
+<p>Two nominal signiﬁcance level values are the main tuning parameters:
+<span class="math inline">\(\alpha_1\)</span> for selecting variables
+with BE (in the ﬁrst step of the FSP) and <span class="math inline">\(\alpha_2\)</span> for comparing the ﬁt of
+functions within the FSP. Often, <span class="math inline">\(\alpha_1=\alpha_2\)</span> is a good choice. If
+available, subject-matter knowledge should replace or at least guide
+data-dependent model choice. Only minor modiﬁcations are required to
+incorporate various types of subject-matter knowledge into MFP modeling.
+For a detailed example, see Sauerbrei and Royston (1999).
+Recommendations for MFP modeling in practice are given in Sauerbrei et
+al. (2007a) and in Royston and Sauerbrei (2008, Section 12.2). In
+<code>mfp2()</code>, the p-value procedure may instead be replaced by
+direct AIC or BIC comparison of the candidate models by setting
+<code>criterion = &quot;aic&quot;</code> or <code>criterion = &quot;bic&quot;</code>.</p>
+</div>
+</div>
+<div id="key-issues-and-approaches-to-handling-them" class="section level2" number="1.5">
+<h2><span class="header-section-number">1.5</span> Key issues and
+approaches to handling them</h2>
+<p>Mainly focusing on the FP component, we brieﬂy mention key issues of
+MFP modeling and refer to the literature for further reading. A brief
+overview is also given on the MFP website (<a href="https://mfp.imbi.uni-freiburg.de/fp/" class="uri">https://mfp.imbi.uni-freiburg.de/fp/</a>). Regarding
+variable selection, we have summarized relevant issues and provided
+arguments for backward elimination as our preferred strategy (Royston
+and Sauerbrei 2008, Chapter 2). Even when a search for model improvement
+using a nonlinear function is not considered, that is, all functions are
+assumed linear, it is infeasible to derive a suitable and stable model
+for description in small datasets. Below we provide some information
+about sample size needed, but implicitly we assume that the sample size
+is “suﬃcient”.</p>
+</div>
+<div id="the-variable-has-to-be-positive" class="section level2" number="1.6">
+<h2><span class="header-section-number">1.6</span> The variable has to
+be positive</h2>
+<p>The class of FP1 and FP2 functions includes a log and other
+transformations which require that the continuous variable must be
+positive. A preliminary origin-shift transformation can be applied as
+shown in section 2.3.2.</p>
+<p>Sometimes, a continuous variable has a spike at zero: a proportion of
+individuals have an observed value of zero, while the positive values
+follow a continuous distribution. Common epidemiological examples
+include cigarette consumption and alcohol intake.</p>
+<p>Royston and Sauerbrei (2008, Section 4.15) and Royston et al. (2010)
+proposed modelling such variables using a binary indicator that
+distinguishes zero from positive values together with a fractional
+polynomial function for the positive component. A two-stage procedure
+assesses whether the final model should retain both components or only
+one of them. Becher et al. (2012) proposed a modification of this
+approach.</p>
+<p>Spike-at-zero modelling is available in <code>mfp2</code>. In the
+formula interface, it can be requested with
+<code>fp(x, spike = TRUE)</code>. In the matrix interface, the variable
+can be specified through <code>spike_vars</code>. See
+<code>vignette(&quot;spike-at-zero&quot;, package = &quot;mfp2&quot;)</code> for practical
+guidance.</p>
+</div>
+<div id="sample-size-and-influential-observations" class="section level2" number="1.7">
+<h2><span class="header-section-number">1.7</span> Sample size and
+influential observations</h2>
+<p>All statistical models are potentially adversely aﬀected by
+inﬂuential observations or “outliers”. However, compared with models
+that comprise only linear functions, the situation may be more critical
+for FP functions because logarithmic or negative power transformations
+may produce extreme functional estimates at small values of <span class="math inline">\(x\)</span>. Conversely, the same may happen with
+large positive powers at large values of <span class="math inline">\(x\)</span>. Such transformations may create
+inﬂuential observations that may affect parts of the FSP. To mitigate
+the impact of influential observations, it is important to assess the
+robustness of FP functions. Some suggestions for investigating
+inﬂuential points (IPs) and handling such issues in MFP modeling can be
+found in Royston and Sauerbrei (2008, Chapters 5 and 10) and their paper
+on improving the robustness of FP models (Royston and Sauerbrei, 2007).
+Using synthetic data, a more detailed investigation of IPs is given in
+Sauerbrei et al. (2023). The authors conclude that for smaller sample
+sizes, IPs and low power are important reasons that the MFP approach may
+not be able to identify underlying functional relationships for
+continuous variables and selected models might differ substantially from
+the true model. However, for larger sample sizes (about 50 or more
+observations per variable) a carefully conducted MFP analysis (which
+includes checks for IPs and other aspects of model criticism) is often a
+suitable way to select a multivariable regression model which includes
+continuous variables.</p>
+</div>
+<div id="lack-of-fit" class="section level2" number="1.8">
+<h2><span class="header-section-number">1.8</span> Lack of fit</h2>
+<p>Based on experience we argue that FP1 or FP2 functions are sufficient
+to derive a good fitting model. Occasionally, higher order FP functions
+(with <span class="math inline">\(m = 3\)</span> or <span class="math inline">\(m = 4\)</span>) are useful in data analysis.
+Negative exponential or other types of pre-transformations may help to
+improve the fit of a complex function or may allow to incorporate
+subject specific knowledge. An example is discussed in section 3.1.3 in
+Sauerbrei and Royston (1999).</p>
+</div>
+<div id="local-features" class="section level2" number="1.9">
+<h2><span class="header-section-number">1.9</span> Local features</h2>
+<p>Unlike splines which have a local interpretation of the fitted
+function, FPs provide a curve with a global interpretation. To
+investigate possible “overlooked” local features of an FP function,
+Binder and Sauerbrei (2010) conducted a systematic analysis of residuals
+from a model obtained by MFP. If local features are detected by their
+MFP + L procedure, statistically signiﬁcant local polynomials are then
+parsimoniously added to the FP function. This enables the identification
+and incorporation of local features that may have been missed by the
+global FP function. This approach is not currently implemented in the
+<code>mfp2</code> package, but it is a potential area for future
+extensions.</p>
+</div>
+<div id="model-selection-uncertainty-and-limitations" class="section level2" number="1.10">
+<h2><span class="header-section-number">1.10</span> Model-selection
+uncertainty and limitations</h2>
+<p>MFP is a model-selection procedure. Standard errors, confidence
+intervals, and p-values from the final regression fit are conditional on
+the selected model; they do not include uncertainty from variable
+deletion, FP power selection, or repeated backfitting. Apparent
+precision can therefore be optimistic, especially when several candidate
+functions fit nearly equally well. Bootstrap stability analyses,
+sensitivity analyses, and external validation are useful when the
+selected model will support substantive conclusions or prediction.</p>
+<p>The FP family is deliberately parsimonious and global. It may miss
+sharp local features, discontinuities, complex interactions, or shapes
+not well represented by low-degree FP functions. Results can be
+sensitive to sparse tails, influential observations, weak signals,
+correlated predictors, and small samples. MFP was not designed for
+high-dimensional settings in which the number of candidate predictors is
+large relative to the available information. Its selection rules should
+be combined with subject-matter knowledge rather than interpreted as an
+automatic search for the uniquely true or predictively optimal
+model.</p>
+</div>
+<div id="references" class="section level2" number="1.11">
+<h2><span class="header-section-number">1.11</span> References</h2>
+<p>Ambler, G. and Royston, P. (2001). Fractional polynomial model
+selection procedures: investigation of type I error rate. <em>Journal of
+Statistical Computation and Simulation</em>, 69, 89–108.</p>
+<p>Binder, H. and Sauerbrei, W. (2010). Adding local components to
+global functions for continuous covariates in multivariable regression
+modeling. <em>Statistics in Medicine</em>, 29, 808–817.</p>
+<p>Binder, H., Sauerbrei, W. and Royston, P. (2013). Comparison between
+splines and fractional polynomials for multivariable model building with
+continuous covariates: a simulation study with continuous response.
+<em>Statistics in Medicine</em>, 32, 2262–2277.</p>
+<p>Buchholz, A. and Sauerbrei, W. (2011). Comparison of procedures to
+assess non-linear and time-varying effects in multivariable models for
+survival data. <em>Biometrical Journal</em>, 53, 308–331. DOI:
+10.1002/bimj.201000159.</p>
+<p>Draper, D. (1995). Assessment and propagation of model selection
+uncertainty (with discussion). <em>Journal of the Royal Statistical
+Society: Series B</em>, 57, 45–97.</p>
+<p>Dunkler, D., Sauerbrei, W. and Heinze, G. (2016). Global,
+parameterwise and joint post-estimation shrinkage. <em>Journal of
+Statistical Software</em>.</p>
+<p>Faes, C., Aerts, M., Geys, H. and Molenberghs, G. (2007). Model
+averaging using fractional polynomials to estimate a safe level of
+exposure. <em>Risk Analysis</em>, 27, 111–123.</p>
+<p>Huebner, M., le Cessie, S., Schmidt, C. O. and Vach, W. (2018). A
+contemporary conceptual framework for initial data analysis.
+<em>Observational Studies</em>, 4(1), 171–192.</p>
+<p>Royston, P. (2014). A smooth covariate rank transformation for use in
+regression models with a sigmoid dose-response function. <em>The Stata
+Journal</em>, 14, 329–341.</p>
+<p>Royston, P. and Altman, D. G. (1994). Regression using fractional
+polynomials of continuous covariates: parsimonious parametric modelling.
+<em>Applied Statistics</em>, 43(3), 429–467.</p>
+<p>Royston, P. and Sauerbrei, W. (2004). A new approach to modelling
+interactions between treatment and continuous covariates in clinical
+trials by using fractional polynomials. <em>Statistics in Medicine</em>,
+23, 2509–2525.</p>
+<p>Royston, P. and Sauerbrei, W. (2007). Improving the robustness of
+fractional polynomial models by preliminary covariate transformation.
+<em>Computational Statistics and Data Analysis</em>, 51, 4240–4253.</p>
+<p>Royston, P. and Sauerbrei, W. (2008). <em>Multivariable
+Model-Building: A Pragmatic Approach to Regression Analysis Based on
+Fractional Polynomials for Modelling Continuous Variables</em>. John
+Wiley &amp; Sons, Chichester, UK.</p>
+<p>Royston, P. and Sauerbrei, W. (2013). Interaction of treatment with a
+continuous variable: simulation study of significance level for several
+methods of analysis. <em>Statistics in Medicine</em>, 32(22),
+3788–3803.</p>
+<p>Royston, P. and Sauerbrei, W. (2014). Interaction of treatment with a
+continuous variable: simulation study of power for several methods of
+analysis. <em>Statistics in Medicine</em>, 33, 4695–4708.</p>
+<p>Royston, P., Altman, D. G. and Sauerbrei, W. (2006). Dichotomizing
+continuous predictors in multiple regression: a bad idea. <em>Statistics
+in Medicine</em>, 25, 127–141.</p>
+<p>Royston, P. and Sauerbrei, W. (2016). mfpa: Extension of mfp using
+the ACD covariate transformation for enhanced parametric multivariable
+modeling. <em>The Stata Journal</em>, 16(1), 72–87.</p>
+<p>Royston, P., Sauerbrei, W. and Becher, H. (2010). Modelling
+continuous exposures with a ‘spike’ at zero: a new procedure based on
+fractional polynomials. <em>Statistics in Medicine</em>, 29,
+1219–1227.</p>
+<p>Sauerbrei, W. (1999). The use of resampling methods to simplify
+regression models in medical statistics. <em>Applied Statistics</em>,
+48, 313–329.</p>
+<p>Sauerbrei, W., Abrahamowicz, M., Altman, D. G., et al. (2014).
+STrengthening Analytical Thinking for Observational Studies: the STRATOS
+initiative. <em>Statistics in Medicine</em>, 33(30), 5413–5432.</p>
+<p>Sauerbrei, W., Kipruto, E. and Balmford, J. (2022). Effects of
+influential points and sample size on the selection and replicability of
+multivariable fractional polynomial models. <em>Diagnostic and
+Prognostic Research</em>, 7(1), 7.</p>
+<p>Sauerbrei, W., Meier-Hirmer, C., Benner, A. and Royston, P. (2006).
+Multivariable regression model building by using fractional polynomials:
+description of SAS, STATA and R programs. <em>Computational Statistics
+and Data Analysis</em>, 50, 3464–3485.</p>
+<p>Sauerbrei, W., Perperoglou, A., Schmid, M., Abrahamowicz, M., Becher,
+H., Binder, H., Dunkler, D., Harrell Jr., F. E., Royston, P. and Heinze,
+G. for TG2 of the STRATOS initiative (2020). State of the art in
+selection of variables and functional forms in multivariable analysis:
+outstanding issues. <em>Diagnostic and Prognostic Research</em>, 4, 3,
+1–18. DOI: 10.1186/s41512-020-00074-3.</p>
+<p>Sauerbrei, W. and Royston, P. (1999). Building multivariable
+prognostic and diagnostic models: transformation of the predictors using
+fractional polynomials. <em>Journal of the Royal Statistical Society:
+Series A</em>, 162, 71–94.</p>
+<p>Sauerbrei, W. and Royston, P. (2011). Multivariable fractional
+polynomial models. In Lovric, M. (ed.), <em>International Encyclopedia
+of Statistical Science</em>. Springer, Berlin, pp. 899–902.</p>
+<p>Sauerbrei, W. and Royston, P. (2016). Multivariable fractional
+polynomial models. <em>Wiley StatsRef: Statistics Reference Online</em>,
+1–8. DOI: 10.1002/9781118445112.stat07861.</p>
+<p>Sauerbrei, W., Royston, P. and Binder, H. (2007b). Selection of
+important variables and determination of functional form for continuous
+predictors in multivariable model-building. <em>Statistics in
+Medicine</em>, 26, 5512–5528.</p>
+<p>Sauerbrei, W., Royston, P. and Look, M. (2007a). A new proposal for
+multivariable modelling of time-varying effects in survival data based
+on fractional polynomial time-transformation. <em>Biometrical
+Journal</em>, 49, 453–473.</p>
+<p>Sauerbrei, W. and Royston, P. (2007). Modelling to extract more
+information from clinical trials data: on some roles for the bootstrap.
+<em>Statistics in Medicine</em>, 26, 4989–5001.</p>
+<p>Shmueli, G. (2010). To explain or to predict? <em>Statistical
+Science</em>, 3, 289–310.</p>
+<p>Stamey, T. A., Kabalin, J. N., McNeal, J. E., Johnstone, I. M.,
+Freiha, F., Redwine, E. A. and Yang, N. (1989). Prostate specific
+antigen in the diagnosis and treatment of adenocarcinoma of the
+prostate. II. Radical prostatectomy treated patients. <em>The Journal of
+Urology</em>, 141(5), 1076–1083.</p>
+<p>StataCorp. (2023). <em>Stata: Release 18. Statistical Software</em>.
+StataCorp LLC, College Station, TX.</p>
+<p>Therneau, T. M. and Grambsch, P. M. (2000). <em>Modeling Survival
+Data: Extending the Cox Model</em>. Springer, New York, pp. 39–77.</p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

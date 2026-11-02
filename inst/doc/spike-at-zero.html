@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Edwin Kipruto and Willi Sauerbrei" />
+
+
+<title>Modelling Spike-at-Zero Covariates with Fractional Polynomials</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Modelling Spike-at-Zero Covariates with
+Fractional Polynomials</h1>
+<h4 class="author">Edwin Kipruto and Willi Sauerbrei</h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction" id="toc-introduction"><span class="toc-section-number">1</span> Introduction</a></li>
+<li><a href="#prostate-cancer-data" id="toc-prostate-cancer-data"><span class="toc-section-number">2</span> Prostate cancer data</a>
+<ul>
+<li><a href="#univariable-analysis-with-p-values" id="toc-univariable-analysis-with-p-values"><span class="toc-section-number">2.1</span> Univariable analysis with
+p-values</a></li>
+<li><a href="#forcing-inclusion-or-the-full-saz-model" id="toc-forcing-inclusion-or-the-full-saz-model"><span class="toc-section-number">2.2</span> Forcing inclusion or the full SAZ
+model</a></li>
+<li><a href="#multivariable-analysis" id="toc-multivariable-analysis"><span class="toc-section-number">2.3</span> Multivariable analysis</a></li>
+<li><a href="#selection-with-aic-or-bic" id="toc-selection-with-aic-or-bic"><span class="toc-section-number">2.4</span> Selection with AIC or BIC</a></li>
+</ul></li>
+<li><a href="#simulated-data-continuous-binary" id="toc-simulated-data-continuous-binary"><span class="toc-section-number">3</span> Simulated data: continuous +
+binary</a></li>
+<li><a href="#several-saz-covariates-in-one-model" id="toc-several-saz-covariates-in-one-model"><span class="toc-section-number">4</span> Several SAZ covariates in one
+model</a></li>
+<li><a href="#matrix-interface" id="toc-matrix-interface"><span class="toc-section-number">5</span> Matrix interface</a></li>
+<li><a href="#further-details" id="toc-further-details"><span class="toc-section-number">6</span> Further details</a>
+<ul>
+<li><a href="#paper-reference" id="toc-paper-reference"><span class="toc-section-number">6.1</span> Paper reference</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="introduction" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Introduction</h1>
+<p>A spike-at-zero (SAZ) covariate has a proportion of observations
+equal to zero and a continuous distribution of positive values. In
+<code>mfp2()</code>, setting <code>spike = TRUE</code> inside
+<code>fp()</code> models such a covariate with two components: a binary
+indicator <span class="math inline">\(I(x = 0)\)</span> and an FP
+function of the positive values. The selection procedure then decides
+which components to keep.</p>
+<p>This vignette shows how to run the analyses in the accompanying paper
+(<a href="#paper-reference">paper reference</a>) and how to read the
+output. For the model, the selection procedures and the eligibility
+rules, each section points to the relevant part of the paper.</p>
+<p>Every SAZ fit reports one of four <code>saz_decision</code> values
+(paper, Section 2.3):</p>
+<table>
+<colgroup>
+<col width="29%" />
+<col width="49%" />
+<col width="20%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><code>saz_decision</code></th>
+<th>Retained components</th>
+<th>Paper notation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>continuous + binary</code></td>
+<td>FP function and binary indicator</td>
+<td><span class="math inline">\(M_{BP}\)</span></td>
+</tr>
+<tr class="even">
+<td><code>continuous only</code></td>
+<td>FP function of positive values only</td>
+<td><span class="math inline">\(M_P\)</span></td>
+</tr>
+<tr class="odd">
+<td><code>binary only</code></td>
+<td>Binary indicator only</td>
+<td><span class="math inline">\(M_B\)</span></td>
+</tr>
+<tr class="even">
+<td><code>not selected</code></td>
+<td>None (covariate excluded)</td>
+<td>–</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(mfp2)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;prostate&quot;</span>, <span class="at">package =</span> <span class="st">&quot;mfp2&quot;</span>)</span></code></pre></div>
+</div>
+<div id="prostate-cancer-data" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Prostate cancer
+data</h1>
+<p>The outcome is <code>lpsa</code> (log prostate-specific antigen). The
+SAZ candidate is <code>pgg45</code>, the percentage of Gleason score 4
+or 5 (paper, Section 4.1).</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">nrow</span>(prostate)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co">#&gt; [1] 97</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="fu">table</span>(<span class="at">pgg45_zero =</span> prostate<span class="sc">$</span>pgg45 <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt; pgg45_zero</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt; FALSE  TRUE </span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt;    62    35</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">mean</span>(prostate<span class="sc">$</span>pgg45 <span class="sc">==</span> <span class="dv">0</span>), <span class="dv">2</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; [1] 0.36</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">unique</span>(prostate<span class="sc">$</span>pgg45[prostate<span class="sc">$</span>pgg45 <span class="sc">&gt;</span> <span class="dv">0</span>]))  <span class="co"># distinct positive values</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt; [1] 18</span></span></code></pre></div>
+<p>The zero proportion (0.36) and the positive proportion (0.64) are
+both above the default threshold <code>min_saz_prop = 0.10</code>, so
+<code>pgg45</code> is eligible for SAZ modelling (paper, Section
+3.2).</p>
+<div id="univariable-analysis-with-p-values" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Univariable analysis
+with p-values</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>fit_pgg45 <span class="ot">&lt;-</span> <span class="fu">mfp2</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  lpsa <span class="sc">~</span> <span class="fu">fp</span>(pgg45, <span class="at">df =</span> <span class="dv">4</span>, <span class="at">select =</span> <span class="fl">0.05</span>, <span class="at">alpha =</span> <span class="fl">0.05</span>, <span class="at">spike =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="at">data =</span> prostate,</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;gaussian&quot;</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="at">criterion =</span> <span class="st">&quot;pvalue&quot;</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>)</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="fu">print</span>(fit_pgg45, <span class="at">detailed_settings =</span> <span class="cn">FALSE</span>, <span class="at">notes =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt; MFP Model Fit</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt; mfp2(lpsa ~ fp(pgg45, df = 4, select = 0.05, alpha = 0.05, spike = TRUE), </span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt;     data = prostate, family = &quot;gaussian&quot;, criterion = &quot;pvalue&quot;, </span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt;     verbose = FALSE)</span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#&gt; Model: Gaussian GLM (identity link) | Criterion: p-value | Converged: yes</span></span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="co">#&gt; Observations: 97</span></span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="co">#&gt; Dispersion: 1.031 (estimated)</span></span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="co">#&gt; Selection Summary </span></span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a><span class="co">#&gt; Selected variables (linear): pgg45</span></span>
+<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a><span class="co">#&gt; Selected variables (nonlinear): none</span></span>
+<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a><span class="co">#&gt; Excluded variables: none</span></span>
+<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb3-32"><a href="#cb3-32" tabindex="-1"></a><span class="co">#&gt; Covariate Preprocessing </span></span>
+<span id="cb3-33"><a href="#cb3-33" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb3-34"><a href="#cb3-34" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-35"><a href="#cb3-35" tabindex="-1"></a><span class="co">#&gt;       shift scale center</span></span>
+<span id="cb3-36"><a href="#cb3-36" tabindex="-1"></a><span class="co">#&gt; pgg45 0     1     TRUE  </span></span>
+<span id="cb3-37"><a href="#cb3-37" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-38"><a href="#cb3-38" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb3-39"><a href="#cb3-39" tabindex="-1"></a><span class="co">#&gt; Summary of Function Selection </span></span>
+<span id="cb3-40"><a href="#cb3-40" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb3-41"><a href="#cb3-41" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-42"><a href="#cb3-42" tabindex="-1"></a><span class="co">#&gt; Spike-at-Zero (SAZ; x is transformed only for x &gt; 0, binary is I(x = 0))</span></span>
+<span id="cb3-43"><a href="#cb3-43" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------</span></span>
+<span id="cb3-44"><a href="#cb3-44" tabindex="-1"></a><span class="co">#&gt;  Variable prop_zero df (init-&gt;final) saz_decision Function</span></span>
+<span id="cb3-45"><a href="#cb3-45" tabindex="-1"></a><span class="co">#&gt;  pgg45    0.361     5 -&gt; 1           binary only  binary  </span></span>
+<span id="cb3-46"><a href="#cb3-46" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-47"><a href="#cb3-47" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb3-48"><a href="#cb3-48" tabindex="-1"></a><span class="co">#&gt; Final Model Coefficients </span></span>
+<span id="cb3-49"><a href="#cb3-49" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb3-50"><a href="#cb3-50" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-51"><a href="#cb3-51" tabindex="-1"></a><span class="co">#&gt; Estimates are for: Basis - Center</span></span>
+<span id="cb3-52"><a href="#cb3-52" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-53"><a href="#cb3-53" tabindex="-1"></a><span class="co">#&gt;  Variable    Basis        Center Estimate SE   </span></span>
+<span id="cb3-54"><a href="#cb3-54" tabindex="-1"></a><span class="co">#&gt;  (Intercept)                     2.896    0.129</span></span>
+<span id="cb3-55"><a href="#cb3-55" tabindex="-1"></a><span class="co">#&gt;  pgg45       I(pgg45 = 0) 0.000  -1.158   0.215</span></span>
+<span id="cb3-56"><a href="#cb3-56" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-57"><a href="#cb3-57" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb3-58"><a href="#cb3-58" tabindex="-1"></a><span class="co">#&gt; Model Fit </span></span>
+<span id="cb3-59"><a href="#cb3-59" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb3-60"><a href="#cb3-60" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-61"><a href="#cb3-61" tabindex="-1"></a><span class="co">#&gt;                    Deviance    df</span></span>
+<span id="cb3-62"><a href="#cb3-62" tabindex="-1"></a><span class="co">#&gt; Full linear model    95.416     2</span></span>
+<span id="cb3-63"><a href="#cb3-63" tabindex="-1"></a><span class="co">#&gt; MFP model            97.931     1</span></span>
+<span id="cb3-64"><a href="#cb3-64" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-65"><a href="#cb3-65" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-66"><a href="#cb3-66" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span></code></pre></div>
+<p>What the arguments do (all except <code>spike</code> are the
+defaults):</p>
+<ul>
+<li><code>spike = TRUE</code> requests the SAZ decomposition.</li>
+<li><code>df = 4</code> allows at most an FP2 function for the positive
+values.</li>
+<li><code>select</code> is the significance level for including the
+covariate.</li>
+<li><code>alpha</code> is the significance level for choosing the FP
+function and for the tests that remove a component (paper, Sections
+2.3.1–2.3.2).</li>
+<li><code>detailed_settings = FALSE</code> and
+<code>notes = FALSE</code> shorten the printed output.</li>
+</ul>
+<p>The selected model is <code>binary only</code>: the FP function is
+dropped, so every positive value of <code>pgg45</code> gets the same
+fitted value (paper, Section 4.2).</p>
+<p><code>predict()</code> takes covariates on their original scale and
+builds the indicator and FP terms itself:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>newdat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">pgg45 =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">20</span>, <span class="dv">45</span>, <span class="dv">60</span>, <span class="dv">100</span>))</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="fu">predict</span>(fit_pgg45, <span class="at">newdata =</span> newdat, <span class="at">type =</span> <span class="st">&quot;link&quot;</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co">#&gt;        1        2        3        4        5        6 </span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt; 1.738370 2.896138 2.896138 2.896138 2.896138 2.896138</span></span></code></pre></div>
+<p>The prediction is about 1.74 at zero and about 2.90 at every positive
+value.</p>
+<p><code>plot()</code> returns a list of ggplot objects, one per
+covariate. <code>partial_only = TRUE</code> plots only the fitted
+effect, without partial residuals. A <code>binary only</code> effect
+shows as two points with confidence intervals. The intervals do not
+account for model selection.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">plot</span>(fit_pgg45, <span class="at">terms =</span> <span class="st">&quot;pgg45&quot;</span>, <span class="at">partial_only =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>p1[[<span class="st">&quot;pgg45&quot;</span>]]</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img role="img" aria-label="Binary-only SAZ model for pgg45 (paper, Figure 1)." src="data:image/png;base64,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" alt="Binary-only SAZ model for pgg45 (paper, Figure 1)." width="100%" />
+<p class="caption">
+Binary-only SAZ model for pgg45 (paper, Figure 1).
+</p>
+</div>
+</div>
+<div id="forcing-inclusion-or-the-full-saz-model" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Forcing inclusion or
+the full SAZ model</h2>
+<p>Three settings override parts of the selection (paper, Section 3.1
+and the table of arguments there).</p>
+<p><strong><code>select = 1</code></strong> keeps <code>pgg45</code> in
+the model. <code>alpha</code> still controls the choice of FP function
+and the removal of components, so any SAZ decision except
+<code>not selected</code> can result.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>fit_forced <span class="ot">&lt;-</span> <span class="fu">mfp2</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  lpsa <span class="sc">~</span> <span class="fu">fp</span>(pgg45, <span class="at">select =</span> <span class="dv">1</span>, <span class="at">alpha =</span> <span class="fl">0.05</span>, <span class="at">spike =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="at">data =</span> prostate,</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">gaussian</span>(),</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  <span class="at">criterion =</span> <span class="st">&quot;pvalue&quot;</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>)</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="fu">print</span>(fit_forced, <span class="at">detailed_settings =</span> <span class="cn">FALSE</span>, <span class="at">notes =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="co">#&gt; MFP Model Fit</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#&gt; mfp2(lpsa ~ fp(pgg45, select = 1, alpha = 0.05, spike = TRUE), </span></span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co">#&gt;     data = prostate, family = gaussian(), criterion = &quot;pvalue&quot;, </span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="co">#&gt;     verbose = FALSE)</span></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a><span class="co">#&gt; Model: Gaussian GLM (identity link) | Criterion: p-value | Converged: yes</span></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="co">#&gt; Observations: 97</span></span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a><span class="co">#&gt; Dispersion: 1.031 (estimated)</span></span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a><span class="co">#&gt; Selection Summary </span></span>
+<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a><span class="co">#&gt; Selected variables (linear): pgg45</span></span>
+<span id="cb6-27"><a href="#cb6-27" tabindex="-1"></a><span class="co">#&gt; Selected variables (nonlinear): none</span></span>
+<span id="cb6-28"><a href="#cb6-28" tabindex="-1"></a><span class="co">#&gt; Excluded variables: none</span></span>
+<span id="cb6-29"><a href="#cb6-29" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-30"><a href="#cb6-30" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb6-31"><a href="#cb6-31" tabindex="-1"></a><span class="co">#&gt; Covariate Preprocessing </span></span>
+<span id="cb6-32"><a href="#cb6-32" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb6-33"><a href="#cb6-33" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-34"><a href="#cb6-34" tabindex="-1"></a><span class="co">#&gt;       shift scale center</span></span>
+<span id="cb6-35"><a href="#cb6-35" tabindex="-1"></a><span class="co">#&gt; pgg45 0     1     TRUE  </span></span>
+<span id="cb6-36"><a href="#cb6-36" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-37"><a href="#cb6-37" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb6-38"><a href="#cb6-38" tabindex="-1"></a><span class="co">#&gt; Summary of Function Selection </span></span>
+<span id="cb6-39"><a href="#cb6-39" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb6-40"><a href="#cb6-40" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-41"><a href="#cb6-41" tabindex="-1"></a><span class="co">#&gt; Spike-at-Zero (SAZ; x is transformed only for x &gt; 0, binary is I(x = 0))</span></span>
+<span id="cb6-42"><a href="#cb6-42" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------</span></span>
+<span id="cb6-43"><a href="#cb6-43" tabindex="-1"></a><span class="co">#&gt;  Variable prop_zero df (init-&gt;final) saz_decision Function</span></span>
+<span id="cb6-44"><a href="#cb6-44" tabindex="-1"></a><span class="co">#&gt;  pgg45    0.361     5 -&gt; 1           binary only  binary  </span></span>
+<span id="cb6-45"><a href="#cb6-45" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-46"><a href="#cb6-46" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb6-47"><a href="#cb6-47" tabindex="-1"></a><span class="co">#&gt; Final Model Coefficients </span></span>
+<span id="cb6-48"><a href="#cb6-48" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb6-49"><a href="#cb6-49" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-50"><a href="#cb6-50" tabindex="-1"></a><span class="co">#&gt; Estimates are for: Basis - Center</span></span>
+<span id="cb6-51"><a href="#cb6-51" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-52"><a href="#cb6-52" tabindex="-1"></a><span class="co">#&gt;  Variable    Basis        Center Estimate SE   </span></span>
+<span id="cb6-53"><a href="#cb6-53" tabindex="-1"></a><span class="co">#&gt;  (Intercept)                     2.896    0.129</span></span>
+<span id="cb6-54"><a href="#cb6-54" tabindex="-1"></a><span class="co">#&gt;  pgg45       I(pgg45 = 0) 0.000  -1.158   0.215</span></span>
+<span id="cb6-55"><a href="#cb6-55" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-56"><a href="#cb6-56" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb6-57"><a href="#cb6-57" tabindex="-1"></a><span class="co">#&gt; Model Fit </span></span>
+<span id="cb6-58"><a href="#cb6-58" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb6-59"><a href="#cb6-59" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-60"><a href="#cb6-60" tabindex="-1"></a><span class="co">#&gt;                    Deviance    df</span></span>
+<span id="cb6-61"><a href="#cb6-61" tabindex="-1"></a><span class="co">#&gt; Full linear model    95.416     2</span></span>
+<span id="cb6-62"><a href="#cb6-62" tabindex="-1"></a><span class="co">#&gt; MFP model            97.931     1</span></span>
+<span id="cb6-63"><a href="#cb6-63" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-64"><a href="#cb6-64" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-65"><a href="#cb6-65" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span></code></pre></div>
+<p><strong><code>keep</code></strong> does the same for any
+<code>criterion</code>. It is an argument of <code>mfp2()</code>, not of
+<code>fp()</code>, and takes variable names. The multivariable model in
+the next section excludes <code>pgg45</code>;
+<code>keep = &quot;pgg45&quot;</code> keeps it in:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>fit_keep <span class="ot">&lt;-</span> <span class="fu">mfp2</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  lpsa <span class="sc">~</span> <span class="fu">fp</span>(pgg45, <span class="at">spike =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> <span class="fu">fp</span>(age) <span class="sc">+</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>    <span class="fu">fp</span>(cavol) <span class="sc">+</span> <span class="fu">fp</span>(weight) <span class="sc">+</span> <span class="fu">fp</span>(bph) <span class="sc">+</span> <span class="fu">fp</span>(cp) <span class="sc">+</span> svi,</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="at">data =</span> prostate,</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">gaussian</span>(),</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  <span class="at">criterion =</span> <span class="st">&quot;pvalue&quot;</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>  <span class="at">select =</span> <span class="fl">0.05</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>  <span class="at">alpha =</span> <span class="fl">0.05</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>  <span class="at">keep =</span> <span class="st">&quot;pgg45&quot;</span>,</span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>)</span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a><span class="fu">print</span>(fit_keep, <span class="at">detailed_settings =</span> <span class="cn">FALSE</span>, <span class="at">notes =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a><span class="co">#&gt; MFP Model Fit</span></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a><span class="co">#&gt; mfp2(lpsa ~ fp(pgg45, spike = TRUE) + fp(age) + fp(cavol) + fp(weight) + </span></span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a><span class="co">#&gt;     fp(bph) + fp(cp) + svi, data = prostate, family = gaussian(), </span></span>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a><span class="co">#&gt;     criterion = &quot;pvalue&quot;, select = 0.05, alpha = 0.05, keep = &quot;pgg45&quot;, </span></span>
+<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a><span class="co">#&gt;     verbose = FALSE)</span></span>
+<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a><span class="co">#&gt; Model: Gaussian GLM (identity link) | Criterion: p-value | Converged: yes</span></span>
+<span id="cb7-24"><a href="#cb7-24" tabindex="-1"></a><span class="co">#&gt; Observations: 97</span></span>
+<span id="cb7-25"><a href="#cb7-25" tabindex="-1"></a><span class="co">#&gt; Dispersion: 0.499 (estimated)</span></span>
+<span id="cb7-26"><a href="#cb7-26" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-27"><a href="#cb7-27" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb7-28"><a href="#cb7-28" tabindex="-1"></a><span class="co">#&gt; Selection Summary </span></span>
+<span id="cb7-29"><a href="#cb7-29" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb7-30"><a href="#cb7-30" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-31"><a href="#cb7-31" tabindex="-1"></a><span class="co">#&gt; Selected variables (linear): svi, pgg45, weight</span></span>
+<span id="cb7-32"><a href="#cb7-32" tabindex="-1"></a><span class="co">#&gt; Selected variables (nonlinear): cavol</span></span>
+<span id="cb7-33"><a href="#cb7-33" tabindex="-1"></a><span class="co">#&gt; Excluded variables: bph, cp, age</span></span>
+<span id="cb7-34"><a href="#cb7-34" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-35"><a href="#cb7-35" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb7-36"><a href="#cb7-36" tabindex="-1"></a><span class="co">#&gt; Covariate Preprocessing </span></span>
+<span id="cb7-37"><a href="#cb7-37" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb7-38"><a href="#cb7-38" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-39"><a href="#cb7-39" tabindex="-1"></a><span class="co">#&gt;        shift scale center</span></span>
+<span id="cb7-40"><a href="#cb7-40" tabindex="-1"></a><span class="co">#&gt; cavol  0     10    TRUE  </span></span>
+<span id="cb7-41"><a href="#cb7-41" tabindex="-1"></a><span class="co">#&gt; svi    0     1     TRUE  </span></span>
+<span id="cb7-42"><a href="#cb7-42" tabindex="-1"></a><span class="co">#&gt; pgg45  0     1     TRUE  </span></span>
+<span id="cb7-43"><a href="#cb7-43" tabindex="-1"></a><span class="co">#&gt; weight 0     100   TRUE  </span></span>
+<span id="cb7-44"><a href="#cb7-44" tabindex="-1"></a><span class="co">#&gt; bph    0     1     TRUE  </span></span>
+<span id="cb7-45"><a href="#cb7-45" tabindex="-1"></a><span class="co">#&gt; cp     0     10    TRUE  </span></span>
+<span id="cb7-46"><a href="#cb7-46" tabindex="-1"></a><span class="co">#&gt; age    0     10    TRUE  </span></span>
+<span id="cb7-47"><a href="#cb7-47" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-48"><a href="#cb7-48" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb7-49"><a href="#cb7-49" tabindex="-1"></a><span class="co">#&gt; Summary of Function Selection </span></span>
+<span id="cb7-50"><a href="#cb7-50" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb7-51"><a href="#cb7-51" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-52"><a href="#cb7-52" tabindex="-1"></a><span class="co">#&gt; Standard MFP</span></span>
+<span id="cb7-53"><a href="#cb7-53" tabindex="-1"></a><span class="co">#&gt; ------------</span></span>
+<span id="cb7-54"><a href="#cb7-54" tabindex="-1"></a><span class="co">#&gt;  Variable Selected df (init-&gt;final) Function</span></span>
+<span id="cb7-55"><a href="#cb7-55" tabindex="-1"></a><span class="co">#&gt;  cavol    yes      4 -&gt; 2           FP(0)   </span></span>
+<span id="cb7-56"><a href="#cb7-56" tabindex="-1"></a><span class="co">#&gt;  svi      yes      1 -&gt; 1           linear  </span></span>
+<span id="cb7-57"><a href="#cb7-57" tabindex="-1"></a><span class="co">#&gt;  weight   yes      4 -&gt; 1           linear  </span></span>
+<span id="cb7-58"><a href="#cb7-58" tabindex="-1"></a><span class="co">#&gt;  bph      no       4 -&gt; 0           out     </span></span>
+<span id="cb7-59"><a href="#cb7-59" tabindex="-1"></a><span class="co">#&gt;  cp       no       4 -&gt; 0           out     </span></span>
+<span id="cb7-60"><a href="#cb7-60" tabindex="-1"></a><span class="co">#&gt;  age      no       4 -&gt; 0           out     </span></span>
+<span id="cb7-61"><a href="#cb7-61" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-62"><a href="#cb7-62" tabindex="-1"></a><span class="co">#&gt; Spike-at-Zero (SAZ; x is transformed only for x &gt; 0, binary is I(x = 0))</span></span>
+<span id="cb7-63"><a href="#cb7-63" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------</span></span>
+<span id="cb7-64"><a href="#cb7-64" tabindex="-1"></a><span class="co">#&gt;  Variable prop_zero df (init-&gt;final) saz_decision Function</span></span>
+<span id="cb7-65"><a href="#cb7-65" tabindex="-1"></a><span class="co">#&gt;  pgg45    0.361     5 -&gt; 1           binary only  binary  </span></span>
+<span id="cb7-66"><a href="#cb7-66" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-67"><a href="#cb7-67" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb7-68"><a href="#cb7-68" tabindex="-1"></a><span class="co">#&gt; Final Model Coefficients </span></span>
+<span id="cb7-69"><a href="#cb7-69" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb7-70"><a href="#cb7-70" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-71"><a href="#cb7-71" tabindex="-1"></a><span class="co">#&gt; Estimates are for: Basis - Center</span></span>
+<span id="cb7-72"><a href="#cb7-72" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-73"><a href="#cb7-73" tabindex="-1"></a><span class="co">#&gt;  Variable    Basis        Center Estimate SE   </span></span>
+<span id="cb7-74"><a href="#cb7-74" tabindex="-1"></a><span class="co">#&gt;  (Intercept)                     2.437    0.110</span></span>
+<span id="cb7-75"><a href="#cb7-75" tabindex="-1"></a><span class="co">#&gt;  cavol       log(cavol)   1.350  0.497    0.079</span></span>
+<span id="cb7-76"><a href="#cb7-76" tabindex="-1"></a><span class="co">#&gt;  svi         svi          0.000  0.626    0.210</span></span>
+<span id="cb7-77"><a href="#cb7-77" tabindex="-1"></a><span class="co">#&gt;  pgg45       I(pgg45 = 0) 0.000  -0.262   0.175</span></span>
+<span id="cb7-78"><a href="#cb7-78" tabindex="-1"></a><span class="co">#&gt;  weight      weight       41.310 0.014    0.004</span></span>
+<span id="cb7-79"><a href="#cb7-79" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-80"><a href="#cb7-80" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb7-81"><a href="#cb7-81" tabindex="-1"></a><span class="co">#&gt; Model Fit </span></span>
+<span id="cb7-82"><a href="#cb7-82" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb7-83"><a href="#cb7-83" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-84"><a href="#cb7-84" tabindex="-1"></a><span class="co">#&gt;                    Deviance    df</span></span>
+<span id="cb7-85"><a href="#cb7-85" tabindex="-1"></a><span class="co">#&gt; Full linear model    49.471     8</span></span>
+<span id="cb7-86"><a href="#cb7-86" tabindex="-1"></a><span class="co">#&gt; MFP model            45.891     5</span></span>
+<span id="cb7-87"><a href="#cb7-87" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-88"><a href="#cb7-88" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-89"><a href="#cb7-89" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span></code></pre></div>
+<p><strong><code>force_max_fp = TRUE</code></strong> in
+<code>fp()</code> keeps the binary indicator and the most complex FP
+function allowed by <code>df</code> (FP2 here). Components are not
+removed, whatever the criterion.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>fit_maxfp <span class="ot">&lt;-</span> <span class="fu">mfp2</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  lpsa <span class="sc">~</span> <span class="fu">fp</span>(pgg45, <span class="at">spike =</span> <span class="cn">TRUE</span>, <span class="at">force_max_fp =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="at">data =</span> prostate,</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">gaussian</span>(),</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>  <span class="at">criterion =</span> <span class="st">&quot;pvalue&quot;</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>)</span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="fu">print</span>(fit_maxfp, <span class="at">detailed_settings =</span> <span class="cn">FALSE</span>, <span class="at">notes =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="co">#&gt; MFP Model Fit</span></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a><span class="co">#&gt; mfp2(lpsa ~ fp(pgg45, spike = TRUE, force_max_fp = TRUE), data = prostate, </span></span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="co">#&gt;     family = gaussian(), criterion = &quot;pvalue&quot;, verbose = FALSE)</span></span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a><span class="co">#&gt; Model: Gaussian GLM (identity link) | Criterion: p-value | Converged: yes</span></span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a><span class="co">#&gt; Observations: 97</span></span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a><span class="co">#&gt; Dispersion: 1.012 (estimated)</span></span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a><span class="co">#&gt; Selection Summary </span></span>
+<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a><span class="co">#&gt; Selected variables (linear): none</span></span>
+<span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a><span class="co">#&gt; Selected variables (nonlinear): pgg45</span></span>
+<span id="cb8-27"><a href="#cb8-27" tabindex="-1"></a><span class="co">#&gt; Excluded variables: none</span></span>
+<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a><span class="co">#&gt; Covariate Preprocessing </span></span>
+<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-33"><a href="#cb8-33" tabindex="-1"></a><span class="co">#&gt;       shift scale center</span></span>
+<span id="cb8-34"><a href="#cb8-34" tabindex="-1"></a><span class="co">#&gt; pgg45 0     1     TRUE  </span></span>
+<span id="cb8-35"><a href="#cb8-35" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-36"><a href="#cb8-36" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb8-37"><a href="#cb8-37" tabindex="-1"></a><span class="co">#&gt; Summary of Function Selection </span></span>
+<span id="cb8-38"><a href="#cb8-38" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb8-39"><a href="#cb8-39" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-40"><a href="#cb8-40" tabindex="-1"></a><span class="co">#&gt; Spike-at-Zero (SAZ; x is transformed only for x &gt; 0, binary is I(x = 0))</span></span>
+<span id="cb8-41"><a href="#cb8-41" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------</span></span>
+<span id="cb8-42"><a href="#cb8-42" tabindex="-1"></a><span class="co">#&gt;  Variable prop_zero df (init-&gt;final) saz_decision        Function         </span></span>
+<span id="cb8-43"><a href="#cb8-43" tabindex="-1"></a><span class="co">#&gt;  pgg45    0.361     5 -&gt; 5           continuous + binary FP(1, 3) + binary</span></span>
+<span id="cb8-44"><a href="#cb8-44" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-45"><a href="#cb8-45" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb8-46"><a href="#cb8-46" tabindex="-1"></a><span class="co">#&gt; Final Model Coefficients </span></span>
+<span id="cb8-47"><a href="#cb8-47" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb8-48"><a href="#cb8-48" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-49"><a href="#cb8-49" tabindex="-1"></a><span class="co">#&gt; Estimates are for: Basis - Center</span></span>
+<span id="cb8-50"><a href="#cb8-50" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-51"><a href="#cb8-51" tabindex="-1"></a><span class="co">#&gt;  Variable    Basis                  Center    Estimate SE   </span></span>
+<span id="cb8-52"><a href="#cb8-52" tabindex="-1"></a><span class="co">#&gt;  (Intercept)                                  2.718    0.158</span></span>
+<span id="cb8-53"><a href="#cb8-53" tabindex="-1"></a><span class="co">#&gt;  pgg45       I(pgg45 &gt; 0) * pgg45   24.381    0.019    0.011</span></span>
+<span id="cb8-54"><a href="#cb8-54" tabindex="-1"></a><span class="co">#&gt;              I(pgg45 &gt; 0) * pgg45^3 93130.464 -0.000   0.000</span></span>
+<span id="cb8-55"><a href="#cb8-55" tabindex="-1"></a><span class="co">#&gt;              I(pgg45 = 0)           0.000     -0.663   0.333</span></span>
+<span id="cb8-56"><a href="#cb8-56" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-57"><a href="#cb8-57" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb8-58"><a href="#cb8-58" tabindex="-1"></a><span class="co">#&gt; Model Fit </span></span>
+<span id="cb8-59"><a href="#cb8-59" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb8-60"><a href="#cb8-60" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-61"><a href="#cb8-61" tabindex="-1"></a><span class="co">#&gt;                    Deviance    df</span></span>
+<span id="cb8-62"><a href="#cb8-62" tabindex="-1"></a><span class="co">#&gt; Full linear model    95.416     2</span></span>
+<span id="cb8-63"><a href="#cb8-63" tabindex="-1"></a><span class="co">#&gt; MFP model            94.072     5</span></span>
+<span id="cb8-64"><a href="#cb8-64" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-65"><a href="#cb8-65" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-66"><a href="#cb8-66" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span></code></pre></div>
+</div>
+<div id="multivariable-analysis" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> Multivariable
+analysis</h2>
+<p>SAZ covariates can be mixed with ordinary FP covariates and with
+binary covariates entered without <code>fp()</code> (here
+<code>svi</code>). The SAZ decision for <code>pgg45</code> is made in
+each backfitting cycle, given the current functions of the other
+covariates (paper, Section 2.4). Settings passed to <code>mfp2()</code>
+(<code>select</code>, <code>alpha</code>) apply to all covariates unless
+overridden inside <code>fp()</code>.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>fit_multi <span class="ot">&lt;-</span> <span class="fu">mfp2</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  lpsa <span class="sc">~</span> <span class="fu">fp</span>(pgg45, <span class="at">spike =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> <span class="fu">fp</span>(age) <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>    <span class="fu">fp</span>(cavol) <span class="sc">+</span> <span class="fu">fp</span>(weight) <span class="sc">+</span> <span class="fu">fp</span>(bph) <span class="sc">+</span> <span class="fu">fp</span>(cp) <span class="sc">+</span> svi,</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>  <span class="at">data =</span> prostate,</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">gaussian</span>(),</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>  <span class="at">criterion =</span> <span class="st">&quot;pvalue&quot;</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>  <span class="at">select =</span> <span class="fl">0.05</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>  <span class="at">alpha =</span> <span class="fl">0.05</span>,</span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>)</span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="fu">print</span>(fit_multi, <span class="at">detailed_settings =</span> <span class="cn">FALSE</span>, <span class="at">notes =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="co">#&gt; MFP Model Fit</span></span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a><span class="co">#&gt; mfp2(lpsa ~ fp(pgg45, spike = TRUE) + fp(age) + fp(cavol) + fp(weight) + </span></span>
+<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a><span class="co">#&gt;     fp(bph) + fp(cp) + svi, data = prostate, family = gaussian(), </span></span>
+<span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a><span class="co">#&gt;     criterion = &quot;pvalue&quot;, select = 0.05, alpha = 0.05, verbose = FALSE)</span></span>
+<span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a><span class="co">#&gt; Model: Gaussian GLM (identity link) | Criterion: p-value | Converged: yes</span></span>
+<span id="cb9-22"><a href="#cb9-22" tabindex="-1"></a><span class="co">#&gt; Observations: 97</span></span>
+<span id="cb9-23"><a href="#cb9-23" tabindex="-1"></a><span class="co">#&gt; Dispersion: 0.505 (estimated)</span></span>
+<span id="cb9-24"><a href="#cb9-24" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-25"><a href="#cb9-25" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb9-26"><a href="#cb9-26" tabindex="-1"></a><span class="co">#&gt; Selection Summary </span></span>
+<span id="cb9-27"><a href="#cb9-27" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb9-28"><a href="#cb9-28" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-29"><a href="#cb9-29" tabindex="-1"></a><span class="co">#&gt; Selected variables (linear): svi, weight</span></span>
+<span id="cb9-30"><a href="#cb9-30" tabindex="-1"></a><span class="co">#&gt; Selected variables (nonlinear): cavol</span></span>
+<span id="cb9-31"><a href="#cb9-31" tabindex="-1"></a><span class="co">#&gt; Excluded variables: pgg45, bph, cp, age</span></span>
+<span id="cb9-32"><a href="#cb9-32" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-33"><a href="#cb9-33" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb9-34"><a href="#cb9-34" tabindex="-1"></a><span class="co">#&gt; Covariate Preprocessing </span></span>
+<span id="cb9-35"><a href="#cb9-35" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb9-36"><a href="#cb9-36" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-37"><a href="#cb9-37" tabindex="-1"></a><span class="co">#&gt;        shift scale center</span></span>
+<span id="cb9-38"><a href="#cb9-38" tabindex="-1"></a><span class="co">#&gt; cavol  0     10    TRUE  </span></span>
+<span id="cb9-39"><a href="#cb9-39" tabindex="-1"></a><span class="co">#&gt; svi    0     1     TRUE  </span></span>
+<span id="cb9-40"><a href="#cb9-40" tabindex="-1"></a><span class="co">#&gt; pgg45  0     1     TRUE  </span></span>
+<span id="cb9-41"><a href="#cb9-41" tabindex="-1"></a><span class="co">#&gt; weight 0     100   TRUE  </span></span>
+<span id="cb9-42"><a href="#cb9-42" tabindex="-1"></a><span class="co">#&gt; bph    0     1     TRUE  </span></span>
+<span id="cb9-43"><a href="#cb9-43" tabindex="-1"></a><span class="co">#&gt; cp     0     10    TRUE  </span></span>
+<span id="cb9-44"><a href="#cb9-44" tabindex="-1"></a><span class="co">#&gt; age    0     10    TRUE  </span></span>
+<span id="cb9-45"><a href="#cb9-45" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-46"><a href="#cb9-46" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb9-47"><a href="#cb9-47" tabindex="-1"></a><span class="co">#&gt; Summary of Function Selection </span></span>
+<span id="cb9-48"><a href="#cb9-48" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb9-49"><a href="#cb9-49" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-50"><a href="#cb9-50" tabindex="-1"></a><span class="co">#&gt; Standard MFP</span></span>
+<span id="cb9-51"><a href="#cb9-51" tabindex="-1"></a><span class="co">#&gt; ------------</span></span>
+<span id="cb9-52"><a href="#cb9-52" tabindex="-1"></a><span class="co">#&gt;  Variable Selected df (init-&gt;final) Function</span></span>
+<span id="cb9-53"><a href="#cb9-53" tabindex="-1"></a><span class="co">#&gt;  cavol    yes      4 -&gt; 2           FP(0)   </span></span>
+<span id="cb9-54"><a href="#cb9-54" tabindex="-1"></a><span class="co">#&gt;  svi      yes      1 -&gt; 1           linear  </span></span>
+<span id="cb9-55"><a href="#cb9-55" tabindex="-1"></a><span class="co">#&gt;  weight   yes      4 -&gt; 1           linear  </span></span>
+<span id="cb9-56"><a href="#cb9-56" tabindex="-1"></a><span class="co">#&gt;  bph      no       4 -&gt; 0           out     </span></span>
+<span id="cb9-57"><a href="#cb9-57" tabindex="-1"></a><span class="co">#&gt;  cp       no       4 -&gt; 0           out     </span></span>
+<span id="cb9-58"><a href="#cb9-58" tabindex="-1"></a><span class="co">#&gt;  age      no       4 -&gt; 0           out     </span></span>
+<span id="cb9-59"><a href="#cb9-59" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-60"><a href="#cb9-60" tabindex="-1"></a><span class="co">#&gt; Spike-at-Zero (SAZ; x is transformed only for x &gt; 0, binary is I(x = 0))</span></span>
+<span id="cb9-61"><a href="#cb9-61" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------</span></span>
+<span id="cb9-62"><a href="#cb9-62" tabindex="-1"></a><span class="co">#&gt;  Variable prop_zero df (init-&gt;final) saz_decision Function</span></span>
+<span id="cb9-63"><a href="#cb9-63" tabindex="-1"></a><span class="co">#&gt;  pgg45    0.361     5 -&gt; 0           not selected out     </span></span>
+<span id="cb9-64"><a href="#cb9-64" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-65"><a href="#cb9-65" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb9-66"><a href="#cb9-66" tabindex="-1"></a><span class="co">#&gt; Final Model Coefficients </span></span>
+<span id="cb9-67"><a href="#cb9-67" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb9-68"><a href="#cb9-68" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-69"><a href="#cb9-69" tabindex="-1"></a><span class="co">#&gt; Estimates are for: Basis - Center</span></span>
+<span id="cb9-70"><a href="#cb9-70" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-71"><a href="#cb9-71" tabindex="-1"></a><span class="co">#&gt;  Variable    Basis      Center Estimate SE   </span></span>
+<span id="cb9-72"><a href="#cb9-72" tabindex="-1"></a><span class="co">#&gt;  (Intercept)                   2.331    0.085</span></span>
+<span id="cb9-73"><a href="#cb9-73" tabindex="-1"></a><span class="co">#&gt;  cavol       log(cavol) 1.350  0.540    0.074</span></span>
+<span id="cb9-74"><a href="#cb9-74" tabindex="-1"></a><span class="co">#&gt;  svi         svi        0.000  0.679    0.208</span></span>
+<span id="cb9-75"><a href="#cb9-75" tabindex="-1"></a><span class="co">#&gt;  weight      weight     41.310 0.014    0.004</span></span>
+<span id="cb9-76"><a href="#cb9-76" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-77"><a href="#cb9-77" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb9-78"><a href="#cb9-78" tabindex="-1"></a><span class="co">#&gt; Model Fit </span></span>
+<span id="cb9-79"><a href="#cb9-79" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb9-80"><a href="#cb9-80" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-81"><a href="#cb9-81" tabindex="-1"></a><span class="co">#&gt;                    Deviance    df</span></span>
+<span id="cb9-82"><a href="#cb9-82" tabindex="-1"></a><span class="co">#&gt; Full linear model    49.471     8</span></span>
+<span id="cb9-83"><a href="#cb9-83" tabindex="-1"></a><span class="co">#&gt; MFP model            47.004     4</span></span>
+<span id="cb9-84"><a href="#cb9-84" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-85"><a href="#cb9-85" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-86"><a href="#cb9-86" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span></code></pre></div>
+<p>After adjustment, <code>pgg45</code> is <code>not selected</code>.
+Only <code>cavol</code> (log), <code>weight</code> (linear) and
+<code>svi</code> are retained (paper, Section 4.3).</p>
+</div>
+<div id="selection-with-aic-or-bic" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span> Selection with AIC or
+BIC</h2>
+<p>With <code>criterion = &quot;aic&quot;</code> or <code>&quot;bic&quot;</code>, all
+candidate SAZ models are compared in a single step and
+<code>select</code> and <code>alpha</code> are ignored (paper, Sections
+2.3.3 and 4.4).</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>fit_pgg45_aic <span class="ot">&lt;-</span> <span class="fu">mfp2</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>  lpsa <span class="sc">~</span> <span class="fu">fp</span>(pgg45, <span class="at">spike =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>  <span class="at">data =</span> prostate,</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;gaussian&quot;</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>  <span class="at">criterion =</span> <span class="st">&quot;aic&quot;</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>)</span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="fu">print</span>(fit_pgg45_aic, <span class="at">detailed_settings =</span> <span class="cn">FALSE</span>, <span class="at">notes =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="co">#&gt; MFP Model Fit</span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="co">#&gt; mfp2(lpsa ~ fp(pgg45, spike = TRUE), data = prostate, family = &quot;gaussian&quot;, </span></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="co">#&gt;     criterion = &quot;aic&quot;, verbose = FALSE)</span></span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="co">#&gt; Model: Gaussian GLM (identity link) | Criterion: AIC | Converged: yes</span></span>
+<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a><span class="co">#&gt; Observations: 97</span></span>
+<span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a><span class="co">#&gt; Dispersion: 0.999 (estimated)</span></span>
+<span id="cb10-20"><a href="#cb10-20" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-21"><a href="#cb10-21" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb10-22"><a href="#cb10-22" tabindex="-1"></a><span class="co">#&gt; Selection Summary </span></span>
+<span id="cb10-23"><a href="#cb10-23" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb10-24"><a href="#cb10-24" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-25"><a href="#cb10-25" tabindex="-1"></a><span class="co">#&gt; Selected variables (linear): none</span></span>
+<span id="cb10-26"><a href="#cb10-26" tabindex="-1"></a><span class="co">#&gt; Selected variables (nonlinear): pgg45</span></span>
+<span id="cb10-27"><a href="#cb10-27" tabindex="-1"></a><span class="co">#&gt; Excluded variables: none</span></span>
+<span id="cb10-28"><a href="#cb10-28" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-29"><a href="#cb10-29" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb10-30"><a href="#cb10-30" tabindex="-1"></a><span class="co">#&gt; Covariate Preprocessing </span></span>
+<span id="cb10-31"><a href="#cb10-31" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb10-32"><a href="#cb10-32" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-33"><a href="#cb10-33" tabindex="-1"></a><span class="co">#&gt;       shift scale center</span></span>
+<span id="cb10-34"><a href="#cb10-34" tabindex="-1"></a><span class="co">#&gt; pgg45 0     1     TRUE  </span></span>
+<span id="cb10-35"><a href="#cb10-35" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-36"><a href="#cb10-36" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb10-37"><a href="#cb10-37" tabindex="-1"></a><span class="co">#&gt; Summary of Function Selection </span></span>
+<span id="cb10-38"><a href="#cb10-38" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb10-39"><a href="#cb10-39" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-40"><a href="#cb10-40" tabindex="-1"></a><span class="co">#&gt; Spike-at-Zero (SAZ; x is transformed only for x &gt; 0, binary is I(x = 0))</span></span>
+<span id="cb10-41"><a href="#cb10-41" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------</span></span>
+<span id="cb10-42"><a href="#cb10-42" tabindex="-1"></a><span class="co">#&gt;  Variable prop_zero df (init-&gt;final) saz_decision    Function</span></span>
+<span id="cb10-43"><a href="#cb10-43" tabindex="-1"></a><span class="co">#&gt;  pgg45    0.361     5 -&gt; 2           continuous only FP(0)   </span></span>
+<span id="cb10-44"><a href="#cb10-44" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-45"><a href="#cb10-45" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb10-46"><a href="#cb10-46" tabindex="-1"></a><span class="co">#&gt; Final Model Coefficients </span></span>
+<span id="cb10-47"><a href="#cb10-47" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb10-48"><a href="#cb10-48" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-49"><a href="#cb10-49" tabindex="-1"></a><span class="co">#&gt; Estimates are for: Basis - Center</span></span>
+<span id="cb10-50"><a href="#cb10-50" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-51"><a href="#cb10-51" tabindex="-1"></a><span class="co">#&gt;  Variable    Basis                     Center Estimate SE   </span></span>
+<span id="cb10-52"><a href="#cb10-52" tabindex="-1"></a><span class="co">#&gt;  (Intercept)                                  2.478    0.101</span></span>
+<span id="cb10-53"><a href="#cb10-53" tabindex="-1"></a><span class="co">#&gt;  pgg45       I(pgg45 &gt; 0) * log(pgg45) 2.117  0.334    0.058</span></span>
+<span id="cb10-54"><a href="#cb10-54" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-55"><a href="#cb10-55" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb10-56"><a href="#cb10-56" tabindex="-1"></a><span class="co">#&gt; Model Fit </span></span>
+<span id="cb10-57"><a href="#cb10-57" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb10-58"><a href="#cb10-58" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-59"><a href="#cb10-59" tabindex="-1"></a><span class="co">#&gt;                    Deviance    df</span></span>
+<span id="cb10-60"><a href="#cb10-60" tabindex="-1"></a><span class="co">#&gt; Full linear model    95.416     2</span></span>
+<span id="cb10-61"><a href="#cb10-61" tabindex="-1"></a><span class="co">#&gt; MFP model            94.871     2</span></span>
+<span id="cb10-62"><a href="#cb10-62" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-63"><a href="#cb10-63" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-64"><a href="#cb10-64" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span></code></pre></div>
+<p>AIC penalises extra parameters less than the 0.05 p-value test does,
+and selects <code>continuous only</code> with a log function. There is
+no binary indicator. For <code>pgg45 = 0</code> the FP term is set to
+zero (<code>log(0)</code> is not computed), so the prediction at zero is
+the uncentred intercept. This equals the fitted log function at
+<code>pgg45 = 1</code>.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>newdat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">pgg45 =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">25</span>, <span class="dv">100</span>))</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="fu">predict</span>(fit_pgg45_aic, <span class="at">newdata =</span> newdat, <span class="at">type =</span> <span class="st">&quot;link&quot;</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a><span class="co">#&gt;        1        2        3        4 </span></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="co">#&gt; 1.771067 2.234322 2.846712 3.309967</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">plot</span>(fit_pgg45_aic, <span class="at">terms =</span> <span class="st">&quot;pgg45&quot;</span>, <span class="at">partial_only =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>           <span class="at">show_grid =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>p2[[<span class="st">&quot;pgg45&quot;</span>]]</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img role="img" aria-label="Continuous-only SAZ model for pgg45 selected by AIC (paper, Figure 2)." src="data:image/png;base64,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" alt="Continuous-only SAZ model for pgg45 selected by AIC (paper, Figure 2)." width="100%" />
+<p class="caption">
+Continuous-only SAZ model for pgg45 selected by AIC (paper, Figure 2).
+</p>
+</div>
+<p>BIC penalises extra parameters more than AIC does, and selects
+<code>binary only</code>, the same result as the p-value analysis:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>fit_pgg45_bic <span class="ot">&lt;-</span> <span class="fu">mfp2</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  lpsa <span class="sc">~</span> <span class="fu">fp</span>(pgg45, <span class="at">spike =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>  <span class="at">data =</span> prostate,</span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;gaussian&quot;</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>  <span class="at">criterion =</span> <span class="st">&quot;bic&quot;</span>,</span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a>)</span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a><span class="fu">print</span>(fit_pgg45_bic, <span class="at">detailed_settings =</span> <span class="cn">FALSE</span>, <span class="at">notes =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a><span class="co">#&gt; MFP Model Fit</span></span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span>
+<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a><span class="co">#&gt; mfp2(lpsa ~ fp(pgg45, spike = TRUE), data = prostate, family = &quot;gaussian&quot;, </span></span>
+<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a><span class="co">#&gt;     criterion = &quot;bic&quot;, verbose = FALSE)</span></span>
+<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a><span class="co">#&gt; Model: Gaussian GLM (identity link) | Criterion: BIC | Converged: yes</span></span>
+<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a><span class="co">#&gt; Observations: 97</span></span>
+<span id="cb13-19"><a href="#cb13-19" tabindex="-1"></a><span class="co">#&gt; Dispersion: 1.031 (estimated)</span></span>
+<span id="cb13-20"><a href="#cb13-20" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-21"><a href="#cb13-21" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb13-22"><a href="#cb13-22" tabindex="-1"></a><span class="co">#&gt; Selection Summary </span></span>
+<span id="cb13-23"><a href="#cb13-23" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb13-24"><a href="#cb13-24" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-25"><a href="#cb13-25" tabindex="-1"></a><span class="co">#&gt; Selected variables (linear): pgg45</span></span>
+<span id="cb13-26"><a href="#cb13-26" tabindex="-1"></a><span class="co">#&gt; Selected variables (nonlinear): none</span></span>
+<span id="cb13-27"><a href="#cb13-27" tabindex="-1"></a><span class="co">#&gt; Excluded variables: none</span></span>
+<span id="cb13-28"><a href="#cb13-28" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-29"><a href="#cb13-29" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb13-30"><a href="#cb13-30" tabindex="-1"></a><span class="co">#&gt; Covariate Preprocessing </span></span>
+<span id="cb13-31"><a href="#cb13-31" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb13-32"><a href="#cb13-32" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-33"><a href="#cb13-33" tabindex="-1"></a><span class="co">#&gt;       shift scale center</span></span>
+<span id="cb13-34"><a href="#cb13-34" tabindex="-1"></a><span class="co">#&gt; pgg45 0     1     TRUE  </span></span>
+<span id="cb13-35"><a href="#cb13-35" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-36"><a href="#cb13-36" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb13-37"><a href="#cb13-37" tabindex="-1"></a><span class="co">#&gt; Summary of Function Selection </span></span>
+<span id="cb13-38"><a href="#cb13-38" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb13-39"><a href="#cb13-39" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-40"><a href="#cb13-40" tabindex="-1"></a><span class="co">#&gt; Spike-at-Zero (SAZ; x is transformed only for x &gt; 0, binary is I(x = 0))</span></span>
+<span id="cb13-41"><a href="#cb13-41" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------</span></span>
+<span id="cb13-42"><a href="#cb13-42" tabindex="-1"></a><span class="co">#&gt;  Variable prop_zero df (init-&gt;final) saz_decision Function</span></span>
+<span id="cb13-43"><a href="#cb13-43" tabindex="-1"></a><span class="co">#&gt;  pgg45    0.361     5 -&gt; 1           binary only  binary  </span></span>
+<span id="cb13-44"><a href="#cb13-44" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-45"><a href="#cb13-45" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb13-46"><a href="#cb13-46" tabindex="-1"></a><span class="co">#&gt; Final Model Coefficients </span></span>
+<span id="cb13-47"><a href="#cb13-47" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb13-48"><a href="#cb13-48" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-49"><a href="#cb13-49" tabindex="-1"></a><span class="co">#&gt; Estimates are for: Basis - Center</span></span>
+<span id="cb13-50"><a href="#cb13-50" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-51"><a href="#cb13-51" tabindex="-1"></a><span class="co">#&gt;  Variable    Basis        Center Estimate SE   </span></span>
+<span id="cb13-52"><a href="#cb13-52" tabindex="-1"></a><span class="co">#&gt;  (Intercept)                     2.896    0.129</span></span>
+<span id="cb13-53"><a href="#cb13-53" tabindex="-1"></a><span class="co">#&gt;  pgg45       I(pgg45 = 0) 0.000  -1.158   0.215</span></span>
+<span id="cb13-54"><a href="#cb13-54" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-55"><a href="#cb13-55" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb13-56"><a href="#cb13-56" tabindex="-1"></a><span class="co">#&gt; Model Fit </span></span>
+<span id="cb13-57"><a href="#cb13-57" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb13-58"><a href="#cb13-58" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-59"><a href="#cb13-59" tabindex="-1"></a><span class="co">#&gt;                    Deviance    df</span></span>
+<span id="cb13-60"><a href="#cb13-60" tabindex="-1"></a><span class="co">#&gt; Full linear model    95.416     2</span></span>
+<span id="cb13-61"><a href="#cb13-61" tabindex="-1"></a><span class="co">#&gt; MFP model            97.931     1</span></span>
+<span id="cb13-62"><a href="#cb13-62" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-63"><a href="#cb13-63" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-64"><a href="#cb13-64" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span></code></pre></div>
+</div>
+</div>
+<div id="simulated-data-continuous-binary" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Simulated data:
+continuous + binary</h1>
+<p>The prostate data do not produce <code>continuous + binary</code>.
+Section 4.5 of the paper therefore simulates data from its Equation 14:
+an FP2 function with powers (0.5, 1) for positive values, a binary
+effect <span class="math inline">\(\gamma = 2\)</span>, and about 30%
+zeros.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2107</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">5000</span></span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>is_zero <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> <span class="fl">0.30</span>) <span class="sc">==</span> <span class="dv">1</span></span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>x_saz <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(is_zero, <span class="dv">0</span>, <span class="fu">runif</span>(n, <span class="at">min =</span> <span class="dv">1</span>, <span class="at">max =</span> <span class="dv">12</span>))</span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a><span class="co"># True FP2 function for positive values; 0 at x = 0</span></span>
+<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a>positive <span class="ot">&lt;-</span> x_saz <span class="sc">&gt;</span> <span class="dv">0</span></span>
+<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a>f_saz <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n)</span>
+<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a>f_saz[positive] <span class="ot">&lt;-</span> <span class="fl">4.0</span> <span class="sc">*</span> <span class="fu">sqrt</span>(x_saz[positive]) <span class="sc">-</span> <span class="fl">0.9</span> <span class="sc">*</span> x_saz[positive]</span>
+<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">1.5</span>  <span class="co"># intercept</span></span>
+<span id="cb14-13"><a href="#cb14-13" tabindex="-1"></a>gamma <span class="ot">&lt;-</span> <span class="fl">2.0</span>  <span class="co"># binary-indicator effect</span></span>
+<span id="cb14-14"><a href="#cb14-14" tabindex="-1"></a>z_saz <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(x_saz <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb14-15"><a href="#cb14-15" tabindex="-1"></a>y <span class="ot">&lt;-</span> alpha <span class="sc">+</span> gamma <span class="sc">*</span> z_saz <span class="sc">+</span> f_saz <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb14-16"><a href="#cb14-16" tabindex="-1"></a></span>
+<span id="cb14-17"><a href="#cb14-17" tabindex="-1"></a>dat_bincont <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">y =</span> y, <span class="at">x_saz =</span> x_saz)</span></code></pre></div>
+<p><code>center = FALSE</code> makes the coefficients directly
+comparable with the generating values.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>fit_bincont <span class="ot">&lt;-</span> <span class="fu">mfp2</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>  y <span class="sc">~</span> <span class="fu">fp</span>(x_saz, <span class="at">center =</span> <span class="cn">FALSE</span>, <span class="at">spike =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>  <span class="at">data =</span> dat_bincont,</span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">gaussian</span>(),</span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>  <span class="at">criterion =</span> <span class="st">&quot;pvalue&quot;</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a>  <span class="at">min_saz_prop =</span> <span class="fl">0.10</span>,</span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a>)</span>
+<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a><span class="fu">print</span>(fit_bincont, <span class="at">detailed_settings =</span> <span class="cn">FALSE</span>, <span class="at">notes =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a><span class="fu">predict</span>(fit_bincont, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">x_saz =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">7</span>, <span class="dv">12</span>)))</span>
+<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a></span>
+<span id="cb15-13"><a href="#cb15-13" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">plot</span>(fit_bincont, <span class="at">terms =</span> <span class="st">&quot;x_saz&quot;</span>, <span class="at">partial_only =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb15-14"><a href="#cb15-14" tabindex="-1"></a>           <span class="at">show_grid =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-15"><a href="#cb15-15" tabindex="-1"></a>p3[[<span class="st">&quot;x_saz&quot;</span>]]</span></code></pre></div>
+<p>Results reported in the paper:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>True</th>
+<th>Estimate (SE)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Intercept <span class="math inline">\(\alpha\)</span></td>
+<td>1.5</td>
+<td>1.578 (0.212)</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(x^{0.5}\)</span></td>
+<td>4.0</td>
+<td>3.977 (0.190)</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(x\)</span></td>
+<td>-0.9</td>
+<td>-0.904 (0.040)</td>
+</tr>
+<tr class="even">
+<td>Binary <span class="math inline">\(\gamma\)</span></td>
+<td>2.0</td>
+<td>1.930 (0.213)</td>
+</tr>
+</tbody>
+</table>
+<p>The selected model is <code>continuous + binary</code> with powers
+(0.5, 1). The prediction at zero is <span class="math inline">\(\hat\alpha + \hat\gamma \approx 3.51\)</span>.
+Over the positive values, the predictions rise to a peak near <span class="math inline">\(x = 5\)</span> and then fall (paper, Figure
+3).</p>
+</div>
+<div id="several-saz-covariates-in-one-model" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Several SAZ covariates
+in one model</h1>
+<p>Appendix A of the paper simulates three SAZ covariates, one for each
+retained decision, plus an ordinary FP covariate (<code>x4</code>) and
+two noise covariates (<code>x5</code>, <code>x6</code>). Each SAZ
+covariate gets its own decision within the backfitting.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2107</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="dv">6</span></span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a>rho <span class="ot">&lt;-</span> <span class="fl">0.20</span></span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">3</span>, p)</span>
+<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fl">0.60</span></span>
+<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a>Sigma <span class="ot">&lt;-</span> <span class="fu">matrix</span>(rho <span class="sc">*</span> sigma<span class="sc">^</span><span class="dv">2</span>, <span class="at">nrow =</span> p, <span class="at">ncol =</span> p)</span>
+<span id="cb16-8"><a href="#cb16-8" tabindex="-1"></a><span class="fu">diag</span>(Sigma) <span class="ot">&lt;-</span> sigma<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb16-9"><a href="#cb16-9" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" tabindex="-1"></a><span class="cf">repeat</span> {</span>
+<span id="cb16-11"><a href="#cb16-11" tabindex="-1"></a>  X <span class="ot">&lt;-</span> MASS<span class="sc">::</span><span class="fu">mvrnorm</span>(<span class="at">n =</span> n, <span class="at">mu =</span> mu, <span class="at">Sigma =</span> Sigma)</span>
+<span id="cb16-12"><a href="#cb16-12" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">all</span>(X <span class="sc">&gt;</span> <span class="dv">0</span>)) <span class="cf">break</span></span>
+<span id="cb16-13"><a href="#cb16-13" tabindex="-1"></a>}</span>
+<span id="cb16-14"><a href="#cb16-14" tabindex="-1"></a><span class="fu">colnames</span>(X) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;x&quot;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>)</span>
+<span id="cb16-15"><a href="#cb16-15" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> X[, <span class="dv">1</span>]; x2 <span class="ot">&lt;-</span> X[, <span class="dv">2</span>]; x3 <span class="ot">&lt;-</span> X[, <span class="dv">3</span>]</span>
+<span id="cb16-16"><a href="#cb16-16" tabindex="-1"></a>x4 <span class="ot">&lt;-</span> X[, <span class="dv">4</span>]; x5 <span class="ot">&lt;-</span> X[, <span class="dv">5</span>]; x6 <span class="ot">&lt;-</span> X[, <span class="dv">6</span>]</span>
+<span id="cb16-17"><a href="#cb16-17" tabindex="-1"></a></span>
+<span id="cb16-18"><a href="#cb16-18" tabindex="-1"></a><span class="co"># Introduce zeros in the three SAZ covariates</span></span>
+<span id="cb16-19"><a href="#cb16-19" tabindex="-1"></a>x1[<span class="fu">rbinom</span>(n, <span class="dv">1</span>, <span class="fl">0.30</span>) <span class="sc">==</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb16-20"><a href="#cb16-20" tabindex="-1"></a>x2[<span class="fu">rbinom</span>(n, <span class="dv">1</span>, <span class="fl">0.25</span>) <span class="sc">==</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb16-21"><a href="#cb16-21" tabindex="-1"></a>x3[<span class="fu">rbinom</span>(n, <span class="dv">1</span>, <span class="fl">0.35</span>) <span class="sc">==</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb16-22"><a href="#cb16-22" tabindex="-1"></a></span>
+<span id="cb16-23"><a href="#cb16-23" tabindex="-1"></a><span class="co"># FP transformation of positive values; 0 at x = 0</span></span>
+<span id="cb16-24"><a href="#cb16-24" tabindex="-1"></a>positive_fp <span class="ot">&lt;-</span> <span class="cf">function</span>(x, power) {</span>
+<span id="cb16-25"><a href="#cb16-25" tabindex="-1"></a>  out <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(x))</span>
+<span id="cb16-26"><a href="#cb16-26" tabindex="-1"></a>  pos <span class="ot">&lt;-</span> x <span class="sc">&gt;</span> <span class="dv">0</span></span>
+<span id="cb16-27"><a href="#cb16-27" tabindex="-1"></a>  out[pos] <span class="ot">&lt;-</span> <span class="cf">if</span> (power <span class="sc">==</span> <span class="dv">0</span>) <span class="fu">log</span>(x[pos]) <span class="cf">else</span> x[pos]<span class="sc">^</span>power</span>
+<span id="cb16-28"><a href="#cb16-28" tabindex="-1"></a>  out</span>
+<span id="cb16-29"><a href="#cb16-29" tabindex="-1"></a>}</span>
+<span id="cb16-30"><a href="#cb16-30" tabindex="-1"></a></span>
+<span id="cb16-31"><a href="#cb16-31" tabindex="-1"></a><span class="co"># Linear predictor (paper, Equation 15)</span></span>
+<span id="cb16-32"><a href="#cb16-32" tabindex="-1"></a>eta <span class="ot">&lt;-</span> <span class="fl">0.5</span> <span class="sc">+</span></span>
+<span id="cb16-33"><a href="#cb16-33" tabindex="-1"></a>  <span class="fl">20.00</span> <span class="sc">*</span> <span class="fu">positive_fp</span>(x1, <span class="sc">-</span><span class="dv">2</span>) <span class="sc">-</span> <span class="fl">1.40</span> <span class="sc">*</span> (x1 <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">+</span>   <span class="co"># FP1 + binary</span></span>
+<span id="cb16-34"><a href="#cb16-34" tabindex="-1"></a>  <span class="fl">15.00</span> <span class="sc">*</span> <span class="fu">positive_fp</span>(x2, <span class="sc">-</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb16-35"><a href="#cb16-35" tabindex="-1"></a>   <span class="fl">0.25</span> <span class="sc">*</span> <span class="fu">positive_fp</span>(x2, <span class="dv">2</span>) <span class="sc">+</span>                         <span class="co"># FP2 only</span></span>
+<span id="cb16-36"><a href="#cb16-36" tabindex="-1"></a>   <span class="fl">1.40</span> <span class="sc">*</span> (x3 <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">+</span>                                  <span class="co"># binary only</span></span>
+<span id="cb16-37"><a href="#cb16-37" tabindex="-1"></a>   <span class="fl">4.00</span> <span class="sc">*</span> <span class="fu">log</span>(x4)                                      <span class="co"># ordinary FP1</span></span>
+<span id="cb16-38"><a href="#cb16-38" tabindex="-1"></a></span>
+<span id="cb16-39"><a href="#cb16-39" tabindex="-1"></a>y <span class="ot">&lt;-</span> eta <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="fl">0.80</span>)</span>
+<span id="cb16-40"><a href="#cb16-40" tabindex="-1"></a>simdat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(y, x1, x2, x3, x4, x5, x6)</span>
+<span id="cb16-41"><a href="#cb16-41" tabindex="-1"></a></span>
+<span id="cb16-42"><a href="#cb16-42" tabindex="-1"></a><span class="fu">colMeans</span>(simdat[<span class="fu">c</span>(<span class="st">&quot;x1&quot;</span>, <span class="st">&quot;x2&quot;</span>, <span class="st">&quot;x3&quot;</span>)] <span class="sc">==</span> <span class="dv">0</span>)  <span class="co"># zero proportions</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>fit_sim <span class="ot">&lt;-</span> <span class="fu">mfp2</span>(</span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>  y <span class="sc">~</span> <span class="fu">fp</span>(x1, <span class="at">spike =</span> <span class="cn">TRUE</span>, <span class="at">center =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>    <span class="fu">fp</span>(x2, <span class="at">spike =</span> <span class="cn">TRUE</span>, <span class="at">center =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>    <span class="fu">fp</span>(x3, <span class="at">spike =</span> <span class="cn">TRUE</span>, <span class="at">center =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a>    <span class="fu">fp</span>(x4, <span class="at">center =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a>    <span class="fu">fp</span>(x5, <span class="at">center =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a>    <span class="fu">fp</span>(x6, <span class="at">center =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a>  <span class="at">data =</span> simdat,</span>
+<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">&quot;gaussian&quot;</span>,</span>
+<span id="cb17-10"><a href="#cb17-10" tabindex="-1"></a>  <span class="at">criterion =</span> <span class="st">&quot;bic&quot;</span>,</span>
+<span id="cb17-11"><a href="#cb17-11" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb17-12"><a href="#cb17-12" tabindex="-1"></a>)</span>
+<span id="cb17-13"><a href="#cb17-13" tabindex="-1"></a><span class="fu">print</span>(fit_sim, <span class="at">detailed_settings =</span> <span class="cn">FALSE</span>, <span class="at">notes =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<p>The paper reports that the true form is selected for every
+covariate:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Covariate</th>
+<th><code>saz_decision</code></th>
+<th>Selected function</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>x1</code></td>
+<td><code>continuous + binary</code></td>
+<td>FP(-2) + binary</td>
+</tr>
+<tr class="even">
+<td><code>x2</code></td>
+<td><code>continuous only</code></td>
+<td>FP(-2, 2)</td>
+</tr>
+<tr class="odd">
+<td><code>x3</code></td>
+<td><code>binary only</code></td>
+<td>binary</td>
+</tr>
+<tr class="even">
+<td><code>x4</code></td>
+<td>not SAZ</td>
+<td>FP(0) (log)</td>
+</tr>
+<tr class="odd">
+<td><code>x5</code>, <code>x6</code></td>
+<td>not SAZ</td>
+<td>excluded</td>
+</tr>
+</tbody>
+</table>
+<p>All estimated coefficients are close to the generating values (paper,
+Appendix A). This is one sample, so it does not show how often the
+correct model is selected.</p>
+</div>
+<div id="matrix-interface" class="section level1" number="5">
+<h1><span class="header-section-number">5</span> Matrix interface</h1>
+<p><code>mfp2()</code> also accepts a numeric matrix <code>x</code> and
+a response <code>y</code>. SAZ covariates are then named in
+<code>spike_vars</code> instead of using
+<code>fp(..., spike = TRUE)</code>. The two interfaces give the same fit
+(paper, Appendix B). The code below refits the three prostate models and
+compares their coefficients with the formula fits above.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>y <span class="ot">&lt;-</span> prostate<span class="sc">$</span>lpsa</span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(prostate[, <span class="st">&quot;pgg45&quot;</span>, <span class="at">drop =</span> <span class="cn">FALSE</span>])  <span class="co"># drop = FALSE keeps a matrix</span></span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a>x_multi <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(</span>
+<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a>  prostate[, <span class="fu">c</span>(<span class="st">&quot;pgg45&quot;</span>, <span class="st">&quot;age&quot;</span>, <span class="st">&quot;cavol&quot;</span>, <span class="st">&quot;weight&quot;</span>, <span class="st">&quot;bph&quot;</span>, <span class="st">&quot;cp&quot;</span>, <span class="st">&quot;svi&quot;</span>)]</span>
+<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a>)</span>
+<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a>fit_pgg45_mat <span class="ot">&lt;-</span> <span class="fu">mfp2</span>(x, y, <span class="at">family =</span> <span class="st">&quot;gaussian&quot;</span>, <span class="at">criterion =</span> <span class="st">&quot;pvalue&quot;</span>,</span>
+<span id="cb18-8"><a href="#cb18-8" tabindex="-1"></a>                      <span class="at">select =</span> <span class="fl">0.05</span>, <span class="at">alpha =</span> <span class="fl">0.05</span>, <span class="at">spike_vars =</span> <span class="st">&quot;pgg45&quot;</span>,</span>
+<span id="cb18-9"><a href="#cb18-9" tabindex="-1"></a>                      <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb18-10"><a href="#cb18-10" tabindex="-1"></a></span>
+<span id="cb18-11"><a href="#cb18-11" tabindex="-1"></a>fit_multi_mat <span class="ot">&lt;-</span> <span class="fu">mfp2</span>(x_multi, y, <span class="at">family =</span> <span class="st">&quot;gaussian&quot;</span>, <span class="at">criterion =</span> <span class="st">&quot;pvalue&quot;</span>,</span>
+<span id="cb18-12"><a href="#cb18-12" tabindex="-1"></a>                      <span class="at">select =</span> <span class="fl">0.05</span>, <span class="at">alpha =</span> <span class="fl">0.05</span>, <span class="at">spike_vars =</span> <span class="st">&quot;pgg45&quot;</span>,</span>
+<span id="cb18-13"><a href="#cb18-13" tabindex="-1"></a>                      <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb18-14"><a href="#cb18-14" tabindex="-1"></a></span>
+<span id="cb18-15"><a href="#cb18-15" tabindex="-1"></a>fit_aic_mat <span class="ot">&lt;-</span> <span class="fu">mfp2</span>(x, y, <span class="at">family =</span> <span class="st">&quot;gaussian&quot;</span>, <span class="at">criterion =</span> <span class="st">&quot;aic&quot;</span>,</span>
+<span id="cb18-16"><a href="#cb18-16" tabindex="-1"></a>                    <span class="at">spike_vars =</span> <span class="st">&quot;pgg45&quot;</span>, <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb18-17"><a href="#cb18-17" tabindex="-1"></a></span>
+<span id="cb18-18"><a href="#cb18-18" tabindex="-1"></a><span class="fu">print</span>(fit_pgg45_mat, <span class="at">detailed_settings =</span> <span class="cn">FALSE</span>, <span class="at">notes =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb18-19"><a href="#cb18-19" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span>
+<span id="cb18-20"><a href="#cb18-20" tabindex="-1"></a><span class="co">#&gt; MFP Model Fit</span></span>
+<span id="cb18-21"><a href="#cb18-21" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span>
+<span id="cb18-22"><a href="#cb18-22" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-23"><a href="#cb18-23" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb18-24"><a href="#cb18-24" tabindex="-1"></a><span class="co">#&gt; mfp2(x = x, y = y, family = &quot;gaussian&quot;, criterion = &quot;pvalue&quot;, </span></span>
+<span id="cb18-25"><a href="#cb18-25" tabindex="-1"></a><span class="co">#&gt;     select = 0.05, alpha = 0.05, spike_vars = &quot;pgg45&quot;, verbose = FALSE)</span></span>
+<span id="cb18-26"><a href="#cb18-26" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-27"><a href="#cb18-27" tabindex="-1"></a><span class="co">#&gt; Model: Gaussian GLM (identity link) | Criterion: p-value | Converged: yes</span></span>
+<span id="cb18-28"><a href="#cb18-28" tabindex="-1"></a><span class="co">#&gt; Observations: 97</span></span>
+<span id="cb18-29"><a href="#cb18-29" tabindex="-1"></a><span class="co">#&gt; Dispersion: 1.031 (estimated)</span></span>
+<span id="cb18-30"><a href="#cb18-30" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-31"><a href="#cb18-31" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb18-32"><a href="#cb18-32" tabindex="-1"></a><span class="co">#&gt; Selection Summary </span></span>
+<span id="cb18-33"><a href="#cb18-33" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb18-34"><a href="#cb18-34" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-35"><a href="#cb18-35" tabindex="-1"></a><span class="co">#&gt; Selected variables (linear): pgg45</span></span>
+<span id="cb18-36"><a href="#cb18-36" tabindex="-1"></a><span class="co">#&gt; Selected variables (nonlinear): none</span></span>
+<span id="cb18-37"><a href="#cb18-37" tabindex="-1"></a><span class="co">#&gt; Excluded variables: none</span></span>
+<span id="cb18-38"><a href="#cb18-38" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-39"><a href="#cb18-39" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb18-40"><a href="#cb18-40" tabindex="-1"></a><span class="co">#&gt; Covariate Preprocessing </span></span>
+<span id="cb18-41"><a href="#cb18-41" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb18-42"><a href="#cb18-42" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-43"><a href="#cb18-43" tabindex="-1"></a><span class="co">#&gt;       shift scale center</span></span>
+<span id="cb18-44"><a href="#cb18-44" tabindex="-1"></a><span class="co">#&gt; pgg45 0     1     TRUE  </span></span>
+<span id="cb18-45"><a href="#cb18-45" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-46"><a href="#cb18-46" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb18-47"><a href="#cb18-47" tabindex="-1"></a><span class="co">#&gt; Summary of Function Selection </span></span>
+<span id="cb18-48"><a href="#cb18-48" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb18-49"><a href="#cb18-49" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-50"><a href="#cb18-50" tabindex="-1"></a><span class="co">#&gt; Spike-at-Zero (SAZ; x is transformed only for x &gt; 0, binary is I(x = 0))</span></span>
+<span id="cb18-51"><a href="#cb18-51" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------</span></span>
+<span id="cb18-52"><a href="#cb18-52" tabindex="-1"></a><span class="co">#&gt;  Variable prop_zero df (init-&gt;final) saz_decision Function</span></span>
+<span id="cb18-53"><a href="#cb18-53" tabindex="-1"></a><span class="co">#&gt;  pgg45    0.361     5 -&gt; 1           binary only  binary  </span></span>
+<span id="cb18-54"><a href="#cb18-54" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-55"><a href="#cb18-55" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb18-56"><a href="#cb18-56" tabindex="-1"></a><span class="co">#&gt; Final Model Coefficients </span></span>
+<span id="cb18-57"><a href="#cb18-57" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb18-58"><a href="#cb18-58" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-59"><a href="#cb18-59" tabindex="-1"></a><span class="co">#&gt; Estimates are for: Basis - Center</span></span>
+<span id="cb18-60"><a href="#cb18-60" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-61"><a href="#cb18-61" tabindex="-1"></a><span class="co">#&gt;  Variable    Basis        Center Estimate SE   </span></span>
+<span id="cb18-62"><a href="#cb18-62" tabindex="-1"></a><span class="co">#&gt;  (Intercept)                     2.896    0.129</span></span>
+<span id="cb18-63"><a href="#cb18-63" tabindex="-1"></a><span class="co">#&gt;  pgg45       I(pgg45 = 0) 0.000  -1.158   0.215</span></span>
+<span id="cb18-64"><a href="#cb18-64" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-65"><a href="#cb18-65" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb18-66"><a href="#cb18-66" tabindex="-1"></a><span class="co">#&gt; Model Fit </span></span>
+<span id="cb18-67"><a href="#cb18-67" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------------------------------------------</span></span>
+<span id="cb18-68"><a href="#cb18-68" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-69"><a href="#cb18-69" tabindex="-1"></a><span class="co">#&gt;                    Deviance    df</span></span>
+<span id="cb18-70"><a href="#cb18-70" tabindex="-1"></a><span class="co">#&gt; Full linear model    95.416     2</span></span>
+<span id="cb18-71"><a href="#cb18-71" tabindex="-1"></a><span class="co">#&gt; MFP model            97.931     1</span></span>
+<span id="cb18-72"><a href="#cb18-72" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-73"><a href="#cb18-73" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-74"><a href="#cb18-74" tabindex="-1"></a><span class="co">#&gt; ==============================================================================</span></span></code></pre></div>
+</div>
+<div id="further-details" class="section level1" number="6">
+<h1><span class="header-section-number">6</span> Further details</h1>
+<p>See <code>?mfp2</code>, <code>?fp</code>, <code>?predict.mfp2</code>
+and <code>?plot.mfp2</code> for all arguments. The paper describes the
+SAZ model and selection procedures (Section 2), the software interface,
+eligibility checks and methods for fitted objects (Section 3), and
+discusses the results in more detail (Section 4 and Appendices A–B).</p>
+<div id="paper-reference" class="section level2" number="6.1">
+<h2><span class="header-section-number">6.1</span> Paper reference</h2>
+<p>Kipruto, E., and Sauerbrei, W. <em>Modelling Spike-at-Zero Covariates
+with Fractional Polynomials in R</em>. Manuscript submitted to the
+<em>Journal of Statistical Software</em>.</p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
