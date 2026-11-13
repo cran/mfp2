@@ -1,6 +1,6 @@
-645b94efe58d1790c30e3347da5ffa8d *DESCRIPTION
+eccb5ad691726dc99dc5bfde27778094 *DESCRIPTION
 c7d419a18215674400c3edcb6cf6ef12 *NAMESPACE
-54390d85114f0d8e6cef72f453113794 *NEWS.md
+94757474f3395be06f2876931ec3b66c *NEWS.md
 d21901fff87749b41548432cdc88e3ef *R/RcppExports.R
 1dac71ed0f41556cc6928946d4e45e47 *R/acd.R
 138cce4ddfbf0035cb9d369dacd0956f *R/calculate_number_fp_powers.R
@@ -47,9 +47,9 @@ c0608d2d7bf3a49377885a951be71b16 *R/tests.R
 9b3458910b68abfa79b35cf0b0263f6a *R/transformations.R
 4f8a0235927f5747ba487ceab3ce00cf *R/validation_helpers.R
 3a24625be8937f0d8efa5cb5513b6353 *R/validation_powers.R
-9273c94ba9c7f81055fc6d9a3ffba30a *README.md
+41a408f84e1882c9ebde20cb993d4b44 *README.md
 6af8e7644a2c366a25339b1923c9a048 *build/partial.rdb
-f7537943f5be1bb3998a2a5399d84a86 *build/vignette.rds
+4249742d671f2405fbc6f4af75c7305d *build/vignette.rds
 174c3eb21bffc92f069a439abd45297e *data/advanced_prostate_cancer.rda
 76736545e734ba21ebe8b60ec88f612f *data/art.rda
 8449af4856d0de0f83a9c2a57a944fe2 *data/gbsg.rda
@@ -58,13 +58,16 @@ a8e30517d03ab0e76a5ff695dcd465dc *data/pima.rda
 98f0751ab2ba1f414812a6f4765a02cc *inst/CITATION
 00170c5875928560d659570d2a003f29 *inst/doc/acd-transformations.R
 b608881131bae7275a6659d109df4f9a *inst/doc/acd-transformations.Rmd
-508fc40adcfcf69f785037d02755f314 *inst/doc/acd-transformations.html
+7f83934eda5dddc871e01f8562af687e *inst/doc/acd-transformations.html
 e3f6225722a5d6f3411fdb1697b9d30c *inst/doc/interactions.R
 d5d9c28823511a99e113d8709eb1276e *inst/doc/interactions.Rmd
 d81a4b77788aed2645e4980dfeae0bb4 *inst/doc/interactions.html
 5c32aa2d41df8b4afec2dbbb28a6e91e *inst/doc/mfp-methodology.R
 2478b58ffb564fc2ea4de2399f933743 *inst/doc/mfp-methodology.Rmd
-db173eaa65f5c6a605023dba08e4a936 *inst/doc/mfp-methodology.html
+cc5bda8998dd9de5a90c3e52ff0df328 *inst/doc/mfp-methodology.html
+f18e471adc0bd88f79840db03c823cf4 *inst/doc/mfp2-user-guide.R
+82b9c030581e3480a5d6a20490b4b737 *inst/doc/mfp2-user-guide.Rmd
+123b259fdcb0e1fe7954af0eec19bb58 *inst/doc/mfp2-user-guide.html
 d5eded23ac7570076d1e725317d363ee *inst/doc/spike-at-zero.R
 62601f23418a85f0993929e10c1d34f5 *inst/doc/spike-at-zero.Rmd
 5934da0cde836b0198fe4740502261f9 *inst/doc/spike-at-zero.html
@@ -163,7 +166,7 @@ b631ecb689dfcf172b9a1205a5bb397f *tests/testthat/test_gee_alpha_warm_start.R
 2bf3096b4efc87f9f2b9d9d3bc65e422 *tests/testthat/test_gee_candidate_scaling.R
 34394fe9c63ca5cd3aa7557d5c4ebd2f *tests/testthat/test_gee_failed_candidates.R
 1cf5a9d84560c1c2e3de035b56ef52e4 *tests/testthat/test_gee_predict_offset_se.R
-fed1b5ea91df164e5287661408014b8d *tests/testthat/test_gee_step_memo.R
+0d66a9329f9a2ac0d1b1ab8bf233abde *tests/testthat/test_gee_step_memo.R
 3f74b83f9e4795d37fa42fd399ef9724 *tests/testthat/test_hot_path_preparation.R
 6a249e115a3a852d4612468eade96cbc *tests/testthat/test_internal_model_names.R
 1c0d17dac45733d571ec9dfb312c7c4a *tests/testthat/test_linear_equivalence_cox.R
@@ -260,4 +263,5 @@ b24e37aab0b265305fbddffb91086e1c *tests/testthat/test_transformation_helpers.R
 b608881131bae7275a6659d109df4f9a *vignettes/acd-transformations.Rmd
 d5d9c28823511a99e113d8709eb1276e *vignettes/interactions.Rmd
 2478b58ffb564fc2ea4de2399f933743 *vignettes/mfp-methodology.Rmd
+82b9c030581e3480a5d6a20490b4b737 *vignettes/mfp2-user-guide.Rmd
 62601f23418a85f0993929e10c1d34f5 *vignettes/spike-at-zero.Rmd

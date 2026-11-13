@@ -1,6 +1,7 @@
 # When a later MFP cycle revisits a GEE term with an unchanged adjustment
 # model, the previous (deterministic) power search is reused. These tests check
-# that the reuse happens and that it never changes the fitted result.
+# that reuse happens, preserves model selection, and produces numerically
+# equivalent fitted results.
 
 core_gee_data <- function(K = 30, m = 4, seed = 101) {
   set.seed(seed)
@@ -37,12 +38,17 @@ test_that("GEE MFP selection is unchanged by the step memo", {
     old <- options(mfp2.gee_step_memo = FALSE)
     slow <- fit(criterion)
     options(old)
+
     expect_identical(fast$fp_powers, slow$fp_powers)
-    expect_identical(coef(fast), coef(slow))
-    expect_identical(vcov(fast), vcov(slow))
+    expect_equal(coef(fast), coef(slow), tolerance = 1e-10)
+    expect_equal(vcov(fast), vcov(slow), tolerance = 1e-10)
     expect_identical(fast$fp_terms, slow$fp_terms)
     expect_false(is.null(fast$mfp_selection_score))
-    expect_identical(fast$mfp_selection_score, slow$mfp_selection_score)
+    expect_equal(
+      fast$mfp_selection_score,
+      slow$mfp_selection_score,
+      tolerance = 1e-10
+    )
   }
 })
 
@@ -76,5 +82,9 @@ test_that("a revisited GEE term with unchanged adjustments reuses its search", {
   expect_gte(plain$calls, 4L)
   expect_lt(memo$calls, plain$calls)
   expect_identical(memo$model$fp_powers, plain$model$fp_powers)
-  expect_identical(coef(memo$model), coef(plain$model))
+  expect_equal(
+    coef(memo$model),
+    coef(plain$model),
+    tolerance = 1e-10
+  )
 })
